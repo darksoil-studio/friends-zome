@@ -1,7 +1,13 @@
 use hdk::prelude::*;
-use private_event_sourcing::{create_private_event, query_all_my_agents};
+use private_event_sourcing::{
+    create_private_event, query_all_my_agents, send_private_event_to_new_recipients, PrivateEvent,
+    SignedEvent,
+};
 
-use crate::{private_event::FriendsEvent, profile::query_my_profile};
+use crate::{
+    private_event::{query_friends_events, FriendsEvent},
+    profile::query_my_profile,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SendFriendRequestInput {
@@ -32,6 +38,7 @@ pub fn accept_friend_request(friend_request_hash: EntryHash) -> ExternResult<()>
     create_private_event(FriendsEvent::AcceptFriendRequest {
         friend_request_hash,
     })?;
+
     Ok(())
 }
 

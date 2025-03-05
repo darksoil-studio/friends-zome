@@ -24,7 +24,7 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
     for friend_event in sorted_events {
         match friend_event.event.content {
             FriendsEvent::SetProfile { agents, profile } => {
-                if agents.iter().find(|a| all_my_agents.contains(a)).is_some() {
+                if agents.iter().any(|a| all_my_agents.contains(a)) {
                     // This is our SetProfile: continue
                     continue;
                 }
@@ -45,12 +45,8 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
             }
             FriendsEvent::RemoveFriend { agents } => {
                 let maybe_position = friends.iter().position(|friend| {
-                    friend
-                        .agents
-                        .iter()
-                        .find(|a1| agents.contains(a1))
-                        .is_some()
-                        || all_my_agents.iter().find(|a| agents.contains(a)).is_some()
+                    friend.agents.iter().any(|a1| agents.contains(a1))
+                        || all_my_agents.iter().any(|a| agents.contains(a))
                 });
                 if let Some(position) = maybe_position {
                     friends.remove(position);

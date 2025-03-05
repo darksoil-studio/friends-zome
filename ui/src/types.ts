@@ -26,7 +26,7 @@ export interface Friend {
 export interface Profile {
 	name: string;
 	avatar: string;
-	custom_fields: Record<string, string>;
+	fields: Record<string, string>;
 }
 
 export interface FriendRequest {

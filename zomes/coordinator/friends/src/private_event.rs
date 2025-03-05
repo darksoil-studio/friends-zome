@@ -3,13 +3,13 @@ use std::collections::BTreeMap;
 use hdk::prelude::*;
 use private_event_sourcing::*;
 
-use crate::all_friends::query_all_friends;
+use crate::{all_friends::query_all_friends, profile::query_my_profile_event};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Profile {
     pub name: String,
     pub avatar: Option<String>,
-    pub custom_fields: BTreeMap<String, String>,
+    pub fields: BTreeMap<String, String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, SerializedBytes)]
@@ -43,7 +43,11 @@ pub enum FriendsEvent {
 }
 
 impl PrivateEvent for FriendsEvent {
-    fn validate(&self, author: AgentPubKey) -> ExternResult<ValidateCallbackResult> {
+    fn validate(
+        &self,
+        author: AgentPubKey,
+        _timestamp: Timestamp,
+    ) -> ExternResult<ValidateCallbackResult> {
         match self {
             FriendsEvent::FriendRequest {
                 from_agents,
@@ -69,8 +73,7 @@ impl PrivateEvent for FriendsEvent {
                 Ok(ValidateCallbackResult::Valid)
             }
             FriendsEvent::SetProfile { agents, .. } => {
-                info!("Agents {agents:?} {author}");
-                if agents.contains(&author) {
+                if !agents.contains(&author) {
                     return Ok(ValidateCallbackResult::Invalid(
                         "Agents must include the author of the SetProfile event.".into(),
                     ));
@@ -115,7 +118,11 @@ impl PrivateEvent for FriendsEvent {
         }
     }
 
-    fn recipients(&self) -> ExternResult<Vec<AgentPubKey>> {
+    fn recipients(
+        &self,
+        _author: AgentPubKey,
+        _timestamp: Timestamp,
+    ) -> ExternResult<Vec<AgentPubKey>> {
         match self {
             FriendsEvent::SetProfile { .. } => query_my_friends(),
             FriendsEvent::RemoveFriend { agents } => Ok(agents.clone()),
@@ -157,6 +164,47 @@ impl PrivateEvent for FriendsEvent {
                 Ok(to_agents)
             }
         }
+    }
+
+    fn post_commit(&self, _author: AgentPubKey, _timestamp: Timestamp) -> ExternResult<()> {
+        let FriendsEvent::AcceptFriendRequest {
+            friend_request_hash,
+        } = self
+        else {
+            return Ok(());
+        };
+
+        let Some(my_profile_event) = query_my_profile_event()? else {
+            return Err(wasm_error!(
+                "Can't accept a friend request if we haven't set our profile."
+            ));
+        };
+
+        let Some(friend_request_entry) =
+            query_private_event::<FriendsEvent>(friend_request_hash.clone())?
+        else {
+            return Err(wasm_error!("Friend request not found."));
+        };
+        let FriendsEvent::FriendRequest {
+            from_agents,
+            to_agents,
+            ..
+        } = friend_request_entry.event.content
+        else {
+            return Err(wasm_error!("."));
+        };
+        let all_my_agents = query_all_my_agents()?;
+        let peer_agents = if from_agents.iter().any(|a| all_my_agents.contains(a)) {
+            to_agents
+        } else {
+            from_agents
+        };
+
+        info!("Sending my profile to {peer_agents:?}.");
+
+        send_private_event_to_new_recipients(my_profile_event.0.clone().into(), peer_agents)?;
+
+        Ok(())
     }
 }
 

@@ -12,20 +12,26 @@ pub fn set_my_profile(profile: Profile) -> ExternResult<()> {
 
 #[hdk_extern]
 pub fn query_my_profile() -> ExternResult<Option<Profile>> {
-    let contacts_events = query_friends_events()?;
+    let my_profile_event = query_my_profile_event()?;
+    Ok(my_profile_event.map(|(_hash, profile)| profile))
+}
 
-    let mut sorted_events: Vec<SignedEvent<FriendsEvent>> = contacts_events.into_values().collect();
+pub fn query_my_profile_event() -> ExternResult<Option<(EntryHashB64, Profile)>> {
+    let friends_events = query_friends_events()?;
 
-    sorted_events.sort_by(|e1, e2| e1.event.timestamp.cmp(&e2.event.timestamp));
+    let mut sorted_events: Vec<(EntryHashB64, SignedEvent<FriendsEvent>)> =
+        friends_events.into_iter().collect();
+
+    sorted_events.sort_by(|e1, e2| e1.1.event.timestamp.cmp(&e2.1.event.timestamp));
 
     let all_my_agents = query_all_my_agents()?;
 
-    let profile_events: Vec<Profile> = sorted_events
+    let profile_events: Vec<(EntryHashB64, Profile)> = sorted_events
         .into_iter()
-        .filter_map(|event| match event.event.content {
+        .filter_map(|(entry_hash, event)| match event.event.content {
             FriendsEvent::SetProfile { agents, profile } => {
-                match agents.iter().find(|a| all_my_agents.contains(a)).is_some() {
-                    true => Some(profile),
+                match agents.iter().any(|a| all_my_agents.contains(a)) {
+                    true => Some((entry_hash.clone(), profile)),
                     false => None,
                 }
             }

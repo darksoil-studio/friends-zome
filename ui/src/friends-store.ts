@@ -2,28 +2,49 @@ import {
 	PrivateEventSourcingStore,
 	SignedEvent,
 } from '@darksoil-studio/private-event-sourcing-zome';
-import { asyncReadable } from '@darksoil-studio/private-event-sourcing-zome/dist/utils.js';
-import { EntryHashB64, encodeHashToBase64 } from '@holochain/client';
+import { EntryHashB64, Timestamp, encodeHashToBase64 } from '@holochain/client';
 import { AsyncComputed } from '@tnesh-stack/signals';
 import { MemoMap } from '@tnesh-stack/utils';
 
+import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';
-import { Friend, FriendRequest, FriendsEvent } from './types.js';
+import { Friend, FriendRequest, FriendsEvent, Profile } from './types.js';
+import { asyncReadable } from './utils.js';
 
 export class FriendsStore extends PrivateEventSourcingStore<FriendsEvent> {
-	constructor(public client: FriendsClient) {
+	constructor(
+		public client: FriendsClient,
+		public config: FriendsConfig = defaultConfig,
+	) {
 		super(client);
 	}
 
-	// friendRequests = new AsyncComputed(() => {
-	// 			const privateEvents = this.privateEvents.get();
-	// 			if (privateEvents.status !== 'completed') return privateEvents;
-	// 			const privateEventsOfThisType: Record<EntryHashB64, SignedEvent<FriendRequest>> = pickBy(privateEvents.value, value =>
-	// 				value.event.content.type === 'FriendRequest'
-	// 		);
+	myProfile = new AsyncComputed(() => {
+		const privateEvents = this.privateEvents.get();
+		if (privateEvents.status !== 'completed') return privateEvents;
 
-	// 			return { status: 'completed',value:privateEventsOfThisType};
-	// 		}
+		let myProfile: [Timestamp, Profile] | undefined;
+
+		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
+			if (entry.event.content.type !== 'SetProfile') continue;
+			if (
+				encodeHashToBase64(entry.author) !==
+				encodeHashToBase64(this.client.client.myPubKey)
+			)
+				continue;
+
+			const profile = entry.event.content.profile;
+
+			if (!myProfile || myProfile[0] < entry.event.timestamp) {
+				myProfile = [entry.event.timestamp, profile];
+			}
+		}
+
+		return {
+			status: 'completed',
+			value: myProfile ? myProfile[1] : undefined,
+		};
+	});
 
 	pendingFriendRequests = new AsyncComputed(() => {
 		const privateEvents = this.privateEvents.get();
@@ -53,14 +74,16 @@ export class FriendsStore extends PrivateEventSourcingStore<FriendsEvent> {
 	});
 
 	friends = asyncReadable<Friend[]>(async set => {
-		const entries = await this.client.queryAllFriends();
-		set(entries);
+		let friends = await this.client.queryAllFriends();
+		set(friends);
 
-		return this.client.onSignal(async signal => {
-			if (signal.type !== 'EntryCreated') return;
+		const interval = setInterval(async () => {
+			friends = await this.client.queryAllFriends();
+			set(friends);
+		}, 1000);
 
-			const entries = await this.client.queryAllFriends();
-			set(entries);
-		});
+		return () => {
+			clearInterval(interval);
+		};
 	});
 }

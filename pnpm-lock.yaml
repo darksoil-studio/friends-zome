@@ -17,6 +17,9 @@ importers:
       concurrently:
         specifier: ^6.2.1
         version: 6.5.1
+      concurrently-repeat:
+        specifier: ^0.0.1
+        version: 0.0.1
       eslint:
         specifier: ^9.0.0
         version: 9.21.0
@@ -1479,6 +1482,10 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+
+  concurrently-repeat@0.0.1:
+    resolution: {integrity: sha512-9UR6DJRsn1D8tGjK6L7BR2cTkfTQXRJRokoaC3KQgthRBEKHwXJzWXt3EQ3V9hjaURHYX5vAeEjt5aWhCpvSwQ==}
+    hasBin: true
 
   concurrently@6.5.1:
     resolution: {integrity: sha512-FlSwNpGjWQfRwPLXvJ/OgysbBxPkWpiVjy1042b0U7on7S7qwwMIILRj7WTN1mTgqa582bG6NFuScOoh6Zgdag==}
@@ -4374,6 +4381,11 @@ snapshots:
       '@floating-ui/utils': 0.2.9
 
   concat-map@0.0.1: {}
+
+  concurrently-repeat@0.0.1:
+    dependencies:
+      concurrently: 6.5.1
+      yargs: 16.2.0
 
   concurrently@6.5.1:
     dependencies:
