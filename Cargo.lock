@@ -755,7 +755,7 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 [[package]]
 name = "private_event_sourcing"
 version = "0.0.1"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main#8cd460b012bef97d4a085d8afc015be40a558d38"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main#a82f49ad6c638a1d070ef7d13159b5cd0fda9d9b"
 dependencies = [
  "hdk",
  "linked_devices_types",
@@ -766,7 +766,7 @@ dependencies = [
 [[package]]
 name = "private_event_sourcing_integrity"
 version = "0.0.1"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main#8cd460b012bef97d4a085d8afc015be40a558d38"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main#a82f49ad6c638a1d070ef7d13159b5cd0fda9d9b"
 dependencies = [
  "hdi",
  "serde",

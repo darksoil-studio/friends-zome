@@ -10,7 +10,7 @@ pub struct SendFriendRequestInput {
 }
 
 #[hdk_extern]
-pub fn send_friend_request(input: SendFriendRequestInput) -> ExternResult<()> {
+pub fn send_friend_request(input: SendFriendRequestInput) -> ExternResult<EntryHash> {
     let Some(my_profile) = query_my_profile(())? else {
         return Err(wasm_error!(
             "Can't request to share contacts before creating a profile."
@@ -24,24 +24,35 @@ pub fn send_friend_request(input: SendFriendRequestInput) -> ExternResult<()> {
         from_agents: my_agents,
         to_name: input.to_name,
         to_agents: input.to_agents,
+    })
+}
+
+#[hdk_extern]
+pub fn accept_friend_request(friend_request_hash: EntryHash) -> ExternResult<()> {
+    create_private_event(FriendsEvent::AcceptFriendRequest {
+        friend_request_hash,
     })?;
     Ok(())
 }
 
 #[hdk_extern]
-pub fn accept_friend_request(friend_request_hash: EntryHash) -> ExternResult<()> {
-    create_private_event(FriendsEvent::AcceptFriendRequest(friend_request_hash))?;
-    Ok(())
-}
-
-#[hdk_extern]
 pub fn reject_friend_request(friend_request_hash: EntryHash) -> ExternResult<()> {
-    create_private_event(FriendsEvent::RejectFriendRequest(friend_request_hash))?;
+    create_private_event(FriendsEvent::RejectFriendRequest {
+        friend_request_hash,
+    })?;
     Ok(())
 }
 
 #[hdk_extern]
 pub fn cancel_friend_request(friend_request_hash: EntryHash) -> ExternResult<()> {
-    create_private_event(FriendsEvent::CancelFriendRequest(friend_request_hash))?;
+    create_private_event(FriendsEvent::CancelFriendRequest {
+        friend_request_hash,
+    })?;
+    Ok(())
+}
+
+#[hdk_extern]
+pub fn remove_friend(agents: Vec<AgentPubKey>) -> ExternResult<()> {
+    create_private_event(FriendsEvent::RemoveFriend { agents })?;
     Ok(())
 }
