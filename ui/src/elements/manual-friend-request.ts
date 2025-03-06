@@ -95,6 +95,7 @@ export class ManualFriendRequest extends SignalWatcher(LitElement) {
 	render() {
 		return html` ${this.renderDialog()}
 			<sl-icon-button
+				style="font-size: 1.5rem"
 				@click=${() =>
 					(this.shadowRoot!.querySelector('sl-dialog')! as SlDialog).show()}
 				.src=${wrapPathInSvg(mdiAccountPlus)}
