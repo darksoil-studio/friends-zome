@@ -105,3 +105,12 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
 
     Ok(friends)
 }
+pub fn query_my_friends() -> ExternResult<Vec<AgentPubKey>> {
+    let all_friends = query_all_friends(())?;
+
+    Ok(all_friends
+        .into_iter()
+        .map(|friend| friend.agents)
+        .flatten()
+        .collect())
+}

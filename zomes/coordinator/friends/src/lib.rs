@@ -1,20 +1,16 @@
+use hc_zome_trait_notifications::NotificationsZomeTrait;
+use hc_zome_traits::implemented_zome_traits;
 use hdk::prelude::*;
-use private_event::FriendsEvent;
-use private_event_sourcing::*;
+use notifications::FriendsNotifications;
+
+mod notifications;
+mod private_event;
 
 mod all_friends;
 mod friend_request;
-mod private_event;
 mod profile;
-mod synchronize;
 
-#[hdk_extern]
-pub fn recv_remote_signal(signal_bytes: SerializedBytes) -> ExternResult<()> {
-    if let Ok(private_event_sourcing_remote_signal) =
-        PrivateEventSourcingRemoteSignal::try_from(signal_bytes)
-    {
-        recv_private_events_remote_signal::<FriendsEvent>(private_event_sourcing_remote_signal)
-    } else {
-        Ok(())
-    }
+#[implemented_zome_traits]
+pub enum ZomeTraits {
+    Notifications(FriendsNotifications),
 }

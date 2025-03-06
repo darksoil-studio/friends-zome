@@ -11,7 +11,11 @@
     p2p-shipyard.url = "github:darksoil-studio/p2p-shipyard/main-0.4";
     playground.url = "github:darksoil-studio/holochain-playground/main-0.4";
 
+    notifications-zome.url =
+      "github:darksoil-studio/notifications-zome/main-0.4";
     profiles-zome.url = "github:darksoil-studio/profiles-zome/main-0.4";
+    private-event-sourcing-zome.url =
+      "github:darksoil-studio/private-event-sourcing-zome/main-0.4";
   };
 
   nixConfig = {
@@ -33,6 +37,7 @@
         # Just for testing purposes
         ./workdir/dna.nix
         ./workdir/happ.nix
+        inputs.tnesh-stack.outputs.flakeModules.builders
       ];
 
       systems = builtins.attrNames inputs.holonix.devShells;
