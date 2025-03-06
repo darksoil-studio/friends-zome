@@ -1,40 +1,38 @@
 import {
-  AgentPubKeyMap,
-  decodeEntry,
-  fakeEntry,
-  fakeCreateAction,
-  fakeUpdateEntry,
-  fakeDeleteEntry,
-  fakeRecord,
-  pickBy,
-  ZomeMock,
-  HoloHashMap,
-  HashType,
-  hash
-} from "@tnesh-stack/utils";
+	ActionHash,
+	AgentPubKey,
+	AppClient,
+	Delete,
+	EntryHash,
+	Link,
+	NewEntryAction,
+	Record,
+	SignedActionHashed,
+	decodeHashFromBase64,
+	fakeActionHash,
+	fakeAgentPubKey,
+	fakeDnaHash,
+	fakeEntryHash,
+} from '@holochain/client';
 import {
-  decodeHashFromBase64,
-  NewEntryAction,
-  AgentPubKey,
-  ActionHash,
-  EntryHash,
-  Delete,
-  AppClient,
-  fakeAgentPubKey,
-  fakeDnaHash,
-  Link,
-  fakeActionHash,
-  SignedActionHashed,
-  fakeEntryHash,
-  Record,
-} from "@holochain/client";
-import { FriendsClient } from './friends-client.js'
+	AgentPubKeyMap,
+	HashType,
+	HoloHashMap,
+	ZomeMock,
+	decodeEntry,
+	fakeCreateAction,
+	fakeDeleteEntry,
+	fakeEntry,
+	fakeRecord,
+	fakeUpdateEntry,
+	hash,
+	pickBy,
+} from '@tnesh-stack/utils';
+
+import { FriendsClient } from './friends-client.js';
 
 export class FriendsZomeMock extends ZomeMock implements AppClient {
-  constructor(
-    myPubKey?: AgentPubKey
-  ) {
-    super("friends_test", "friends", "friends_test_app", myPubKey);
-  }
-  
+	constructor(myPubKey?: AgentPubKey) {
+		super('friends_test', 'friends', 'friends_test_app', myPubKey);
+	}
 }

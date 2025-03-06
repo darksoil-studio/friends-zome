@@ -15,7 +15,7 @@ This will do the following:
   - Add the UI package for `@darksoil-studio/friends-zome` as a dependency of your UI package.
   - Add the `<friends-context>` element at the top level of your application.
 
-That's it! You have now integrated the `linked_devices` coordinator and integrity zomes and their UI into your app!
+That's it! You have now integrated the `friends` coordinator and integrity zomes and their UI into your app!
 
 Now, [choose which elements you need](/elements/friends-context.md) and import them like this:
 
