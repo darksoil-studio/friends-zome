@@ -1,0 +1,1188 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/config.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "defaultConfig",
+          "type": {
+            "text": "FriendsConfig"
+          },
+          "default": "{ additionalFields: [], minNicknameLength: 3, }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defaultConfig",
+          "declaration": {
+            "name": "defaultConfig",
+            "module": "src/config.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/context.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "friendsStoreContext"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "friendsStoreContext",
+          "declaration": {
+            "name": "friendsStoreContext",
+            "module": "src/context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/friends-client.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FriendsClient",
+          "members": [
+            {
+              "kind": "method",
+              "name": "setMyProfile",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "profile",
+                  "type": {
+                    "text": "Profile"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "sendFriendRequest",
+              "return": {
+                "type": {
+                  "text": "Promise<EntryHash>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "agents",
+                  "type": {
+                    "text": "AgentPubKey[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "acceptFriendRequest",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "friendRequestHash",
+                  "type": {
+                    "text": "EntryHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "rejectFriendRequest",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "friendRequestHash",
+                  "type": {
+                    "text": "EntryHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "cancelFriendRequest",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "friendRequestHash",
+                  "type": {
+                    "text": "EntryHash"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeFriend",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "agents",
+                  "type": {
+                    "text": "AgentPubKey[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "queryAllFriends",
+              "return": {
+                "type": {
+                  "text": "Promise<Friend[]>"
+                }
+              }
+            }
+          ],
+          "superclass": {
+            "name": "PrivateEventSourcingClient",
+            "package": "@darksoil-studio/private-event-sourcing-zome"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FriendsClient",
+          "declaration": {
+            "name": "FriendsClient",
+            "module": "src/friends-client.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/friends-store.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FriendsStore",
+          "members": [
+            {
+              "kind": "field",
+              "name": "myProfile",
+              "default": "new AsyncComputed(() => { const privateEvents = this.privateEvents.get(); if (privateEvents.status !== 'completed') return privateEvents; let myProfile: [Timestamp, Profile] | undefined; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type !== 'SetProfile') continue; if ( encodeHashToBase64(entry.author) !== encodeHashToBase64(this.client.client.myPubKey) ) continue; const profile = entry.event.content.profile; if (!myProfile || myProfile[0] < entry.event.timestamp) { myProfile = [entry.event.timestamp, profile]; } } return { status: 'completed', value: myProfile ? myProfile[1] : undefined, }; })"
+            },
+            {
+              "kind": "field",
+              "name": "pendingFriendRequests",
+              "default": "new AsyncComputed(() => { const privateEvents = this.privateEvents.get(); if (privateEvents.status !== 'completed') return privateEvents; const friendRequests: Record<EntryHashB64, SignedEvent<FriendRequest>> = {}; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type === 'FriendRequest') { friendRequests[entryHash] = entry as SignedEvent<FriendRequest>; } } for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if ( entry.event.content.type === 'AcceptFriendRequest' || entry.event.content.type === 'RejectFriendRequest' || entry.event.content.type === 'CancelFriendRequest' ) { delete friendRequests[ encodeHashToBase64(entry.event.content.friend_request_hash) ]; } } return { status: 'completed', value: friendRequests }; })"
+            },
+            {
+              "kind": "field",
+              "name": "friends"
+            }
+          ],
+          "superclass": {
+            "name": "PrivateEventSourcingStore",
+            "package": "@darksoil-studio/private-event-sourcing-zome"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FriendsStore",
+          "declaration": {
+            "name": "FriendsStore",
+            "module": "src/friends-store.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./friends-store.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./friends-client.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./context.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "package": "./types.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/mocks.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FriendsZomeMock",
+          "superclass": {
+            "name": "ZomeMock",
+            "package": "@tnesh-stack/utils"
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FriendsZomeMock",
+          "declaration": {
+            "name": "FriendsZomeMock",
+            "module": "src/mocks.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/types.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/utils.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "asyncReadable",
+          "parameters": [
+            {
+              "name": "initFn",
+              "type": {
+                "text": "(set: (value: T) => void) => Promise<(() => void) | void>"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "asyncReadable",
+          "declaration": {
+            "name": "asyncReadable",
+            "module": "src/utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/create-profile.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A custom element that fires event on value change.",
+          "name": "CreateProfile",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "method",
+              "name": "setProfile",
+              "parameters": [
+                {
+                  "name": "profile",
+                  "type": {
+                    "text": "Profile"
+                  }
+                }
+              ],
+              "description": "Private properties"
+            },
+            {
+              "kind": "method",
+              "name": "renderField",
+              "parameters": [
+                {
+                  "name": "fieldConfig",
+                  "type": {
+                    "text": "FieldConfig"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderForm"
+            }
+          ],
+          "events": [
+            {
+              "name": "profile-created",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired after the profile has been created. Detail will have this shape: { profile: { nickname, fields } }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "create-profile",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CreateProfile",
+          "declaration": {
+            "name": "CreateProfile",
+            "module": "src/elements/create-profile.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "create-profile",
+          "declaration": {
+            "name": "CreateProfile",
+            "module": "src/elements/create-profile.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/friend-requests.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FriendRequests",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "method",
+              "name": "renderList",
+              "parameters": [
+                {
+                  "name": "pendingFriendRequests",
+                  "type": {
+                    "text": "Record<string, SignedEvent<FriendRequest>>"
+                  }
+                }
+              ],
+              "description": "Private properties"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when the user selects an agent from the list. Detail will have this shape: { profileHash: <ProfileHash as ActionHash> }",
+              "name": "profile-selected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "friend-requests",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FriendRequests",
+          "declaration": {
+            "name": "FriendRequests",
+            "module": "src/elements/friend-requests.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "friend-requests",
+          "declaration": {
+            "name": "FriendRequests",
+            "module": "src/elements/friend-requests.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/friends-context.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FriendsContext",
+          "members": [
+            {
+              "kind": "field",
+              "name": "client",
+              "type": {
+                "text": "AppClient"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "attribute": "store"
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "role"
+            },
+            {
+              "kind": "field",
+              "name": "zome",
+              "type": {
+                "text": "string"
+              },
+              "default": "'friends'",
+              "attribute": "zome"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "fieldName": "store"
+            },
+            {
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "role"
+            },
+            {
+              "name": "zome",
+              "type": {
+                "text": "string"
+              },
+              "default": "'friends'",
+              "fieldName": "zome"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "friends-context",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "FriendsContext",
+          "declaration": {
+            "name": "FriendsContext",
+            "module": "src/elements/friends-context.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "friends-context",
+          "declaration": {
+            "name": "FriendsContext",
+            "module": "src/elements/friends-context.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/manual-friend-request.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ManualFriendRequest",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "method",
+              "name": "sendFriendRequest",
+              "parameters": [
+                {
+                  "name": "code",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderDialog"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "manual-friend-request",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ManualFriendRequest",
+          "declaration": {
+            "name": "ManualFriendRequest",
+            "module": "src/elements/manual-friend-request.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "manual-friend-request",
+          "declaration": {
+            "name": "ManualFriendRequest",
+            "module": "src/elements/manual-friend-request.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/my-friends.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "MyFriends",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "method",
+              "name": "renderList",
+              "parameters": [
+                {
+                  "name": "friends",
+                  "type": {
+                    "text": "Array<Friend>"
+                  }
+                }
+              ],
+              "description": "Private properties"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when the user selects an agent from the list. Detail will have this shape: { profileHash: <ProfileHash as ActionHash> }",
+              "name": "profile-selected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "my-friends",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MyFriends",
+          "declaration": {
+            "name": "MyFriends",
+            "module": "src/elements/my-friends.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "my-friends",
+          "declaration": {
+            "name": "MyFriends",
+            "module": "src/elements/my-friends.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/profile-prompt.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ProfilePrompt",
+          "slots": [
+            {
+              "description": "The content of the app",
+              "name": "default"
+            },
+            {
+              "description": "Will be displayed above the create-profile form when the user is prompted with it",
+              "name": "hero"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a `<profiles-context>`",
+              "attribute": "store"
+            },
+            {
+              "kind": "field",
+              "name": "linkingDevices",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "renderContent",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderPrompt",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "myProfileExists",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a `<profiles-context>`",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "profile-prompt",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ProfilePrompt",
+          "declaration": {
+            "name": "ProfilePrompt",
+            "module": "src/elements/profile-prompt.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "profile-prompt",
+          "declaration": {
+            "name": "ProfilePrompt",
+            "module": "src/elements/profile-prompt.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/search-friend-dropdown.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SearchProfileDropdown",
+          "members": [
+            {
+              "kind": "field",
+              "name": "searchFilter",
+              "description": "Public attributes"
+            },
+            {
+              "kind": "field",
+              "name": "_searchFilter",
+              "default": "new Signal.State<string | undefined>(undefined)"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "attribute": "open"
+            },
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "method",
+              "name": "onFriendSelected",
+              "parameters": [
+                {
+                  "name": "friend",
+                  "type": {
+                    "text": "Friend"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderFriendList"
+            }
+          ],
+          "events": [
+            {
+              "name": "friend-selected",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "Fired when the user selects some agent. Detail will have this shape: { profileHash: ActionHash }",
+              "name": "profile-selected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "fieldName": "open"
+            },
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "search-profile-dropdown",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SearchProfileDropdown",
+          "declaration": {
+            "name": "SearchProfileDropdown",
+            "module": "src/elements/search-friend-dropdown.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "search-profile-dropdown",
+          "declaration": {
+            "name": "SearchProfileDropdown",
+            "module": "src/elements/search-friend-dropdown.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/search-friend.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "SearchFriend",
+          "members": [
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the field if this element is used inside a form\nRequired only if the element is used inside a form",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "AgentPubKey[] | undefined"
+              },
+              "description": "The default value of the field if this element is used inside a form",
+              "attribute": "defaultValue"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this field is required if this element is used inside a form",
+              "attribute": "required"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this field is disabled if this element is used inside a form",
+              "attribute": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "clearOnSelect",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether to clear the field when an agent is selected.",
+              "attribute": "clear-on-select"
+            },
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "field",
+              "name": "fieldLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "Label for the agent searching field.",
+              "attribute": "field-label"
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity"
+            },
+            {
+              "kind": "method",
+              "name": "reset"
+            },
+            {
+              "kind": "field",
+              "name": "searchFilter",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "onFriendSelected",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "friend",
+                  "type": {
+                    "text": "Friend"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when the user selects some agent. Detail will have this shape: { agentPubKey: HoloHash }",
+              "name": "friend-selected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "clear-on-select",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether to clear the field when an agent is selected.",
+              "fieldName": "clearOnSelect",
+              "attribute": "clear-on-select"
+            },
+            {
+              "name": "field-label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Label for the agent searching field.",
+              "fieldName": "fieldLabel",
+              "attribute": "field-label"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the field if this element is used inside a form\nRequired only if the element is used inside a form",
+              "fieldName": "name"
+            },
+            {
+              "name": "defaultValue",
+              "type": {
+                "text": "AgentPubKey[] | undefined"
+              },
+              "description": "The default value of the field if this element is used inside a form",
+              "fieldName": "defaultValue"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this field is required if this element is used inside a form",
+              "fieldName": "required"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether this field is disabled if this element is used inside a form",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "search-friend",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "SearchFriend",
+          "declaration": {
+            "name": "SearchFriend",
+            "module": "src/elements/search-friend.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "search-friend",
+          "declaration": {
+            "name": "SearchFriend",
+            "module": "src/elements/search-friend.ts"
+          }
+        }
+      ]
+    }
+  ]
+}
