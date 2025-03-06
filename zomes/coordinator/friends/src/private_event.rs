@@ -18,9 +18,9 @@ pub enum FriendsEvent {
     /// Friend Request
     FriendRequest {
         from_name: String,
-        from_agents: Vec<AgentPubKey>,
+        from_agents: BTreeSet<AgentPubKey>,
         to_name: String,
-        to_agents: Vec<AgentPubKey>,
+        to_agents: BTreeSet<AgentPubKey>,
     },
     AcceptFriendRequest {
         friend_request_hash: EntryHash,
@@ -33,12 +33,12 @@ pub enum FriendsEvent {
     },
     /// Profile
     SetProfile {
-        agents: Vec<AgentPubKey>,
+        agents: BTreeSet<AgentPubKey>,
         profile: Profile,
     },
     /// Remove Friend
     RemoveFriend {
-        agents: Vec<AgentPubKey>,
+        agents: BTreeSet<AgentPubKey>,
     },
 }
 
@@ -125,8 +125,10 @@ impl PrivateEvent for FriendsEvent {
     ) -> ExternResult<Vec<AgentPubKey>> {
         match self {
             FriendsEvent::SetProfile { .. } => query_my_friends(),
-            FriendsEvent::RemoveFriend { agents } => Ok(agents.clone()),
-            FriendsEvent::FriendRequest { to_agents, .. } => Ok(to_agents.clone()),
+            FriendsEvent::RemoveFriend { agents } => Ok(agents.iter().cloned().collect()),
+            FriendsEvent::FriendRequest { to_agents, .. } => {
+                Ok(to_agents.iter().cloned().collect())
+            }
             FriendsEvent::AcceptFriendRequest {
                 friend_request_hash,
             }
@@ -144,7 +146,7 @@ impl PrivateEvent for FriendsEvent {
                     return Err(wasm_error!("Given hash was not for a FriendRequest"));
                 };
 
-                Ok(from_agents)
+                Ok(from_agents.iter().cloned().collect())
             }
 
             FriendsEvent::CancelFriendRequest {
@@ -161,7 +163,7 @@ impl PrivateEvent for FriendsEvent {
                     return Err(wasm_error!("Given hash was not for a FriendRequest"));
                 };
 
-                Ok(to_agents)
+                Ok(to_agents.iter().cloned().collect())
             }
         }
     }
@@ -191,7 +193,7 @@ impl PrivateEvent for FriendsEvent {
             ..
         } = friend_request_entry.event.content
         else {
-            return Err(wasm_error!("."));
+            return Err(wasm_error!("The given hash is not for a friend request."));
         };
         let all_my_agents = query_all_my_agents()?;
         let peer_agents = if from_agents.iter().any(|a| all_my_agents.contains(a)) {
@@ -202,7 +204,10 @@ impl PrivateEvent for FriendsEvent {
 
         info!("Sending my profile to {peer_agents:?}.");
 
-        send_private_event_to_new_recipients(my_profile_event.0.clone().into(), peer_agents)?;
+        send_private_event_to_new_recipients(
+            my_profile_event.0.clone().into(),
+            peer_agents.iter().cloned().collect(),
+        )?;
 
         Ok(())
     }

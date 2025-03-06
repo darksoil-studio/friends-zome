@@ -20,10 +20,9 @@ test('send friend request and accept it', async () => {
 			fields: {},
 		});
 
-		const friendRequestHash = await alice.store.client.sendFriendRequest(
-			'bob',
-			[bob.player.agentPubKey],
-		);
+		let friendRequestHash = await alice.store.client.sendFriendRequest('bob', [
+			bob.player.agentPubKey,
+		]);
 
 		await pause(2000);
 
@@ -66,5 +65,21 @@ test('send friend request and accept it', async () => {
 
 		friends = await toPromise(bob.store.friends);
 		assert.equal(friends.length, 0);
+
+		friendRequestHash = await bob.store.client.sendFriendRequest('bob', [
+			alice.player.agentPubKey,
+		]);
+
+		await pause(2000);
+
+		await alice.store.client.acceptFriendRequest(friendRequestHash);
+
+		await pause(2000);
+
+		friends = await toPromise(alice.store.friends);
+		assert.equal(friends.length, 1);
+
+		friends = await toPromise(bob.store.friends);
+		assert.equal(friends.length, 1);
 	});
 });

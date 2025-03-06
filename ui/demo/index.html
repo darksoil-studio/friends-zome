@@ -64,11 +64,15 @@
 
 				renderContent() {
 					return html`
-						<div class="row">
-							<manual-friend-request> </manual-friend-request>
-							<friend-requests> </friend-requests>
-							<my-friends> </my-friends>
-							<search-friend> </search-friend>
+						<div class="column" style="flex: 1">
+							<div class="row" style="flex: 1">
+								<manual-friend-request style="flex: 1"> </manual-friend-request>
+								<search-friend style="flex: 1"> </search-friend>
+							</div>
+							<div class="row" style="flex: 1">
+								<friend-requests style="flex: 1"> </friend-requests>
+								<my-friends style="flex: 1"> </my-friends>
+							</div>
 						</div>
 					`;
 				}

@@ -7,10 +7,15 @@ import {
 } from '@holochain/client';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
+import { mdiInformationOutline } from '@mdi/js';
 import { SlButton } from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
-import { notifyError, sharedStyles } from '@tnesh-stack/elements';
+import {
+	notifyError,
+	sharedStyles,
+	wrapPathInSvg,
+} from '@tnesh-stack/elements';
 import '@tnesh-stack/elements/dist/elements/display-error.js';
 import { SignalWatcher, joinAsyncMap } from '@tnesh-stack/signals';
 import { LitElement, css, html } from 'lit';
@@ -49,16 +54,27 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 		);
 
 		if (Object.keys(incomingPendingFriendRequests).length === 0)
-			return html`<span
-				>${msg("You don't have pending friend requests.")}</span
-			>`;
+			return html`
+				<div class="column center-content" style="padding: 20px; flex: 1">
+					<sl-icon
+						.src=${wrapPathInSvg(mdiInformationOutline)}
+						style="color: grey; height: 64px; width: 48px;"
+					></sl-icon>
+					<span class="placeholder"
+						>${msg("You don't have pending friend requests.")}</span
+					>
+				</div>
+			`;
 
 		return html`
 			<div class="column" style="flex: 1;">
 				${join(
 					incomingPendingFriendRequests.map(
 						([friendRequestHash, friendRequest]) => html`
-							<div class="row" style="align-items: center; gap: 8px">
+							<div
+								class="row"
+								style="align-items: center; gap: 8px; margin: 8px"
+							>
 								<span style="flex: 1"
 									>${friendRequest.event.content.from_name}</span
 								>

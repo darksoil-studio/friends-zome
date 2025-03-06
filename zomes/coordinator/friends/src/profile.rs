@@ -5,7 +5,7 @@ use crate::private_event::{query_friends_events, FriendsEvent, Profile};
 
 #[hdk_extern]
 pub fn set_my_profile(profile: Profile) -> ExternResult<()> {
-    let agents = query_all_my_agents()?;
+    let agents: BTreeSet<AgentPubKey> = query_all_my_agents()?.into_iter().collect();
     create_private_event(FriendsEvent::SetProfile { agents, profile })?;
     Ok(())
 }
