@@ -1,0 +1,1 @@
+searchState.loadedDescShard("friends", 0, "")

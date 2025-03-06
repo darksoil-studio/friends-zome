@@ -1,0 +1,1 @@
+import{_ as t,c as a,o as s,a2 as i}from"./chunks/framework.B-PCKPf3.js";const u=JSON.parse('{"title":"Setup","description":"","frontmatter":{},"headers":[],"relativePath":"setup.md","filePath":"setup.md"}'),o={name:"setup.md"};function l(n,e,d,r,h,p){return s(),a("div",null,e[0]||(e[0]=[i("",13)]))}const m=t(o,[["render",l]]);export{u as __pageData,m as default};
