@@ -14,7 +14,7 @@ serde = { workspace = true }
 
 friends_integrity = { path = "../../integrity/friends" }
 
-private_event_sourcing = { git = "https://github.com/darksoil-studio/private-event-sourcing-zome", branch = "main" }
+private_event_sourcing = { git = "https://github.com/darksoil-studio/private-event-sourcing-zome", branch = "main-0.4" }
 
 # Notifications handling
 notifications_types = { git = "https://github.com/darksoil-studio/notifications-zome", branch = "main-0.4" }

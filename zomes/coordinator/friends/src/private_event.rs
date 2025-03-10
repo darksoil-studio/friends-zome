@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use hdk::prelude::*;
 use private_event_sourcing::*;
 
-use crate::{all_friends::query_all_friends, profile::query_my_profile_event};
+use crate::{all_friends::query_my_friends, profile::query_my_profile_event};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Profile {
@@ -12,7 +12,7 @@ pub struct Profile {
     pub fields: BTreeMap<String, String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, SerializedBytes)]
+#[private_event]
 #[serde(tag = "type")]
 pub enum FriendsEvent {
     /// Friend Request
@@ -106,7 +106,8 @@ impl PrivateEvent for FriendsEvent {
                 Ok(ValidateCallbackResult::Valid)
             }
             FriendsEvent::RemoveFriend { agents } => {
-                let my_friends = query_my_friends()?;
+                let my_friends: BTreeSet<AgentPubKey> =
+                    query_my_friends()?.into_iter().flatten().collect();
 
                 if !my_friends.contains(&author) && !agents.iter().any(|a| my_friends.contains(a)) {
                     return Ok(ValidateCallbackResult::Invalid(
@@ -124,7 +125,9 @@ impl PrivateEvent for FriendsEvent {
         _timestamp: Timestamp,
     ) -> ExternResult<Vec<AgentPubKey>> {
         match self {
-            FriendsEvent::SetProfile { .. } => query_my_friends(),
+            FriendsEvent::SetProfile { .. } => {
+                Ok(query_my_friends()?.into_iter().flatten().collect())
+            }
             FriendsEvent::RemoveFriend { agents } => Ok(agents.iter().cloned().collect()),
             FriendsEvent::FriendRequest { to_agents, .. } => {
                 Ok(to_agents.iter().cloned().collect())
@@ -169,58 +172,22 @@ impl PrivateEvent for FriendsEvent {
     }
 
     fn post_commit(&self, _author: AgentPubKey, _timestamp: Timestamp) -> ExternResult<()> {
-        let FriendsEvent::AcceptFriendRequest {
-            friend_request_hash,
-        } = self
-        else {
+        let FriendsEvent::AcceptFriendRequest { .. } = self else {
             return Ok(());
         };
 
-        let Some(my_profile_event) = query_my_profile_event()? else {
+        let Some((my_profile_event_hash, _)) = query_my_profile_event()? else {
             return Err(wasm_error!(
                 "Can't accept a friend request if we haven't set our profile."
             ));
         };
 
-        let Some(friend_request_entry) =
-            query_private_event::<FriendsEvent>(friend_request_hash.clone())?
-        else {
-            return Err(wasm_error!("Friend request not found."));
-        };
-        let FriendsEvent::FriendRequest {
-            from_agents,
-            to_agents,
-            ..
-        } = friend_request_entry.event.content
-        else {
-            return Err(wasm_error!("The given hash is not for a friend request."));
-        };
-        let all_my_agents = query_all_my_agents()?;
-        let peer_agents = if from_agents.iter().any(|a| all_my_agents.contains(a)) {
-            to_agents
-        } else {
-            from_agents
-        };
+        info!("Sending my profile to new friends.");
 
-        info!("Sending my profile to {peer_agents:?}.");
-
-        send_private_event_to_new_recipients(
-            my_profile_event.0.clone().into(),
-            peer_agents.iter().cloned().collect(),
-        )?;
+        send_private_events_to_new_recipients::<FriendsEvent>(vec![my_profile_event_hash.into()])?;
 
         Ok(())
     }
-}
-
-fn query_my_friends() -> ExternResult<Vec<AgentPubKey>> {
-    let all_friends = query_all_friends(())?;
-
-    Ok(all_friends
-        .into_iter()
-        .map(|friend| friend.agents)
-        .flatten()
-        .collect())
 }
 
 pub fn query_friends_events() -> ExternResult<BTreeMap<EntryHashB64, SignedEvent<FriendsEvent>>> {
@@ -246,12 +213,9 @@ pub fn attempt_commit_awaiting_deps_entries() -> ExternResult<()> {
 }
 
 #[hdk_extern(infallible)]
-fn scheduled_synchronize_with_linked_devices(_: Option<Schedule>) -> Option<Schedule> {
-    if let Err(err) = commit_my_pending_encrypted_messages::<FriendsEvent>() {
-        error!("Failed to commit my encrypted messages: {err:?}");
-    }
-    if let Err(err) = synchronize_with_linked_devices(()) {
-        error!("Failed to synchronize with other agents: {err:?}");
+fn scheduled_tasks(_: Option<Schedule>) -> Option<Schedule> {
+    if let Err(err) = private_event_sourcing::scheduled_tasks::<FriendsEvent>() {
+        error!("Failed to perform scheduled tasks: {err:?}");
     }
 
     Some(Schedule::Persisted("*/30 * * * * * *".into())) // Every 30 seconds

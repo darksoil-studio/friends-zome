@@ -12,4 +12,4 @@ hdi = { workspace = true }
 
 serde = { workspace = true }
 
-private_event_sourcing_integrity = { git = "https://github.com/darksoil-studio/private-event-sourcing-zome", branch = "main" }
+private_event_sourcing_integrity = { git = "https://github.com/darksoil-studio/private-event-sourcing-zome", branch = "main-0.4" }

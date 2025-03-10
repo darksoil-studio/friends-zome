@@ -214,7 +214,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "rustc_version",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -321,7 +321,7 @@ checksum = "162ee34ebcb7c64a8abebc059ce0fee27c2262618d7b60ed8faf72fef13c3650"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -386,7 +386,7 @@ checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
 [[package]]
 name = "hc_zome_trait_notifications"
 version = "0.1.0"
-source = "git+https://github.com/darksoil-studio/notifications-zome?branch=main-0.4#63011f80235fe42c5e31130ca72f8560c2d8c7b7"
+source = "git+https://github.com/darksoil-studio/notifications-zome?branch=main-0.4#2b0f7e8f5748aff8a98952173e1f515f43e4ef8b"
 dependencies = [
  "hc_zome_traits",
  "hdk",
@@ -403,7 +403,7 @@ dependencies = [
  "convert_case 0.6.0",
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -748,7 +748,7 @@ checksum = "875b3680cb2f8f71bdcf9a30f38d48282f5d3c95cbf9b3fa57269bb5d5c06828"
 [[package]]
 name = "linked_devices_types"
 version = "0.1.0"
-source = "git+https://github.com/darksoil-studio/linked-devices-zome?branch=main-0.4#1c2f8906321f765bab6e256a530d45ef9a31565b"
+source = "git+https://github.com/darksoil-studio/linked-devices-zome?branch=main-0.4#f6f0ac54b9806a829febaf3c897020fa7ef27f5a"
 dependencies = [
  "hdi",
  "serde",
@@ -787,7 +787,7 @@ checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
 [[package]]
 name = "notifications_types"
 version = "0.1.0"
-source = "git+https://github.com/darksoil-studio/notifications-zome?branch=main-0.4#63011f80235fe42c5e31130ca72f8560c2d8c7b7"
+source = "git+https://github.com/darksoil-studio/notifications-zome?branch=main-0.4#2b0f7e8f5748aff8a98952173e1f515f43e4ef8b"
 dependencies = [
  "hdi",
  "serde",
@@ -836,20 +836,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
+name = "private_event_proc_macro"
+version = "0.1.0"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.4#f3a91df0398f34ea9250332e7c3c0e2ca2370edd"
+dependencies = [
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "strum",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "private_event_sourcing"
 version = "0.0.1"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main#4c8c71ca6c0753868a54e4a65a740f8ee9f1180d"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.4#f3a91df0398f34ea9250332e7c3c0e2ca2370edd"
 dependencies = [
  "hdk",
  "linked_devices_types",
+ "private_event_proc_macro",
  "private_event_sourcing_integrity",
  "serde",
+ "strum",
 ]
 
 [[package]]
 name = "private_event_sourcing_integrity"
 version = "0.0.1"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main#4c8c71ca6c0753868a54e4a65a740f8ee9f1180d"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.4#f3a91df0398f34ea9250332e7c3c0e2ca2370edd"
 dependencies = [
  "hdi",
  "serde",
@@ -1004,9 +1018,9 @@ dependencies = [
 
 [[package]]
 name = "serde_bytes"
-version = "0.11.16"
+version = "0.11.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "364fec0df39c49a083c9a8a18a23a6bcfd9af130fe9fe321d18520a0d113e09e"
+checksum = "8437fd221bde2d4ca316d61b90e337e9e702b3820b87d63caa9ba6c02bd06d96"
 dependencies = [
  "serde",
 ]
@@ -1019,7 +1033,7 @@ checksum = "500cbc0ebeb6f46627f50f3f5811ccf6bf00643be300b4c3eabc0ef55dc5b5ba"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -1070,6 +1084,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
+name = "strum"
+version = "0.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f64def088c51c9510a8579e3c5d67c65349dcf755e5479ad3d010aa6454e2c32"
+dependencies = [
+ "strum_macros",
+]
+
+[[package]]
+name = "strum_macros"
+version = "0.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c77a8c5abcaf0f9ce05d62342b7d298c346515365c36b673df4ebe3ced01fde8"
+dependencies = [
+ "heck",
+ "proc-macro2",
+ "quote",
+ "rustversion",
+ "syn 2.0.100",
+]
+
+[[package]]
 name = "subtle"
 version = "2.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1088,9 +1124,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.99"
+version = "2.0.100"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e02e925281e18ffd9d640e234264753c43edc62d64b2d4cf898f1bc5e75f3fc2"
+checksum = "b09a44accad81e1ba1cd74a32461ba89dee89095ba17b32f5d03683b1b1fc2a0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1123,7 +1159,7 @@ checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -1134,7 +1170,7 @@ checksum = "7f7cf42b4507d8ea322120659672cf1b9dbb93f8f2d4ecfd6e51350ff5b17a1d"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -1156,7 +1192,7 @@ checksum = "395ae124c09f9e6918a2310af6038fba074bcf474ac352496d5910dd59a2226d"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -1227,7 +1263,7 @@ dependencies = [
  "log",
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
  "wasm-bindgen-shared",
 ]
 
@@ -1249,7 +1285,7 @@ checksum = "8ae87ea40c9f689fc23f209965b6fb8a99ad69aeeb0231408be24920604395de"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.99",
+ "syn 2.0.100",
  "wasm-bindgen-backend",
  "wasm-bindgen-shared",
 ]
