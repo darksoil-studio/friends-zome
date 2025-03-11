@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@darksoil-studio/notifications-zome": "0.400.0-rev.2b0f7e8f5748aff8a98952173e1f515f43e4ef8b",
-    "@darksoil-studio/private-event-sourcing-zome": "0.400.0-rev.7cdf33345982dc973f5e4a16615629ee5b2127a4",
-    "@darksoil-studio/profiles-zome": "0.400.0-rev.cca82532f957ff1656da8cf2be3d7d6a9c9d4c68",
+    "@darksoil-studio/private-event-sourcing-zome": "0.400.0-rev.f3a91df0398f34ea9250332e7c3c0e2ca2370edd",
+    "@darksoil-studio/profiles-provider": "0.400.0",
     "@holochain/client": "^0.18.0",
     "@lit/context": "^1.0.0",
     "@lit/localize": "^0.12.0",

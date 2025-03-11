@@ -1,3 +1,4 @@
+import { FieldConfig, Profile } from '@darksoil-studio/profiles-provider';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
@@ -10,10 +11,8 @@ import { SignalWatcher } from '@tnesh-stack/signals';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { FieldConfig } from '../config.js';
 import { friendsStoreContext } from '../context.js';
 import { FriendsStore } from '../friends-store.js';
-import { Profile } from '../types.js';
 
 /**
  * A custom element that fires event on value change.
