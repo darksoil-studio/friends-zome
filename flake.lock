@@ -5118,16 +5118,16 @@
     "holochain": {
       "flake": false,
       "locked": {
-        "lastModified": 1738154781,
-        "narHash": "sha256-s011Xzuw4quBGRcv3mSynap4qEyNlKf9reyxYhDW6r8=",
+        "lastModified": 1741629985,
+        "narHash": "sha256-0AwinPJL4F10cQvZWmFSQRFYG0cwFIg0zEg123/g738=",
         "owner": "holochain",
         "repo": "holochain",
-        "rev": "a5816b0072a5a1b8c2f8ef215d81728c3d842b1f",
+        "rev": "e37bc3f71943bbcfde5d39ab934de4d3e78dec05",
         "type": "github"
       },
       "original": {
         "owner": "holochain",
-        "ref": "holochain-0.4.1",
+        "ref": "holochain-0.4.2",
         "repo": "holochain",
         "type": "github"
       }
@@ -6096,11 +6096,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1740557743,
-        "narHash": "sha256-7IIX1ZGNFRPjCeJy4VBd2HmfEKX6H3e+LM8a7glr++M=",
+        "lastModified": 1741645503,
+        "narHash": "sha256-L2R4aHx61X/S/DxzDmUA+jCzpCYGFqF0YqXDejuE3o8=",
         "owner": "holochain",
         "repo": "holonix",
-        "rev": "e37d98ca1159538fdb9ca8336865870bf2eb2a47",
+        "rev": "521d6108c66253a87a439a86004696b717fa94cb",
         "type": "github"
       },
       "original": {
@@ -11294,11 +11294,11 @@
         "tnesh-stack": "tnesh-stack_26"
       },
       "locked": {
-        "lastModified": 1741261757,
-        "narHash": "sha256-vAADuU0p6ukFX6WNhaACtVSG0eNpkDydKx/jl7oHXro=",
+        "lastModified": 1741614678,
+        "narHash": "sha256-iDNDrDMB7mJR2wVg+vhoXf8hsLg790m/H50ZlSzYUe0=",
         "owner": "darksoil-studio",
         "repo": "private-event-sourcing-zome",
-        "rev": "7cdf33345982dc973f5e4a16615629ee5b2127a4",
+        "rev": "f3a91df0398f34ea9250332e7c3c0e2ca2370edd",
         "type": "github"
       },
       "original": {
