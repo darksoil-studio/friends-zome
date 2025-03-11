@@ -1,7 +1,8 @@
 import { PrivateEventSourcingClient } from '@darksoil-studio/private-event-sourcing-zome';
+import { Profile } from '@darksoil-studio/profiles-provider';
 import { AgentPubKey, AppClient, EntryHash } from '@holochain/client';
 
-import { Friend, Profile } from './types';
+import { Friend } from './types';
 
 export class FriendsClient extends PrivateEventSourcingClient {
 	constructor(

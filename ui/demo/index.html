@@ -33,6 +33,7 @@
 		<script type="module">
 			import '@darksoil-studio/notifications-zome/dist/elements/my-notifications-icon-button.js';
 			import '@darksoil-studio/notifications-zome/dist/elements/notifications-context.js';
+			import '@darksoil-studio/profiles-provider/dist/elements/search-user.js';
 			import { AppWebsocket, encodeHashToBase64 } from '@holochain/client';
 			import { ContextProvider } from '@lit/context';
 			import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
@@ -48,7 +49,6 @@
 			import '../src/elements/manual-friend-request.ts';
 			import '../src/elements/my-friends.ts';
 			import '../src/elements/profile-prompt.ts';
-			import '../src/elements/search-friend.ts';
 
 			export class DemoApp extends SignalWatcher(LitElement) {
 				constructor() {
@@ -69,7 +69,7 @@
 						<div class="column" style="flex: 1">
 							<div class="row" style="flex: 1">
 								<manual-friend-request style="flex: 1"> </manual-friend-request>
-								<search-friend style="flex: 1"> </search-friend>
+								<search-user style="flex: 1"> </search-user>
 								<my-notifications-icon-button> </my-notifications-icon-button>
 							</div>
 							<div class="row" style="flex: 1">

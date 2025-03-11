@@ -2,21 +2,39 @@ import {
 	PrivateEventSourcingStore,
 	SignedEvent,
 } from '@darksoil-studio/private-event-sourcing-zome';
-import { EntryHashB64, Timestamp, encodeHashToBase64 } from '@holochain/client';
-import { AsyncComputed } from '@tnesh-stack/signals';
-import { MemoMap } from '@tnesh-stack/utils';
+import {
+	Profile,
+	ProfilesConfig,
+	ProfilesProvider,
+	User,
+} from '@darksoil-studio/profiles-provider';
+import {
+	EntryHashB64,
+	HoloHash,
+	Timestamp,
+	encodeHashToBase64,
+} from '@holochain/client';
+import { AsyncComputed, AsyncSignal, toPromise } from '@tnesh-stack/signals';
+import { MemoHoloHashMap, MemoMap } from '@tnesh-stack/utils';
 
 import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';
-import { Friend, FriendRequest, FriendsEvent, Profile } from './types.js';
+import { Friend, FriendRequest, FriendsEvent } from './types.js';
 import { asyncReadable } from './utils.js';
 
-export class FriendsStore extends PrivateEventSourcingStore<FriendsEvent> {
+export class FriendsStore
+	extends PrivateEventSourcingStore<FriendsEvent>
+	implements ProfilesProvider
+{
 	constructor(
 		public client: FriendsClient,
 		public config: FriendsConfig = defaultConfig,
 	) {
 		super(client);
+	}
+
+	get myPubKey() {
+		return this.client.client.myPubKey;
 	}
 
 	myProfile = new AsyncComputed(() => {
@@ -86,4 +104,35 @@ export class FriendsStore extends PrivateEventSourcingStore<FriendsEvent> {
 			clearInterval(interval);
 		};
 	});
+
+	currentProfileForAgent = new MemoHoloHashMap(
+		agent =>
+			new AsyncComputed(() => {
+				if (encodeHashToBase64(this.myPubKey) === encodeHashToBase64(agent)) {
+					// TODO: what about when the agent is one of your other linked devices?
+					return this.myProfile.get();
+				}
+				const friends = this.friends.get();
+				if (friends.status !== 'completed') return friends;
+
+				const friend = friends.value.find(friend =>
+					friend.agents.find(
+						agent => encodeHashToBase64(agent) === encodeHashToBase64(agent),
+					),
+				);
+
+				return {
+					status: 'completed',
+					value: friend?.profile,
+				};
+			}),
+	);
+
+	async search(nameFilter: string): Promise<Array<User>> {
+		const friends = await toPromise(this.friends);
+		const filteredFriends = friends.filter(friend =>
+			friend.profile.name.startsWith(nameFilter),
+		);
+		return filteredFriends;
+	}
 }

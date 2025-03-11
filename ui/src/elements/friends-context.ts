@@ -1,3 +1,4 @@
+import { profilesProviderContext } from '@darksoil-studio/profiles-provider';
 import { AppClient } from '@holochain/client';
 import { consume, provide } from '@lit/context';
 import { appClientContext } from '@tnesh-stack/elements';
@@ -17,6 +18,7 @@ export class FriendsContext extends LitElement {
 	private client!: AppClient;
 
 	@provide({ context: friendsStoreContext })
+	@provide({ context: profilesProviderContext })
 	@property({ type: Object })
 	store!: FriendsStore;
 

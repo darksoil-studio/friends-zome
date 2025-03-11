@@ -1,15 +1,5 @@
-import {
-	ActionHash,
-	AgentPubKey,
-	Create,
-	CreateLink,
-	Delete,
-	DeleteLink,
-	DnaHash,
-	EntryHash,
-	SignedActionHashed,
-	Update,
-} from '@holochain/client';
+import { Profile } from '@darksoil-studio/profiles-provider';
+import { AgentPubKey, EntryHash } from '@holochain/client';
 import { ActionCommittedSignal } from '@tnesh-stack/utils';
 
 export type FriendsSignal = ActionCommittedSignal<EntryTypes, LinkTypes>;
@@ -21,12 +11,6 @@ export type LinkTypes = string;
 export interface Friend {
 	agents: AgentPubKey[];
 	profile: Profile;
-}
-
-export interface Profile {
-	name: string;
-	avatar: string;
-	fields: Record<string, string>;
 }
 
 export interface FriendRequest {

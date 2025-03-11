@@ -64,7 +64,6 @@ onMounted(async () => {
   // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
-  await import('@darksoil-studio/profiles-zome/dist/elements/profiles-context.js');
   if (!customElements.get('friends-context')) await import('../../ui/src/elements/friends-context.ts');
   if (!customElements.get('my-friends')) await import('../../ui/src/elements/my-friends.ts');
 

@@ -1,5 +1,4 @@
-import '@darksoil-studio/profiles-zome/dist/elements/profile-list-item-skeleton.js';
-import { ActionHash, encodeHashToBase64 } from '@holochain/client';
+import '@darksoil-studio/profiles-provider/dist/elements/profile-list-item-skeleton.js';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
 import { mdiDotsVertical, mdiInformationOutline, mdiMenu } from '@mdi/js';
@@ -26,7 +25,7 @@ import { join } from 'lit/directives/join.js';
 
 import { friendsStoreContext } from '../context.js';
 import { FriendsStore } from '../friends-store.js';
-import { Friend, Profile } from '../types.js';
+import { Friend } from '../types.js';
 
 /**
  * @element my-friends

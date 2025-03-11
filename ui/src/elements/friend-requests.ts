@@ -1,5 +1,5 @@
 import { SignedEvent } from '@darksoil-studio/private-event-sourcing-zome';
-import '@darksoil-studio/profiles-zome/dist/elements/profile-list-item-skeleton.js';
+import '@darksoil-studio/profiles-provider/dist/elements/profile-list-item-skeleton.js';
 import {
 	ActionHash,
 	decodeHashFromBase64,
@@ -24,7 +24,7 @@ import { join } from 'lit/directives/join.js';
 
 import { friendsStoreContext } from '../context.js';
 import { FriendsStore } from '../friends-store.js';
-import { Friend, FriendRequest, Profile } from '../types.js';
+import { FriendRequest } from '../types.js';
 
 /**
  * @element friend-requests

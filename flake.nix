@@ -13,7 +13,6 @@
 
     notifications-zome.url =
       "github:darksoil-studio/notifications-zome/main-0.4";
-    profiles-zome.url = "github:darksoil-studio/profiles-zome/main-0.4";
     private-event-sourcing-zome.url =
       "github:darksoil-studio/private-event-sourcing-zome/main-0.4";
   };
