@@ -110,9 +110,9 @@ importers:
       '@darksoil-studio/private-event-sourcing-zome':
         specifier: 0.400.0-rev.7cdf33345982dc973f5e4a16615629ee5b2127a4
         version: 0.400.0-rev.7cdf33345982dc973f5e4a16615629ee5b2127a4(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
-      '@darksoil-studio/profiles-zome':
-        specifier: 0.400.0-rev.cca82532f957ff1656da8cf2be3d7d6a9c9d4c68
-        version: 0.400.0-rev.cca82532f957ff1656da8cf2be3d7d6a9c9d4c68(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@darksoil-studio/profiles-provider':
+        specifier: 0.400.0
+        version: 0.400.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@holochain/client':
         specifier: ^0.18.0
         version: 0.18.0
@@ -372,6 +372,9 @@ packages:
 
   '@darksoil-studio/private-event-sourcing-zome@0.400.0-rev.7cdf33345982dc973f5e4a16615629ee5b2127a4':
     resolution: {integrity: sha512-yrJZZc26HO/gzPghWqykkstvNIN6PMzD9DCzMBwnUdliWn3tdb6Wl75aWaWTu1nAjs+ZM0g2egW1gyo3IJm7bg==}
+
+  '@darksoil-studio/profiles-provider@0.400.0':
+    resolution: {integrity: sha512-X95UsxJU7MLCe81ge9lPuOktaI8PYcQnqV5mAIAaIjixYvOQOLYBi4TTypQh3e5CrlnYHFf1Ek24EiZBmXcKCA==}
 
   '@darksoil-studio/profiles-zome@0.400.0-rev.cca82532f957ff1656da8cf2be3d7d6a9c9d4c68':
     resolution: {integrity: sha512-S0kiFazqrX4G8Pc2bfwXsfQ3lLMevm+NjIBh0EjBrfqC1SnEoxjqA2F22j/7Qy9T3jeAP9KGAFDi07JqlYofZw==}
@@ -3229,6 +3232,24 @@ snapshots:
   '@darksoil-studio/private-event-sourcing-zome@0.400.0-rev.7cdf33345982dc973f5e4a16615629ee5b2127a4(@floating-ui/utils@0.2.9)(@types/react@19.0.10)':
     dependencies:
       '@darksoil-studio/profiles-zome': 0.400.0-rev.cca82532f957ff1656da8cf2be3d7d6a9c9d4c68(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@holochain/client': 0.18.0
+      '@lit/context': 1.1.4
+      '@lit/localize': 0.12.2
+      '@mdi/js': 7.4.47
+      '@msgpack/msgpack': 2.8.0
+      '@shoelace-style/shoelace': 2.20.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@tnesh-stack/elements': 0.400.1(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@tnesh-stack/signals': 0.400.0
+      '@tnesh-stack/utils': 0.400.0
+      lit: 3.2.1
+    transitivePeerDependencies:
+      - '@floating-ui/utils'
+      - '@types/react'
+      - bufferutil
+      - utf-8-validate
+
+  '@darksoil-studio/profiles-provider@0.400.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)':
+    dependencies:
       '@holochain/client': 0.18.0
       '@lit/context': 1.1.4
       '@lit/localize': 0.12.2

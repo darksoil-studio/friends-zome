@@ -1,3 +1,4 @@
+import { Profile } from '@darksoil-studio/profiles';
 import {
 	ActionHash,
 	AgentPubKey,
@@ -21,12 +22,6 @@ export type LinkTypes = string;
 export interface Friend {
 	agents: AgentPubKey[];
 	profile: Profile;
-}
-
-export interface Profile {
-	name: string;
-	avatar: string;
-	fields: Record<string, string>;
 }
 
 export interface FriendRequest {
