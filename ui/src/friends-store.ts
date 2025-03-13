@@ -26,6 +26,8 @@ export class FriendsStore
 	extends PrivateEventSourcingStore<FriendsEvent>
 	implements ProfilesProvider
 {
+	profilesArePublic = false;
+
 	constructor(
 		public client: FriendsClient,
 		public config: FriendsConfig = defaultConfig,
