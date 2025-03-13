@@ -45,6 +45,7 @@ pub enum FriendsEvent {
 impl PrivateEvent for FriendsEvent {
     fn validate(
         &self,
+        _event_hash: EntryHash,
         author: AgentPubKey,
         _timestamp: Timestamp,
     ) -> ExternResult<ValidateCallbackResult> {
@@ -121,9 +122,10 @@ impl PrivateEvent for FriendsEvent {
 
     fn recipients(
         &self,
+        _event_hash: EntryHash,
         _author: AgentPubKey,
         _timestamp: Timestamp,
-    ) -> ExternResult<Vec<AgentPubKey>> {
+    ) -> ExternResult<BTreeSet<AgentPubKey>> {
         match self {
             FriendsEvent::SetProfile { .. } => {
                 Ok(query_my_friends()?.into_iter().flatten().collect())
@@ -171,7 +173,12 @@ impl PrivateEvent for FriendsEvent {
         }
     }
 
-    fn post_commit(&self, _author: AgentPubKey, _timestamp: Timestamp) -> ExternResult<()> {
+    fn post_commit(
+        &self,
+        _event_hash: EntryHash,
+        _author: AgentPubKey,
+        _timestamp: Timestamp,
+    ) -> ExternResult<()> {
         let FriendsEvent::AcceptFriendRequest { .. } = self else {
             return Ok(());
         };
@@ -184,7 +191,7 @@ impl PrivateEvent for FriendsEvent {
 
         info!("Sending my profile to new friends.");
 
-        send_private_events_to_new_recipients::<FriendsEvent>(vec![my_profile_event_hash.into()])?;
+        send_events(vec![my_profile_event_hash.into()].into_iter().collect())?;
 
         Ok(())
     }
@@ -203,20 +210,4 @@ pub fn recv_remote_signal(signal_bytes: SerializedBytes) -> ExternResult<()> {
     } else {
         Ok(())
     }
-}
-
-#[hdk_extern]
-pub fn attempt_commit_awaiting_deps_entries() -> ExternResult<()> {
-    private_event_sourcing::attempt_commit_awaiting_deps_entries::<FriendsEvent>()?;
-
-    Ok(())
-}
-
-#[hdk_extern(infallible)]
-fn scheduled_tasks(_: Option<Schedule>) -> Option<Schedule> {
-    if let Err(err) = private_event_sourcing::scheduled_tasks::<FriendsEvent>() {
-        error!("Failed to perform scheduled tasks: {err:?}");
-    }
-
-    Some(Schedule::Persisted("*/30 * * * * * *".into())) // Every 30 seconds
 }
