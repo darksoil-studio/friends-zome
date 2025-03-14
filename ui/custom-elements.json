@@ -564,6 +564,25 @@
               "type": {
                 "text": "FriendsStore"
               }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "256",
+              "attribute": "size"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "256",
+              "fieldName": "size"
             }
           ],
           "mixins": [
@@ -914,6 +933,14 @@
                 }
               ],
               "description": "Private properties"
+            }
+          ],
+          "events": [
+            {
+              "name": "friend-clicked",
+              "type": {
+                "text": "CustomEvent"
+              }
             }
           ],
           "attributes": [

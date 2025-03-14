@@ -41,12 +41,7 @@ export async function scanQrCodeAndSendFriendRequest(store: FriendsStore) {
 	const [name, pubkeyB64] = split;
 	const pubkey = decodeHashFromBase64(pubkeyB64);
 
-	try {
-		await store.client.sendFriendRequest(name, [pubkey]);
-	} catch (e) {
-		console.error(e);
-		notifyError(msg('Failed to send friend request.'));
-	}
+	return store.client.sendFriendRequest(name, [pubkey]);
 }
 
 @customElement('friend-request-qr-code')

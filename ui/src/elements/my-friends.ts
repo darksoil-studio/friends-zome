@@ -45,14 +45,15 @@ export class MyFriends extends SignalWatcher(LitElement) {
 	renderList(friends: Array<Friend>) {
 		if (friends.length === 0)
 			return html`
-				<div class="column center-content" style="padding: 20px; flex: 1">
+				<div
+					class="column placeholder center-content"
+					style="flex: 1; gap: 16px"
+				>
 					<sl-icon
 						.src=${wrapPathInSvg(mdiInformationOutline)}
-						style="color: grey; height: 64px; width: 48px;"
+						style="height: 64px; width: 64px;"
 					></sl-icon>
-					<span class="placeholder"
-						>${msg("You don't have any friends yet.")}</span
-					>
+					<span>${msg("You don't have any friends yet.")}</span>
 				</div>
 			`;
 
@@ -63,7 +64,19 @@ export class MyFriends extends SignalWatcher(LitElement) {
 						(friend, i) => html`
 							<div
 								class="row"
-								style="align-items: center; gap: 8px; margin: 8px"
+								style="align-items: center; gap: 8px; margin: 8px; cursor: pointer"
+								@click=${() =>
+									this.dispatchEvent(
+										new CustomEvent('friend-clicked', {
+											detail: {
+												bubbles: true,
+												composed: true,
+												detail: {
+													agents: friend.agents,
+												},
+											},
+										}),
+									)}
 							>
 								<sl-avatar
 									style="--size: 32px;"
