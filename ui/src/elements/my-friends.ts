@@ -68,12 +68,10 @@ export class MyFriends extends SignalWatcher(LitElement) {
 								@click=${() =>
 									this.dispatchEvent(
 										new CustomEvent('friend-clicked', {
+											bubbles: true,
+											composed: true,
 											detail: {
-												bubbles: true,
-												composed: true,
-												detail: {
-													agents: friend.agents,
-												},
+												agents: friend.agents,
 											},
 										}),
 									)}
