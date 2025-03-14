@@ -476,7 +476,7 @@ import{o as G}from"./join.CcJp33yv.js";import{n as d,s as Q,c as J,f as Z,t as e
 							<div
 								class="row"
 								style="align-items: center; gap: 8px; margin: 8px; cursor: pointer"
-								@click=${()=>this.dispatchEvent(new CustomEvent("friend-clicked",{detail:{bubbles:!0,composed:!0,detail:{agents:s.agents}}}))}
+								@click=${()=>this.dispatchEvent(new CustomEvent("friend-clicked",{bubbles:!0,composed:!0,detail:{agents:s.agents}}))}
 							>
 								<sl-avatar
 									style="--size: 32px;"
