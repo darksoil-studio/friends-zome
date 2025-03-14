@@ -4,7 +4,7 @@ import { AgentPubKey, AppClient, EntryHash } from '@holochain/client';
 
 import { Friend } from './types';
 
-export class FriendsClient extends PrivateEventSourcingClient {
+export class FriendsClient extends PrivateEventSourcingClient<object> {
 	constructor(
 		public client: AppClient,
 		public roleName: string,

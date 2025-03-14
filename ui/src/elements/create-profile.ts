@@ -76,8 +76,8 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 					style="justify-content: center; align-self: start; margin-bottom: 16px"
 				>
 					<select-avatar
-						avatar-width="48"
-						avatar-height="48"
+						avatar-width="64"
+						avatar-height="64"
 						name="avatar"
 						required
 					></select-avatar>
