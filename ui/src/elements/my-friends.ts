@@ -45,14 +45,15 @@ export class MyFriends extends SignalWatcher(LitElement) {
 	renderList(friends: Array<Friend>) {
 		if (friends.length === 0)
 			return html`
-				<div class="column center-content" style="padding: 20px; flex: 1">
+				<div
+					class="column placeholder center-content"
+					style="flex: 1; gap: 16px"
+				>
 					<sl-icon
 						.src=${wrapPathInSvg(mdiInformationOutline)}
-						style="color: grey; height: 64px; width: 48px;"
+						style="height: 64px; width: 64px;"
 					></sl-icon>
-					<span class="placeholder"
-						>${msg("You don't have any friends yet.")}</span
-					>
+					<span>${msg("You don't have any friends yet.")}</span>
 				</div>
 			`;
 
