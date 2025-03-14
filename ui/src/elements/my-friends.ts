@@ -47,7 +47,7 @@ export class MyFriends extends SignalWatcher(LitElement) {
 			return html`
 				<div
 					class="column placeholder center-content"
-					style="flex: 1; gap: 16px"
+					style="flex: 1; gap: 8px"
 				>
 					<sl-icon
 						.src=${wrapPathInSvg(mdiInformationOutline)}
@@ -58,7 +58,7 @@ export class MyFriends extends SignalWatcher(LitElement) {
 			`;
 
 		return html`
-			<div class="column" style="flex: 1;">
+			<div class="column" style="flex: 1; gap: 8px">
 				${join(
 					friends.map(
 						(friend, i) => html`
