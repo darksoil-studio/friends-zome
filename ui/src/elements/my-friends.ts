@@ -62,7 +62,7 @@ export class MyFriends extends SignalWatcher(LitElement) {
 				${join(
 					friends.map(
 						(friend, i) => html`
-							<div class="row" style="align-items: center;margin: 8px;">
+							<div class="row" style="align-items: center; margin: 8px;">
 								<div
 									class="row"
 									style="align-items: center; gap: 8px; flex: 1; cursor: pointer"
