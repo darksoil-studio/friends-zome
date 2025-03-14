@@ -8,7 +8,7 @@ import {
 	requestPermissions,
 	scan,
 } from '@tauri-apps/plugin-barcode-scanner';
-import { notifyError, sharedStyles } from '@tnesh-stack/elements';
+import { notify, notifyError, sharedStyles } from '@tnesh-stack/elements';
 import '@tnesh-stack/elements/dist/elements/display-error.js';
 import { SignalWatcher } from '@tnesh-stack/signals';
 import { LitElement, css, html } from 'lit';
@@ -32,6 +32,7 @@ export async function scanQrcode(): Promise<string> {
 
 export async function scanQrCodeAndSendFriendRequest(store: FriendsStore) {
 	const code = await scanQrcode();
+	notify(code);
 
 	const split = code.split('/');
 	if (split.length !== 2) {
