@@ -63,7 +63,19 @@ export class MyFriends extends SignalWatcher(LitElement) {
 						(friend, i) => html`
 							<div
 								class="row"
-								style="align-items: center; gap: 8px; margin: 8px"
+								style="align-items: center; gap: 8px; margin: 8px; cursor: pointer"
+								@click=${() =>
+									this.dispatchEvent(
+										new CustomEvent('friend-clicked', {
+											detail: {
+												bubbles: true,
+												composed: true,
+												detail: {
+													agents: friend.agents,
+												},
+											},
+										}),
+									)}
 							>
 								<sl-avatar
 									style="--size: 32px;"
