@@ -4,18 +4,12 @@ import {
 } from '@darksoil-studio/private-event-sourcing-zome';
 import {
 	Profile,
-	ProfilesConfig,
 	ProfilesProvider,
 	User,
 } from '@darksoil-studio/profiles-provider';
-import {
-	EntryHashB64,
-	HoloHash,
-	Timestamp,
-	encodeHashToBase64,
-} from '@holochain/client';
-import { AsyncComputed, AsyncSignal, toPromise } from '@tnesh-stack/signals';
-import { MemoHoloHashMap, MemoMap } from '@tnesh-stack/utils';
+import { EntryHashB64, Timestamp, encodeHashToBase64 } from '@holochain/client';
+import { AsyncComputed, toPromise } from '@tnesh-stack/signals';
+import { MemoHoloHashMap } from '@tnesh-stack/utils';
 
 import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';
