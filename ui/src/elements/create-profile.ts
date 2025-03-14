@@ -33,8 +33,8 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 	/** Private properties */
 
 	async setProfile(profile: Profile) {
+		this.shadowRoot!.querySelector('sl-button')!.loading = true;
 		try {
-			console.log(profile.avatar?.length);
 			await this.store.client.setMyProfile({
 				...profile,
 				fields: {},
@@ -52,6 +52,7 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 			console.error(e);
 			notifyError(msg('Error creating the profile.'));
 		}
+		this.shadowRoot!.querySelector('sl-button')!.loading = false;
 	}
 
 	renderField(fieldConfig: FieldConfig) {
