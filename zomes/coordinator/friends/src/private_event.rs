@@ -13,7 +13,6 @@ pub struct Profile {
 }
 
 #[private_event]
-#[serde(tag = "type")]
 pub enum FriendsEvent {
     /// Friend Request
     FriendRequest {

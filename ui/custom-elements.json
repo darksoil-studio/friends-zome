@@ -4,6 +4,62 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "locales/locales.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "sourceLocale",
+          "default": "`en`",
+          "description": "The locale code that templates in this source code are written in."
+        },
+        {
+          "kind": "variable",
+          "name": "targetLocales",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ , ]",
+          "description": "The other locale codes that this application is localized into. Sorted\nlexicographically."
+        },
+        {
+          "kind": "variable",
+          "name": "allLocales",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ `en`, ]",
+          "description": "All valid project locale codes. Sorted lexicographically."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "sourceLocale",
+          "declaration": {
+            "name": "sourceLocale",
+            "module": "locales/locales.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "targetLocales",
+          "declaration": {
+            "name": "targetLocales",
+            "module": "locales/locales.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "allLocales",
+          "declaration": {
+            "name": "allLocales",
+            "module": "locales/locales.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/config.ts",
       "declarations": [
         {
@@ -12,7 +68,7 @@
           "type": {
             "text": "FriendsConfig"
           },
-          "default": "{ additionalFields: [], minNicknameLength: 3, }"
+          "default": "{ avatarMode: 'avatar-required', additionalFields: [], minNicknameLength: 3, }"
         }
       ],
       "exports": [
@@ -201,6 +257,19 @@
           "members": [
             {
               "kind": "field",
+              "name": "profilesArePublic",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "myPubKey",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "myProfile",
               "default": "new AsyncComputed(() => { const privateEvents = this.privateEvents.get(); if (privateEvents.status !== 'completed') return privateEvents; let myProfile: [Timestamp, Profile] | undefined; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type !== 'SetProfile') continue; if ( encodeHashToBase64(entry.author) !== encodeHashToBase64(this.client.client.myPubKey) ) continue; const profile = entry.event.content.profile; if (!myProfile || myProfile[0] < entry.event.timestamp) { myProfile = [entry.event.timestamp, profile]; } } return { status: 'completed', value: myProfile ? myProfile[1] : undefined, }; })"
             },
@@ -212,6 +281,28 @@
             {
               "kind": "field",
               "name": "friends"
+            },
+            {
+              "kind": "field",
+              "name": "currentProfileForAgent",
+              "default": "new MemoHoloHashMap( agent => new AsyncComputed(() => { if (encodeHashToBase64(this.myPubKey) === encodeHashToBase64(agent)) { // TODO: what about when the agent is one of your other linked devices? return this.myProfile.get(); } const friends = this.friends.get(); if (friends.status !== 'completed') return friends; const friend = friends.value.find(friend => friend.agents.find( agent => encodeHashToBase64(agent) === encodeHashToBase64(agent), ), ); return { status: 'completed', value: friend?.profile, }; }), )"
+            },
+            {
+              "kind": "method",
+              "name": "search",
+              "return": {
+                "type": {
+                  "text": "Promise<Array<User>>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "nameFilter",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             }
           ],
           "superclass": {
@@ -425,6 +516,117 @@
           "declaration": {
             "name": "CreateProfile",
             "module": "src/elements/create-profile.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/friend-request-qr-code.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isTauriEnv"
+        },
+        {
+          "kind": "variable",
+          "name": "isMobile"
+        },
+        {
+          "kind": "function",
+          "name": "scanQrcode",
+          "return": {
+            "type": {
+              "text": "Promise<string>"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "scanQrCodeAndSendFriendRequest",
+          "parameters": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "FriendRequestQrCode",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              }
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "friend-request-qr-code",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isTauriEnv",
+          "declaration": {
+            "name": "isTauriEnv",
+            "module": "src/elements/friend-request-qr-code.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isMobile",
+          "declaration": {
+            "name": "isMobile",
+            "module": "src/elements/friend-request-qr-code.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scanQrcode",
+          "declaration": {
+            "name": "scanQrcode",
+            "module": "src/elements/friend-request-qr-code.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scanQrCodeAndSendFriendRequest",
+          "declaration": {
+            "name": "scanQrCodeAndSendFriendRequest",
+            "module": "src/elements/friend-request-qr-code.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "FriendRequestQrCode",
+          "declaration": {
+            "name": "FriendRequestQrCode",
+            "module": "src/elements/friend-request-qr-code.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "friend-request-qr-code",
+          "declaration": {
+            "name": "FriendRequestQrCode",
+            "module": "src/elements/friend-request-qr-code.ts"
           }
         }
       ]
@@ -697,7 +899,7 @@
               "type": {
                 "text": "FriendsStore"
               },
-              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "description": "Friends store for this element, not required if you embed this element inside a <friends-context>",
               "attribute": "store"
             },
             {
@@ -714,19 +916,13 @@
               "description": "Private properties"
             }
           ],
-          "events": [
-            {
-              "description": "Fired when the user selects an agent from the list. Detail will have this shape: { profileHash: <ProfileHash as ActionHash> }",
-              "name": "profile-selected"
-            }
-          ],
           "attributes": [
             {
               "name": "store",
               "type": {
                 "text": "FriendsStore"
               },
-              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "description": "Friends store for this element, not required if you embed this element inside a <friends-context>",
               "fieldName": "store"
             }
           ],
@@ -864,219 +1060,38 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/elements/search-friend-dropdown.ts",
+      "path": "src/elements/select-friend.ts",
       "declarations": [
         {
           "kind": "class",
           "description": "",
-          "name": "SearchProfileDropdown",
+          "name": "SelectFriend",
           "members": [
             {
               "kind": "field",
-              "name": "searchFilter",
-              "description": "Public attributes"
-            },
-            {
-              "kind": "field",
-              "name": "_searchFilter",
-              "default": "new Signal.State<string | undefined>(undefined)"
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "attribute": "open"
-            },
-            {
-              "kind": "field",
               "name": "store",
               "type": {
                 "text": "FriendsStore"
               },
-              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
-              "attribute": "store"
-            },
-            {
-              "kind": "method",
-              "name": "onFriendSelected",
-              "parameters": [
-                {
-                  "name": "friend",
-                  "type": {
-                    "text": "Friend"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "renderFriendList"
-            }
-          ],
-          "events": [
-            {
-              "name": "friend-selected",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
-              "description": "Fired when the user selects some agent. Detail will have this shape: { profileHash: ActionHash }",
-              "name": "profile-selected"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "fieldName": "open"
-            },
-            {
-              "name": "store",
-              "type": {
-                "text": "FriendsStore"
-              },
-              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
-              "fieldName": "store"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "search-profile-dropdown",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "SearchProfileDropdown",
-          "declaration": {
-            "name": "SearchProfileDropdown",
-            "module": "src/elements/search-friend-dropdown.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "search-profile-dropdown",
-          "declaration": {
-            "name": "SearchProfileDropdown",
-            "module": "src/elements/search-friend-dropdown.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/elements/search-friend.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "SearchFriend",
-          "members": [
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "The name of the field if this element is used inside a form\nRequired only if the element is used inside a form",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "AgentPubKey[] | undefined"
-              },
-              "description": "The default value of the field if this element is used inside a form",
-              "attribute": "defaultValue"
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether this field is required if this element is used inside a form",
-              "attribute": "required"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether this field is disabled if this element is used inside a form",
-              "attribute": "disabled"
-            },
-            {
-              "kind": "field",
-              "name": "clearOnSelect",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether to clear the field when an agent is selected.",
-              "attribute": "clear-on-select"
-            },
-            {
-              "kind": "field",
-              "name": "store",
-              "type": {
-                "text": "FriendsStore"
-              },
-              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "description": "Friends store for this element, not required if you embed this element inside a <friends-context>",
               "attribute": "store"
             },
             {
               "kind": "field",
-              "name": "fieldLabel",
+              "name": "filter",
               "type": {
-                "text": "string"
+                "text": "string | undefined"
               },
-              "description": "Label for the agent searching field.",
-              "attribute": "field-label"
+              "description": "Private properties"
             },
             {
               "kind": "method",
-              "name": "reportValidity"
-            },
-            {
-              "kind": "method",
-              "name": "reset"
-            },
-            {
-              "kind": "field",
-              "name": "searchFilter",
-              "type": {
-                "text": "string"
-              },
-              "default": "''"
-            },
-            {
-              "kind": "method",
-              "name": "onFriendSelected",
-              "privacy": "private",
+              "name": "renderList",
               "parameters": [
                 {
-                  "name": "friend",
+                  "name": "friends",
                   "type": {
-                    "text": "Friend"
+                    "text": "Array<Friend>"
                   }
                 }
               ]
@@ -1084,70 +1099,17 @@
           ],
           "events": [
             {
-              "description": "Fired when the user selects some agent. Detail will have this shape: { agentPubKey: HoloHash }",
+              "description": "Fired when the user selects an agent from the list. Detail will have this shape: { agents: Array<AgentPubKey> }",
               "name": "friend-selected"
             }
           ],
           "attributes": [
             {
-              "name": "clear-on-select",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether to clear the field when an agent is selected.",
-              "fieldName": "clearOnSelect",
-              "attribute": "clear-on-select"
-            },
-            {
-              "name": "field-label",
-              "type": {
-                "text": "string"
-              },
-              "description": "Label for the agent searching field.",
-              "fieldName": "fieldLabel",
-              "attribute": "field-label"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "description": "The name of the field if this element is used inside a form\nRequired only if the element is used inside a form",
-              "fieldName": "name"
-            },
-            {
-              "name": "defaultValue",
-              "type": {
-                "text": "AgentPubKey[] | undefined"
-              },
-              "description": "The default value of the field if this element is used inside a form",
-              "fieldName": "defaultValue"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether this field is required if this element is used inside a form",
-              "fieldName": "required"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Whether this field is disabled if this element is used inside a form",
-              "fieldName": "disabled"
-            },
-            {
               "name": "store",
               "type": {
                 "text": "FriendsStore"
               },
-              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "description": "Friends store for this element, not required if you embed this element inside a <friends-context>",
               "fieldName": "store"
             }
           ],
@@ -1161,25 +1123,25 @@
             "name": "LitElement",
             "package": "lit"
           },
-          "tagName": "search-friend",
+          "tagName": "select-friends",
           "customElement": true
         }
       ],
       "exports": [
         {
           "kind": "js",
-          "name": "SearchFriend",
+          "name": "SelectFriend",
           "declaration": {
-            "name": "SearchFriend",
-            "module": "src/elements/search-friend.ts"
+            "name": "SelectFriend",
+            "module": "src/elements/select-friend.ts"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "search-friend",
+          "name": "select-friend",
           "declaration": {
-            "name": "SearchFriend",
-            "module": "src/elements/search-friend.ts"
+            "name": "SelectFriend",
+            "module": "src/elements/select-friend.ts"
           }
         }
       ]

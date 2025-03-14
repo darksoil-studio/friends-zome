@@ -34,6 +34,7 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 
 	async setProfile(profile: Profile) {
 		try {
+			console.log(profile.avatar?.length);
 			await this.store.client.setMyProfile({
 				...profile,
 				fields: {},

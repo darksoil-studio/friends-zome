@@ -104,9 +104,6 @@ importers:
 
   ui:
     dependencies:
-      '@darksoil-studio/notifications-zome':
-        specifier: 0.400.0-rev.2b0f7e8f5748aff8a98952173e1f515f43e4ef8b
-        version: 0.400.0-rev.2b0f7e8f5748aff8a98952173e1f515f43e4ef8b(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@darksoil-studio/private-event-sourcing-zome':
         specifier: 0.400.0-rev.6211f22a39ac13f941a43c8a738588d7b4dab7f6
         version: 0.400.0-rev.6211f22a39ac13f941a43c8a738588d7b4dab7f6(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
@@ -131,6 +128,9 @@ importers:
       '@shoelace-style/shoelace':
         specifier: ^2.11.0
         version: 2.20.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@tauri-apps/plugin-barcode-scanner':
+        specifier: ^2.2.0
+        version: 2.2.0
       '@tnesh-stack/elements':
         specifier: ^0.400.0
         version: 0.400.1(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
@@ -150,6 +150,9 @@ importers:
       '@custom-elements-manifest/analyzer':
         specifier: ^0.10.3
         version: 0.10.4
+      '@darksoil-studio/notifications-zome':
+        specifier: 0.400.0-rev.2b0f7e8f5748aff8a98952173e1f515f43e4ef8b
+        version: 0.400.0-rev.2b0f7e8f5748aff8a98952173e1f515f43e4ef8b(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@lit/localize-tools':
         specifier: ^0.6.3
         version: 0.6.10

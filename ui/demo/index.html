@@ -44,11 +44,13 @@
 			import { SignalWatcher } from '@tnesh-stack/signals';
 			import { LitElement, css, html } from 'lit';
 
+			import '../src/elements/friend-request-qr-code.ts';
 			import '../src/elements/friend-requests.ts';
 			import '../src/elements/friends-context.ts';
 			import '../src/elements/manual-friend-request.ts';
 			import '../src/elements/my-friends.ts';
 			import '../src/elements/profile-prompt.ts';
+			import '../src/elements/select-friend.ts';
 
 			export class DemoApp extends SignalWatcher(LitElement) {
 				constructor() {
@@ -69,12 +71,15 @@
 						<div class="column" style="flex: 1">
 							<div class="row" style="flex: 1">
 								<manual-friend-request style="flex: 1"> </manual-friend-request>
+								<friend-request-qr-code style="flex: 1; ">
+								</friend-request-qr-code>
 								<search-user style="flex: 1"> </search-user>
 								<my-notifications-icon-button> </my-notifications-icon-button>
 							</div>
 							<div class="row" style="flex: 1">
 								<friend-requests style="flex: 1"> </friend-requests>
 								<my-friends style="flex: 1"> </my-friends>
+								<select-friend style="flex: 1"> </select-friend>
 							</div>
 						</div>
 					`;
