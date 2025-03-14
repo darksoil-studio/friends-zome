@@ -1,8 +1,8 @@
 import '@darksoil-studio/profiles-provider/dist/elements/profile-list-item-skeleton.js';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
-import { mdiDotsVertical, mdiInformationOutline, mdiMenu } from '@mdi/js';
-import { SlButton, SlDialog } from '@shoelace-style/shoelace';
+import { mdiInformationOutline } from '@mdi/js';
+import { SlInput } from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
@@ -20,7 +20,7 @@ import {
 import '@tnesh-stack/elements/dist/elements/display-error.js';
 import { SignalWatcher, joinAsyncMap } from '@tnesh-stack/signals';
 import { LitElement, css, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { join } from 'lit/directives/join.js';
 
 import { friendsStoreContext } from '../context.js';
@@ -28,11 +28,12 @@ import { FriendsStore } from '../friends-store.js';
 import { Friend } from '../types.js';
 
 /**
- * @element my-friends
+ * @element select-friends
+ * @fires friend-selected - Fired when the user selects an agent from the list. Detail will have this shape: { agents: Array<AgentPubKey> }
  */
 @localized()
-@customElement('my-friends')
-export class MyFriends extends SignalWatcher(LitElement) {
+@customElement('select-friend')
+export class SelectFriend extends SignalWatcher(LitElement) {
 	/**
 	 * Friends store for this element, not required if you embed this element inside a <friends-context>
 	 */
@@ -41,6 +42,9 @@ export class MyFriends extends SignalWatcher(LitElement) {
 	store!: FriendsStore;
 
 	/** Private properties */
+
+	@state()
+	filter: string | undefined;
 
 	renderList(friends: Array<Friend>) {
 		if (friends.length === 0)
@@ -56,80 +60,48 @@ export class MyFriends extends SignalWatcher(LitElement) {
 				</div>
 			`;
 
-		return html`
-			<div class="column" style="flex: 1;">
-				${join(
-					friends.map(
-						(friend, i) => html`
-							<div
-								class="row"
-								style="align-items: center; gap: 8px; margin: 8px"
-							>
-								<sl-avatar
-									style="--size: 32px;"
-									.image=${friend.profile.avatar}
-									.initials=${friend.profile.name.slice(0, 2)}
-								></sl-avatar>
-								<span style="flex: 1">${friend.profile.name}</span>
+		const filteredFriends = friends.filter(
+			friend => !this.filter || friend.profile.name.startsWith(this.filter),
+		);
 
-								<sl-dropdown>
-									<sl-icon-button
-										slot="trigger"
-										.src=${wrapPathInSvg(mdiDotsVertical)}
-									></sl-icon-button>
-									<sl-menu>
-										<sl-menu-item
-											@click=${() =>
-												this.shadowRoot!.querySelector('sl-dialog')!.show()}
-											>${msg('Remove Friend')}
-										</sl-menu-item>
-									</sl-menu>
-								</sl-dropdown>
-								<sl-dialog id="dialog-${i}" .label=${msg('Remove Friend')}>
-									<div class="column" style="gap: 12px">
-										<span
-											>${msg(
-												str`Are you sure you want to remove ${friend.profile.name} as a friend?`,
-											)}</span
-										>
-									</div>
-									<sl-button
-										slot="footer"
+		return html`
+			<div class="column" style="flex: 1; gap: 8px">
+				<sl-input
+					.placeholder=${msg('Filter friends...')}
+					@input=${(e: CustomEvent) => {
+						this.filter = (e.target as SlInput).value;
+					}}
+				></sl-input>
+				${filteredFriends.length === 0
+					? html`<span class="placeholder" style="margin: 16px"
+							>${msg('No friends match the filter.')}</span
+						>`
+					: join(
+							filteredFriends.map(
+								(friend, i) => html`
+									<div
+										class="row"
+										style="align-items: center; gap: 8px; margin: 8px; cursor: pointer"
 										@click=${() =>
-											(
-												this.shadowRoot!.querySelector(
-													`sl-dialog#${i}`,
-												)! as SlDialog
-											).hide()}
-										>${msg('Cancel')}</sl-button
+											new CustomEvent('friend-selected', {
+												bubbles: true,
+												composed: true,
+												detail: {
+													agents: friend.agents,
+												},
+											})}
 									>
-									<sl-button
-										slot="footer"
-										variant="danger"
-										@click=${async (e: CustomEvent) => {
-											const button = e.target as SlButton;
-											button.loading = true;
-											try {
-												await this.store.client.removeFriend(friend.agents);
-											} catch (e) {
-												notifyError(msg('Failed to remove friend.'));
-												console.error(e);
-											}
-											(
-												this.shadowRoot!.querySelector(
-													`sl-dialog#${i}`,
-												)! as SlDialog
-											).hide();
-											button.loading = false;
-										}}
-										>${msg('Remove Friend')}</sl-button
-									>
-								</sl-dialog>
-							</div>
-						`,
-					),
-					() => html`<sl-divider></sl-divider>`,
-				)}
+										<sl-avatar
+											style="--size: 32px;"
+											.image=${friend.profile.avatar}
+											.initials=${friend.profile.name.slice(0, 2)}
+										></sl-avatar>
+										<span style="flex: 1">${friend.profile.name}</span>
+									</div>
+								`,
+							),
+							() => html`<sl-divider></sl-divider>`,
+						)}
 			</div>
 		`;
 	}
