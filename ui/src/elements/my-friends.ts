@@ -62,26 +62,28 @@ export class MyFriends extends SignalWatcher(LitElement) {
 				${join(
 					friends.map(
 						(friend, i) => html`
-							<div
-								class="row"
-								style="align-items: center; gap: 8px; margin: 8px; cursor: pointer"
-								@click=${() =>
-									this.dispatchEvent(
-										new CustomEvent('friend-clicked', {
-											bubbles: true,
-											composed: true,
-											detail: {
-												agents: friend.agents,
-											},
-										}),
-									)}
-							>
-								<sl-avatar
-									style="--size: 32px;"
-									.image=${friend.profile.avatar}
-									.initials=${friend.profile.name.slice(0, 2)}
-								></sl-avatar>
-								<span style="flex: 1">${friend.profile.name}</span>
+							<div class="row" style="align-items: center; margin: 8px;">
+								<div
+									class="row"
+									style="align-items: center; gap: 8px; flex: 1; cursor: pointer"
+									@click=${() =>
+										this.dispatchEvent(
+											new CustomEvent('friend-clicked', {
+												bubbles: true,
+												composed: true,
+												detail: {
+													agents: friend.agents,
+												},
+											}),
+										)}
+								>
+									<sl-avatar
+										style="--size: 32px;"
+										.image=${friend.profile.avatar}
+										.initials=${friend.profile.name.slice(0, 2)}
+									></sl-avatar>
+									<span>${friend.profile.name}</span>
+								</div>
 
 								<sl-dropdown>
 									<sl-icon-button
