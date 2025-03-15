@@ -473,17 +473,19 @@ import{o as G}from"./join.CcJp33yv.js";import{n as d,s as Q,c as J,f as Z,t as e
 			`:u`
 			<div class="column" style="flex: 1; gap: 8px">
 				${G(e.map((s,t)=>u`
-							<div
-								class="row"
-								style="align-items: center; gap: 8px; margin: 8px; cursor: pointer"
-								@click=${()=>this.dispatchEvent(new CustomEvent("friend-clicked",{bubbles:!0,composed:!0,detail:{agents:s.agents}}))}
-							>
-								<sl-avatar
-									style="--size: 32px;"
-									.image=${s.profile.avatar}
-									.initials=${s.profile.name.slice(0,2)}
-								></sl-avatar>
-								<span style="flex: 1">${s.profile.name}</span>
+							<div class="row" style="align-items: center; margin: 8px;">
+								<div
+									class="row"
+									style="align-items: center; gap: 8px; flex: 1; cursor: pointer"
+									@click=${()=>this.dispatchEvent(new CustomEvent("friend-clicked",{bubbles:!0,composed:!0,detail:{agents:s.agents}}))}
+								>
+									<sl-avatar
+										style="--size: 32px;"
+										.image=${s.profile.avatar}
+										.initials=${s.profile.name.slice(0,2)}
+									></sl-avatar>
+									<span>${s.profile.name}</span>
+								</div>
 
 								<sl-dropdown>
 									<sl-icon-button
