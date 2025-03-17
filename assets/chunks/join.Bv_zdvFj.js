@@ -1,4 +1,4 @@
-import{_ as u}from"./tslib.es6.kHcLnhpD.js";import{i as s,x as n,r as v}from"./friends-client.D4zYoAMY.js";import{a as c,t as k,s as m}from"./context.DkJWIMN7.js";import{c as d,_ as i,b as p,e as y,S as g,d as b}from"./display-error.DE2mv8Eq.js";var _=s`
+import{_ as u}from"./tslib.es6.kHcLnhpD.js";import{i as s,x as n,r as v}from"./friends-client.pzzTMS1Y.js";import{a as c,t as k,s as m}from"./context.Bj0aUWzG.js";import{c as d,_ as i,b as p,e as y,S as g,d as b}from"./display-error.DbBI8pmS.js";var _=s`
   :host {
     --border-radius: var(--sl-border-radius-pill);
     --color: var(--sl-color-neutral-200);

@@ -271,7 +271,7 @@
             {
               "kind": "field",
               "name": "myProfile",
-              "default": "new AsyncComputed(() => { const privateEvents = this.privateEvents.get(); if (privateEvents.status !== 'completed') return privateEvents; let myProfile: [Timestamp, Profile] | undefined; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type !== 'SetProfile') continue; if ( encodeHashToBase64(entry.author) !== encodeHashToBase64(this.client.client.myPubKey) ) continue; const profile = entry.event.content.profile; if (!myProfile || myProfile[0] < entry.event.timestamp) { myProfile = [entry.event.timestamp, profile]; } } return { status: 'completed', value: myProfile ? myProfile[1] : undefined, }; })"
+              "default": "new AsyncComputed(() => { const privateEvents = this.privateEvents.get(); if (privateEvents.status !== 'completed') return privateEvents; let myDevices = [this.client.client.myPubKey]; if (this.linkedDevicesStore) { const myLinkedDevices = this.linkedDevicesStore.myLinkedDevices.get(); if (myLinkedDevices.status !== 'completed') return myLinkedDevices; myDevices = [this.client.client.myPubKey, ...myLinkedDevices.value]; } let myProfile: [Timestamp, Profile] | undefined; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type !== 'SetProfile') continue; if ( !myDevices.find( myDevice => encodeHashToBase64(entry.author) === encodeHashToBase64(myDevice), ) ) continue; const profile = entry.event.content.profile; if (!myProfile || myProfile[0] < entry.event.timestamp) { myProfile = [entry.event.timestamp, profile]; } } return { status: 'completed', value: myProfile ? myProfile[1] : undefined, }; })"
             },
             {
               "kind": "field",
@@ -462,10 +462,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "renderForm"
             }
           ],
           "events": [
@@ -766,12 +762,28 @@
             },
             {
               "kind": "field",
+              "name": "config",
+              "type": {
+                "text": "FriendsConfig"
+              },
+              "default": "defaultConfig",
+              "attribute": "config"
+            },
+            {
+              "kind": "field",
               "name": "zome",
               "type": {
                 "text": "string"
               },
               "default": "'friends'",
               "attribute": "zome"
+            },
+            {
+              "kind": "field",
+              "name": "linkedDevicesStore",
+              "type": {
+                "text": "LinkedDevicesStore"
+              }
             }
           ],
           "attributes": [
@@ -788,6 +800,14 @@
                 "text": "string"
               },
               "fieldName": "role"
+            },
+            {
+              "name": "config",
+              "type": {
+                "text": "FriendsConfig"
+              },
+              "default": "defaultConfig",
+              "fieldName": "config"
             },
             {
               "name": "zome",
@@ -1011,8 +1031,18 @@
               "type": {
                 "text": "FriendsStore"
               },
-              "description": "Profiles store for this element, not required if you embed this element inside a `<profiles-context>`",
+              "description": "Friends store for this element, not required if you embed this element inside a `<friends-context>`",
               "attribute": "store"
+            },
+            {
+              "kind": "field",
+              "name": "view",
+              "type": {
+                "text": "'question' | 'create-profile' | 'link-device'"
+              },
+              "privacy": "private",
+              "default": "'question'",
+              "description": "Private properties"
             },
             {
               "kind": "field",
@@ -1048,7 +1078,7 @@
               "type": {
                 "text": "FriendsStore"
               },
-              "description": "Profiles store for this element, not required if you embed this element inside a `<profiles-context>`",
+              "description": "Friends store for this element, not required if you embed this element inside a `<friends-context>`",
               "fieldName": "store"
             }
           ],
@@ -1169,6 +1199,120 @@
           "declaration": {
             "name": "SelectFriend",
             "module": "src/elements/select-friend.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/elements/update-profile.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A custom element that fires event on value change.",
+          "name": "UpdateProfile",
+          "members": [
+            {
+              "kind": "field",
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "attribute": "store"
+            },
+            {
+              "kind": "method",
+              "name": "setProfile",
+              "parameters": [
+                {
+                  "name": "profile",
+                  "type": {
+                    "text": "Profile"
+                  }
+                }
+              ],
+              "description": "Private properties"
+            },
+            {
+              "kind": "method",
+              "name": "renderField",
+              "parameters": [
+                {
+                  "name": "fieldConfig",
+                  "type": {
+                    "text": "FieldConfig"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderForm",
+              "parameters": [
+                {
+                  "name": "profile",
+                  "type": {
+                    "text": "Profile"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "profile-updated",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Fired after the profile has been updated. Detail will have this shape: { profile: { nickname, fields } }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              },
+              "description": "Profiles store for this element, not required if you embed this element inside a <profiles-context>",
+              "fieldName": "store"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "SignalWatcher",
+              "package": "@tnesh-stack/signals"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "update-profile",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "UpdateProfile",
+          "declaration": {
+            "name": "UpdateProfile",
+            "module": "src/elements/update-profile.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "update-profile",
+          "declaration": {
+            "name": "UpdateProfile",
+            "module": "src/elements/update-profile.ts"
           }
         }
       ]
