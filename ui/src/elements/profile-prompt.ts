@@ -3,10 +3,8 @@
 // 	linkedDevicesStoreContext,
 // } from '@darksoil-studio/linked-devices-zome';
 // import '@darksoil-studio/linked-devices-zome/dist/elements/link-device-requestor.js';
-import { AgentPubKey } from '@holochain/client';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
-import { mdiArrowLeft, mdiSync } from '@mdi/js';
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import { sharedStyles, wrapPathInSvg } from '@tnesh-stack/elements';
@@ -28,7 +26,7 @@ import './create-profile.js';
 @customElement('profile-prompt')
 export class ProfilePrompt extends SignalWatcher(LitElement) {
 	/**
-	 * Profiles store for this element, not required if you embed this element inside a `<profiles-context>`
+	 * Friends store for this element, not required if you embed this element inside a `<friends-context>`
 	 */
 	@consume({ context: friendsStoreContext, subscribe: true })
 	@property()
@@ -72,7 +70,18 @@ export class ProfilePrompt extends SignalWatcher(LitElement) {
 
 	private renderContent() {
 		// if (!this.linkedDevicesStore) {
-		return html` <create-profile></create-profile> `;
+		return html`
+			<sl-card>
+				<div class="column">
+					<span
+						class="title"
+						style="margin-bottom: 16px; align-self: flex-start"
+						>${msg('Create Profile')}</span
+					>
+					<create-profile></create-profile>
+				</div>
+			</sl-card>
+		`;
 		// }
 
 		// const myLinkedDevices = this.linkedDevicesStore.myLinkedDevices.get();
