@@ -14159,11 +14159,11 @@
         "tnesh-stack": "tnesh-stack_34"
       },
       "locked": {
-        "lastModified": 1742227818,
-        "narHash": "sha256-Jlk/A1dPX2ZpWqBmW/+z7cv57yVMOpnQ66yvq9Wqbwk=",
+        "lastModified": 1742230938,
+        "narHash": "sha256-70HJL8AHh1wVbjZlhjIheA0PRiqUPfJyBkzD4q+mFWo=",
         "owner": "darksoil-studio",
         "repo": "private-event-sourcing-zome",
-        "rev": "c001b07b9bda5bf11496a7ea023b502c1bfbcb56",
+        "rev": "fe5e05c552c255a2eaf426c408ecad7c725dfe7e",
         "type": "github"
       },
       "original": {

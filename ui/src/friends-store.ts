@@ -14,7 +14,6 @@ import { EntryHashB64, Timestamp, encodeHashToBase64 } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { AsyncComputed, toPromise } from '@tnesh-stack/signals';
 import { MemoHoloHashMap } from '@tnesh-stack/utils';
-import Emittery from 'emittery';
 
 import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';
@@ -27,27 +26,12 @@ export class FriendsStore
 {
 	profilesArePublic = false;
 
-	emittery = new Emittery<{ 'profile-updated': Profile }>();
-
 	constructor(
 		public client: FriendsClient,
 		public config: FriendsConfig = defaultConfig,
 		public linkedDevicesStore?: LinkedDevicesStore,
 	) {
 		super(client, linkedDevicesStore);
-
-		this.client.onSignal(rawSignal => {
-			const signal = rawSignal as PrivateEventSourcingSignal;
-			if ('type' in signal && signal.type !== 'NewPrivateEvent') return;
-			const privateEventEntry = signal.private_event_entry as PrivateEventEntry;
-			const event = decode(privateEventEntry.event.content) as FriendsEvent;
-			if (event.type !== 'SetProfile') return;
-			this.emittery.emit('profile-updated', event.profile);
-		});
-	}
-
-	onProfileUpdated(callback: (updatedProfile: Profile) => void): () => void {
-		return this.emittery.on('profile-updated', callback);
 	}
 
 	get myPubKey() {
