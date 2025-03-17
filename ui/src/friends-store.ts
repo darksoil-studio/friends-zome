@@ -1,4 +1,7 @@
+import { LinkedDevicesStore } from '@darksoil-studio/linked-devices-zome';
 import {
+	PrivateEventEntry,
+	PrivateEventSourcingSignal,
 	PrivateEventSourcingStore,
 	SignedEvent,
 } from '@darksoil-studio/private-event-sourcing-zome';
@@ -8,8 +11,10 @@ import {
 	User,
 } from '@darksoil-studio/profiles-provider';
 import { EntryHashB64, Timestamp, encodeHashToBase64 } from '@holochain/client';
+import { decode } from '@msgpack/msgpack';
 import { AsyncComputed, toPromise } from '@tnesh-stack/signals';
 import { MemoHoloHashMap } from '@tnesh-stack/utils';
+import Emittery from 'emittery';
 
 import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';
@@ -22,11 +27,27 @@ export class FriendsStore
 {
 	profilesArePublic = false;
 
+	emittery = new Emittery<{ 'profile-updated': Profile }>();
+
 	constructor(
 		public client: FriendsClient,
 		public config: FriendsConfig = defaultConfig,
+		public linkedDevicesStore?: LinkedDevicesStore,
 	) {
-		super(client);
+		super(client, linkedDevicesStore);
+
+		this.client.onSignal(rawSignal => {
+			const signal = rawSignal as PrivateEventSourcingSignal;
+			if ('type' in signal && signal.type !== 'NewPrivateEvent') return;
+			const privateEventEntry = signal.private_event_entry as PrivateEventEntry;
+			const event = decode(privateEventEntry.event.content) as FriendsEvent;
+			if (event.type !== 'SetProfile') return;
+			this.emittery.emit('profile-updated', event.profile);
+		});
+	}
+
+	onProfileUpdated(callback: (updatedProfile: Profile) => void): () => void {
+		return this.emittery.on('profile-updated', callback);
 	}
 
 	get myPubKey() {
@@ -37,13 +58,23 @@ export class FriendsStore
 		const privateEvents = this.privateEvents.get();
 		if (privateEvents.status !== 'completed') return privateEvents;
 
+		let myDevices = [this.client.client.myPubKey];
+
+		if (this.linkedDevicesStore) {
+			const myLinkedDevices = this.linkedDevicesStore.myLinkedDevices.get();
+			if (myLinkedDevices.status !== 'completed') return myLinkedDevices;
+			myDevices = [this.client.client.myPubKey, ...myLinkedDevices.value];
+		}
+
 		let myProfile: [Timestamp, Profile] | undefined;
 
 		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
 			if (entry.event.content.type !== 'SetProfile') continue;
 			if (
-				encodeHashToBase64(entry.author) !==
-				encodeHashToBase64(this.client.client.myPubKey)
+				!myDevices.find(
+					myDevice =>
+						encodeHashToBase64(entry.author) === encodeHashToBase64(myDevice),
+				)
 			)
 				continue;
 
