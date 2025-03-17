@@ -1,4 +1,4 @@
-import{_ as u}from"./tslib.es6.kHcLnhpD.js";import{i as s,x as n,r as v}from"./friends-client.ahLd-fl8.js";import{n as c,t as k,s as m}from"./context.DadmyZjg.js";import{c as d,_ as i,b as p,e as y,S as g,d as b}from"./display-error.CBkscn2d.js";var _=s`
+import{_ as u}from"./tslib.es6.kHcLnhpD.js";import{i as s,x as n,r as v}from"./friends-client.D4zYoAMY.js";import{a as c,t as k,s as m}from"./context.DkJWIMN7.js";import{c as d,_ as i,b as p,e as y,S as g,d as b}from"./display-error.DE2mv8Eq.js";var _=s`
   :host {
     --border-radius: var(--sl-border-radius-pill);
     --color: var(--sl-color-neutral-200);
@@ -58,14 +58,14 @@ import{_ as u}from"./tslib.es6.kHcLnhpD.js";import{i as s,x as n,r as v}from"./f
       opacity: 1;
     }
   }
-`,l=class extends p{constructor(){super(...arguments),this.effect="none"}render(){return n`
+`,a=class extends p{constructor(){super(...arguments),this.effect="none"}render(){return n`
       <div
         part="base"
         class=${y({skeleton:!0,"skeleton--pulse":this.effect==="pulse","skeleton--sheen":this.effect==="sheen"})}
       >
         <div part="indicator" class="skeleton__indicator"></div>
       </div>
-    `}};l.styles=[d,_];i([c()],l.prototype,"effect",2);l.define("sl-skeleton");let a=class extends g(v){render(){return n`<div class="row" style="align-items: center; width: 150px">
+    `}};a.styles=[d,_];i([c()],a.prototype,"effect",2);a.define("sl-skeleton");let l=class extends g(v){render(){return n`<div class="row" style="align-items: center; width: 150px">
       <sl-skeleton
         effect="sheen"
         style="height: 32px; width: 32px; border-radius: 50%; margin: 8px"
@@ -79,7 +79,7 @@ import{_ as u}from"./tslib.es6.kHcLnhpD.js";import{i as s,x as n,r as v}from"./f
         :host {
           display: flex;
         }
-      `]}};a=u([k("profile-list-item-skeleton")],a);var x=s`
+      `]}};l=u([k("profile-list-item-skeleton")],l);var x=s`
   :host {
     --color: var(--sl-panel-border-color);
     --width: var(--sl-panel-border-width);

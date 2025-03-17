@@ -1,4 +1,4 @@
-import{i as h,f as b,u as d}from"./friends-client.ahLd-fl8.js";/**
+import{i as h,f as b,u as d}from"./friends-client.D4zYoAMY.js";/**
  * @license
  * Copyright 2021 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
@@ -99,4 +99,4 @@ import{i as h,f as b,u as d}from"./friends-client.ahLd-fl8.js";/**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */const f={attribute:!0,type:String,converter:d,reflect:!1,hasChanged:b},x=(s=f,e,t)=>{const{kind:o,metadata:r}=t;let i=globalThis.litPropertyMetadata.get(r);if(i===void 0&&globalThis.litPropertyMetadata.set(r,i=new Map),i.set(t.name,s),o==="accessor"){const{name:c}=t;return{set(l){const n=e.get.call(this);e.set.call(this,l),this.requestUpdate(c,n,s)},init(l){return l!==void 0&&this.P(c,void 0,s),l}}}if(o==="setter"){const{name:c}=t;return function(l){const n=this[c];e.call(this,l),this.requestUpdate(c,n,s)}}throw Error("Unsupported decorator location: "+o)};function q(s){return(e,t)=>typeof t=="object"?x(s,e,t):((o,r,i)=>{const c=r.hasOwnProperty(i);return r.constructor.createProperty(i,c?{...o,wrapped:!0}:o),c?Object.getOwnPropertyDescriptor(r,i):void 0})(s,e,t)}const E="friends/store";export{p as a,y as b,g as c,E as f,q as n,w as s,k as t};
+ */const f={attribute:!0,type:String,converter:d,reflect:!1,hasChanged:b},x=(s=f,e,t)=>{const{kind:o,metadata:r}=t;let i=globalThis.litPropertyMetadata.get(r);if(i===void 0&&globalThis.litPropertyMetadata.set(r,i=new Map),i.set(t.name,s),o==="accessor"){const{name:c}=t;return{set(l){const n=e.get.call(this);e.set.call(this,l),this.requestUpdate(c,n,s)},init(l){return l!==void 0&&this.P(c,void 0,s),l}}}if(o==="setter"){const{name:c}=t;return function(l){const n=this[c];e.call(this,l),this.requestUpdate(c,n,s)}}throw Error("Unsupported decorator location: "+o)};function q(s){return(e,t)=>typeof t=="object"?x(s,e,t):((o,r,i)=>{const c=r.hasOwnProperty(i);return r.constructor.createProperty(i,c?{...o,wrapped:!0}:o),c?Object.getOwnPropertyDescriptor(r,i):void 0})(s,e,t)}const E="friends/store";export{q as a,p as b,g as c,E as f,y as n,w as s,k as t};

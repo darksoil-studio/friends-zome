@@ -1,4 +1,4 @@
-import{i as w,x as z,E as T}from"./friends-client.ahLd-fl8.js";import{c as x,b as $,L as D,f as I,g as C,h as L,_ as a,i as A,r as V,d as U,e as N}from"./display-error.CBkscn2d.js";import{n as s}from"./context.DadmyZjg.js";var q=w`
+import{i as w,x as z,E as T}from"./friends-client.D4zYoAMY.js";import{c as x,b as $,L as D,f as I,g as C,h as L,_ as a,i as A,r as V,d as U,e as N}from"./display-error.DE2mv8Eq.js";import{a as s}from"./context.DkJWIMN7.js";var q=w`
   :host {
     --track-width: 2px;
     --track-color: rgb(128 128 128 / 25%);
@@ -762,4 +762,4 @@ import{i as w,x as z,E as T}from"./friends-client.ahLd-fl8.js";import{c as x,b a
           aria-hidden="true"
         ></sl-icon>
       </${r}>
-    `}};d.styles=[x,X];d.dependencies={"sl-icon":L};a([A(".icon-button")],d.prototype,"button",2);a([V()],d.prototype,"hasFocus",2);a([s()],d.prototype,"name",2);a([s()],d.prototype,"library",2);a([s()],d.prototype,"src",2);a([s()],d.prototype,"href",2);a([s()],d.prototype,"target",2);a([s()],d.prototype,"download",2);a([s()],d.prototype,"label",2);a([s({type:Boolean,reflect:!0})],d.prototype,"disabled",2);export{W as F,R as H,O as S,d as a,Q as g,l as o};
+    `}};d.styles=[x,X];d.dependencies={"sl-icon":L};a([A(".icon-button")],d.prototype,"button",2);a([V()],d.prototype,"hasFocus",2);a([s()],d.prototype,"name",2);a([s()],d.prototype,"library",2);a([s()],d.prototype,"src",2);a([s()],d.prototype,"href",2);a([s()],d.prototype,"target",2);a([s()],d.prototype,"download",2);a([s()],d.prototype,"label",2);a([s({type:Boolean,reflect:!0})],d.prototype,"disabled",2);export{W as F,R as H,d as S,O as a,Q as g,l as o};
