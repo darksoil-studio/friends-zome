@@ -32,7 +32,7 @@ export class FriendsContext extends LitElement {
 	role!: string;
 
 	@property()
-	config: FriendsConfig= defaultConfig;
+	config: FriendsConfig = defaultConfig;
 
 	@property()
 	zome = 'friends';

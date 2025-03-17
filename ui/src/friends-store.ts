@@ -1,6 +1,7 @@
 import { LinkedDevicesStore } from '@darksoil-studio/linked-devices-zome';
 import {
 	PrivateEventEntry,
+	PrivateEventSourcingSignal,
 	PrivateEventSourcingStore,
 	SignedEvent,
 } from '@darksoil-studio/private-event-sourcing-zome';
@@ -35,10 +36,10 @@ export class FriendsStore
 	) {
 		super(client, linkedDevicesStore);
 
-		this.client.onSignal(signal => {
+		this.client.onSignal(rawSignal => {
+			const signal = rawSignal as PrivateEventSourcingSignal;
 			if ('type' in signal && signal.type !== 'NewPrivateEvent') return;
-			const privateEventEntry = (signal as any)
-				.private_event_entry as PrivateEventEntry;
+			const privateEventEntry = signal.private_event_entry as PrivateEventEntry;
 			const event = decode(privateEventEntry.event.content) as FriendsEvent;
 			if (event.type !== 'SetProfile') return;
 			this.emittery.emit('profile-updated', event.profile);
