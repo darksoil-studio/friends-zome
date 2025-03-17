@@ -31,6 +31,8 @@
 		<demo-app></demo-app>
 
 		<script type="module">
+			import '@darksoil-studio/linked-devices-zome/dist/elements/link-device-recipient.js';
+			import '@darksoil-studio/linked-devices-zome/dist/elements/linked-devices-context.js';
 			import '@darksoil-studio/notifications-zome/dist/elements/my-notifications-icon-button.js';
 			import '@darksoil-studio/notifications-zome/dist/elements/notifications-context.js';
 			import '@darksoil-studio/profiles-provider/dist/elements/search-user.js';
@@ -68,6 +70,18 @@
 				}
 
 				renderContent() {
+					if (this.linkAgent)
+						return html`
+							<link-device-recipient
+								style="flex: 1"
+								@device-linked=${() => {
+									this.linkAgent = false;
+									this.requestUpdate();
+								}}
+							>
+							</link-device-recipient>
+						`;
+
 					return html`
 						<div class="column" style="flex: 1">
 							<div class="row" style="flex: 1">
@@ -76,6 +90,13 @@
 								</friend-request-qr-code>
 								<search-user style="flex: 1"> </search-user>
 								<my-notifications-icon-button> </my-notifications-icon-button>
+								<sl-button
+									@click=${() => {
+										this.linkAgent = true;
+										this.requestUpdate();
+									}}
+									>Link Device
+								</sl-button>
 							</div>
 							<div class="row" style="flex: 1">
 								<friend-requests style="flex: 1"> </friend-requests>
@@ -98,15 +119,17 @@
 
 					return html`
 						<app-client-context .client=${this._client}>
-							<notifications-context role="friends_test">
-								<friends-context role="friends_test">
-									<div class="fill row" style="width: 100vw; height: 100%;">
-										<profile-prompt style="flex: 1;">
-											${this.renderContent()}
-										</profile-prompt>
-									</div>
-								</friends-context>
-							</notifications-context>
+							<linked-devices-context role="friends_test">
+								<notifications-context role="friends_test">
+									<friends-context role="friends_test">
+										<div class="fill row" style="width: 100vw; height: 100%;">
+											<profile-prompt style="flex: 1;">
+												${this.renderContent()}
+											</profile-prompt>
+										</div>
+									</friends-context>
+								</notifications-context>
+							</linked-devices-context>
 						</app-client-context>
 					`;
 				}

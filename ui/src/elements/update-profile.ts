@@ -59,7 +59,7 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 			);
 		} catch (e) {
 			console.error(e);
-			notifyError(msg('Error creating the profile.'));
+			notifyError(msg('Error updating the profile.'));
 		}
 		this.shadowRoot!.querySelector('sl-button')!.loading = false;
 	}

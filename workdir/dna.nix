@@ -6,6 +6,8 @@
       inputs.tnesh-stack.outputs.builders.${system}.dna {
         dnaManifest = ./dna.yaml;
         zomes = {
+          linked_devices_integrity = inputs'.linked-devices-zome.packages.linked_devices_integrity;
+          linked_devices = inputs'.linked-devices-zome.packages.linked_devices;
           notifications_integrity =
             inputs'.notifications-zome.packages.notifications_integrity;
           notifications = inputs'.notifications-zome.packages.notifications;

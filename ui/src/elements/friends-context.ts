@@ -1,3 +1,8 @@
+import {
+	LinkedDevicesStore,
+	linkedDevicesStoreContext,
+} from '@darksoil-studio/linked-devices-zome';
+import { LinkedDevicesContext } from '@darksoil-studio/linked-devices-zome/dist/elements/linked-devices-context.js';
 import { profilesProviderContext } from '@darksoil-studio/profiles-provider';
 import { AppClient } from '@holochain/client';
 import { consume, provide } from '@lit/context';
@@ -5,6 +10,7 @@ import { appClientContext } from '@tnesh-stack/elements';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
+import { FriendsConfig, defaultConfig } from '../config.js';
 import { friendsStoreContext } from '../context.js';
 import { FriendsClient } from '../friends-client.js';
 import { FriendsStore } from '../friends-store.js';
@@ -26,7 +32,13 @@ export class FriendsContext extends LitElement {
 	role!: string;
 
 	@property()
+	config: FriendsConfig= defaultConfig;
+
+	@property()
 	zome = 'friends';
+
+	@consume({ context: linkedDevicesStoreContext, subscribe: true })
+	linkedDevicesStore!: LinkedDevicesStore;
 
 	connectedCallback() {
 		super.connectedCallback();
@@ -46,8 +58,24 @@ export class FriendsContext extends LitElement {
       `);
 		}
 
+		this.addEventListener('context-provider', e => {
+			if (e.context === linkedDevicesStoreContext) {
+				const context = e.target as LinkedDevicesContext;
+
+				setTimeout(() => {
+					this.store = new FriendsStore(
+						new FriendsClient(this.client, this.role, this.zome),
+						this.store.config,
+						context.store,
+					);
+				});
+			}
+		});
+
 		this.store = new FriendsStore(
 			new FriendsClient(this.client, this.role, this.zome),
+			this.config,
+			this.linkedDevicesStore,
 		);
 	}
 
