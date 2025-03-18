@@ -1,4 +1,4 @@
-import{l as wt}from"./context.BayuDQ0X.js";import{e as K,d as bt,i as F,x as k,u as At,T as st,E as Ht,r as Z,g as jt,H as qt}from"./friends-client.pzzTMS1Y.js";import{y as xt,u as Ct,c as tt,_ as h,i as N,r as W,d as et,s as mt,b as rt,L as vt,p as zt,k as dt,o as Et,q as St,e as Q,B as Kt,h as Lt,x as j,v as Qt,C as Gt,l as $t,S as gt,n as Y,m as E,D as Wt,w as ut,E as Jt,z as Yt,F as Xt,G as Tt}from"./display-error.DbBI8pmS.js";import{_ as V}from"./tslib.es6.kHcLnhpD.js";import{a as f,s as it,c as nt,t as ot,f as Rt}from"./context.Bj0aUWzG.js";import{S as Bt,H as kt,F as Zt,o as L,a as te}from"./chunk.HLJ2JR6P.CvG59fEz.js";import"./commonjsHelpers.BosuxZz1.js";const ee=60*1e3;class re{constructor(t){this.host=t,this.host.addController(this),this.handleFormData=this.handleFormData.bind(this),this.handleFormSubmit=this.handleFormSubmit.bind(this),this.handleFormReset=this.handleFormReset.bind(this)}closestElement(t){function o(s){if(!s||s===document||s===window)return null;s.assignedSlot&&(s=s.assignedSlot);const u=s.closest(t);return u||o(s.getRootNode().host)}return o(this.host)}hostConnected(){this.form=this.closestElement("form"),this.form&&(this.form.addEventListener("formdata",this.handleFormData),this.form.addEventListener("submit",this.handleFormSubmit),this.form.addEventListener("reset",this.handleFormReset),this.form.dispatchEvent(new CustomEvent("update-form")))}hostDisconnected(){this.form&&(this.form.removeEventListener("formdata",this.handleFormData),this.form.removeEventListener("submit",this.handleFormSubmit),this.form.removeEventListener("reset",this.handleFormReset),this.form=void 0)}handleFormData(t){const o=this.host.disabled,s=this.host.name,u=this.host.value;!o&&s&&u!==void 0&&(Array.isArray(u)?u.map(v=>t.formData.append(s,v)):t.formData.append(s,u))}handleFormSubmit(t){const o=this.form,s=this.host.disabled,u=this.host.reportValidity;o&&!o.noValidate&&!s&&u&&!this.host.reportValidity()&&(t.preventDefault(),t.stopImmediatePropagation())}handleFormReset(t){this.host.reset()}}function yt(e){return typeof e=="string"&&e.split(",").length===39?new Uint8Array(e.split(",").map(t=>parseInt(t,10))):e}function Pt(e){const t=new FormData(e),o={};return t.forEach((s,u)=>{if(Reflect.has(o,u)){const v=o[u];Array.isArray(v)?v.push(yt(s)):o[u]=[o[u],yt(s)]}else o[u]=yt(s)}),o}class ie extends Ct{constructor(){super(...arguments),this.initialized=!1}update(t,o){this.initialized||(this.initialized=!0,t.element.addEventListener("update-form",u=>{this.listener&&t.element.removeEventListener("submit",this.listener),this.listener=v=>{v.preventDefault();const w=Pt(t.element);o[0](w)},t.element.addEventListener("submit",this.listener)})),setTimeout(()=>{this.listener&&t.element.removeEventListener("submit",this.listener),this.listener=s=>{s.preventDefault();const u=Pt(t.element);o[0](u)},t.element.addEventListener("submit",this.listener)},100)}render(t){return""}}const oe=xt(ie);function se(e){return{attribute:e,type:Object,hasChanged:(t,o)=>(t==null?void 0:t.toString())!==(o==null?void 0:o.toString()),converter:{fromAttribute:t=>t&&t.length>0&&bt(t),toAttribute:t=>t&&K(t)},reflect:!0}}var ne=F`
+import{l as wt}from"./context.83Dfgw3K.js";import{e as K,d as bt,i as F,x as k,u as At,T as st,E as Ht,r as Z,g as jt,H as qt}from"./friends-client.DXmLVIGM.js";import{y as xt,u as Ct,c as tt,_ as h,i as N,r as W,d as et,s as mt,b as rt,L as vt,p as zt,k as dt,o as Et,q as St,e as Q,B as Kt,h as Lt,x as j,v as Qt,C as Gt,l as $t,S as gt,n as Y,m as E,D as Wt,w as ut,E as Jt,z as Yt,F as Xt,G as Tt}from"./display-error.CUGxAW9p.js";import{_ as V}from"./tslib.es6.kHcLnhpD.js";import{a as f,s as it,c as nt,t as ot,f as Rt}from"./context.B1mOevgT.js";import{S as Bt,H as kt,F as Zt,o as L,a as te}from"./chunk.HLJ2JR6P.NGcCBZYb.js";import"./commonjsHelpers.BosuxZz1.js";const ee=60*1e3;class re{constructor(t){this.host=t,this.host.addController(this),this.handleFormData=this.handleFormData.bind(this),this.handleFormSubmit=this.handleFormSubmit.bind(this),this.handleFormReset=this.handleFormReset.bind(this)}closestElement(t){function o(s){if(!s||s===document||s===window)return null;s.assignedSlot&&(s=s.assignedSlot);const u=s.closest(t);return u||o(s.getRootNode().host)}return o(this.host)}hostConnected(){this.form=this.closestElement("form"),this.form&&(this.form.addEventListener("formdata",this.handleFormData),this.form.addEventListener("submit",this.handleFormSubmit),this.form.addEventListener("reset",this.handleFormReset),this.form.dispatchEvent(new CustomEvent("update-form")))}hostDisconnected(){this.form&&(this.form.removeEventListener("formdata",this.handleFormData),this.form.removeEventListener("submit",this.handleFormSubmit),this.form.removeEventListener("reset",this.handleFormReset),this.form=void 0)}handleFormData(t){const o=this.host.disabled,s=this.host.name,u=this.host.value;!o&&s&&u!==void 0&&(Array.isArray(u)?u.map(v=>t.formData.append(s,v)):t.formData.append(s,u))}handleFormSubmit(t){const o=this.form,s=this.host.disabled,u=this.host.reportValidity;o&&!o.noValidate&&!s&&u&&!this.host.reportValidity()&&(t.preventDefault(),t.stopImmediatePropagation())}handleFormReset(t){this.host.reset()}}function yt(e){return typeof e=="string"&&e.split(",").length===39?new Uint8Array(e.split(",").map(t=>parseInt(t,10))):e}function Pt(e){const t=new FormData(e),o={};return t.forEach((s,u)=>{if(Reflect.has(o,u)){const v=o[u];Array.isArray(v)?v.push(yt(s)):o[u]=[o[u],yt(s)]}else o[u]=yt(s)}),o}class ie extends Ct{constructor(){super(...arguments),this.initialized=!1}update(t,o){this.initialized||(this.initialized=!0,t.element.addEventListener("update-form",u=>{this.listener&&t.element.removeEventListener("submit",this.listener),this.listener=v=>{v.preventDefault();const w=Pt(t.element);o[0](w)},t.element.addEventListener("submit",this.listener)})),setTimeout(()=>{this.listener&&t.element.removeEventListener("submit",this.listener),this.listener=s=>{s.preventDefault();const u=Pt(t.element);o[0](u)},t.element.addEventListener("submit",this.listener)},100)}render(t){return""}}const oe=xt(ie);function se(e){return{attribute:e,type:Object,hasChanged:(t,o)=>(t==null?void 0:t.toString())!==(o==null?void 0:o.toString()),converter:{fromAttribute:t=>t&&t.length>0&&bt(t),toAttribute:t=>t&&K(t)},reflect:!0}}var ne=F`
   :host {
     display: contents;
 
@@ -874,7 +874,7 @@ import{l as wt}from"./context.BayuDQ0X.js";import{e as K,d as bt,i as F,x as k,u
 					<div class="column" style="gap: 8px">
 						<span>${E("Send this code to your other device...")} </span>
 						<div class="row" style="align-items: center; gap: 8px">
-							<sl-tag style="flex: 1"
+							<sl-tag style="flex: 1; "
 								>${K(this.store.client.client.myPubKey)}
 							</sl-tag>
 							<sl-copy-button
@@ -898,6 +898,10 @@ import{l as wt}from"./context.BayuDQ0X.js";import{e as K,d as bt,i as F,x as k,u
 		`}};pt.styles=[...it,F`
 			sl-tag::part(base) {
 				font-size: 12px;
+				overflow: hidden;
+			}
+			sl-tag {
+				max-width: 85vw;
 			}
 		`];V([nt({context:wt,subscribe:!0}),f()],pt.prototype,"store",void 0);pt=V([$t(),ot("discover-agent")],pt);let ht=class extends Z{constructor(){super(...arguments),this.passcodeLength=4}firstUpdated(){setTimeout(()=>{var t;(t=this.shadowRoot.getElementById("input-0"))===null||t===void 0||t.focus()})}get passcode(){const t=Array.from(this.shadowRoot.querySelectorAll("sl-input")),o=Array.from(Array(this.passcodeLength)).map(()=>{});for(let s=0;s<t.length;s++){if(t[s].value==="")return;const u=parseInt(t[s].value,10);if(u>9)return;o[s]=u}return o}clearPasscode(){Array.from(this.shadowRoot.querySelectorAll("sl-input")).forEach(o=>o.value=""),setTimeout(()=>{var o;(o=this.shadowRoot.getElementById("input-0"))===null||o===void 0||o.focus()})}maybeDispatchEvent(){const t=this.passcode;t&&this.dispatchEvent(new CustomEvent("passcode-change",{bubbles:!0,composed:!0,detail:{passcode:t}}))}render(){return k`
 			<div class="row">
@@ -1070,31 +1074,25 @@ import{l as wt}from"./context.BayuDQ0X.js";import{e as K,d as bt,i as F,x as k,u
 				name="${e.name}"
 				.required=${e.required}
 				.label=${e.label}
-				style="margin-bottom: 16px;"
 			></sl-input>
 		`}render(){return k`
 			<form
 				id="profile-form"
 				class="column"
 				${oe(e=>this.setProfile(e))}
+				style="gap: 16px"
 			>
 				<div
 					class="row"
-					style="justify-content: center; align-self: start; margin-bottom: 16px"
+					style="justify-content: center; align-self: start; gap: 16px"
 				>
-					<select-avatar
-						avatar-width="64"
-						avatar-height="64"
-						name="avatar"
-						required
-					></select-avatar>
+					<select-avatar name="avatar" required></select-avatar>
 					<sl-input
 						name="name"
 						.label=${E("Name")}
 						required
 						minLength="${this.store.config.minNicknameLength}"
 						.helpText=${E(Yt`Min. ${this.store.config.minNicknameLength} characters`)}
-						style="margin-left: 16px;"
 					></sl-input>
 				</div>
 
