@@ -32,7 +32,6 @@ export async function scanQrcode(): Promise<string> {
 
 export async function scanQrCodeAndSendFriendRequest(store: FriendsStore) {
 	const code = await scanQrcode();
-	notify(code);
 
 	const split = code.split('/');
 	if (split.length !== 2) {
