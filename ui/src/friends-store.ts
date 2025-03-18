@@ -38,10 +38,7 @@ export class FriendsStore
 		return this.client.client.myPubKey;
 	}
 
-	myProfile = new AsyncComputed(() => {
-		const privateEvents = this.privateEvents.get();
-		if (privateEvents.status !== 'completed') return privateEvents;
-
+	allMyAgents = new AsyncComputed(() => {
 		let myDevices = [this.client.client.myPubKey];
 
 		if (this.linkedDevicesStore) {
@@ -49,13 +46,24 @@ export class FriendsStore
 			if (myLinkedDevices.status !== 'completed') return myLinkedDevices;
 			myDevices = [this.client.client.myPubKey, ...myLinkedDevices.value];
 		}
+		return {
+			status: 'completed',
+			value: myDevices,
+		};
+	});
+
+	myProfile = new AsyncComputed(() => {
+		const privateEvents = this.privateEvents.get();
+		const myAgents = this.allMyAgents.get();
+		if (privateEvents.status !== 'completed') return privateEvents;
+		if (myAgents.status !== 'completed') return myAgents;
 
 		let myProfile: [Timestamp, Profile] | undefined;
 
 		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
 			if (entry.event.content.type !== 'SetProfile') continue;
 			if (
-				!myDevices.find(
+				!myAgents.value.find(
 					myDevice =>
 						encodeHashToBase64(entry.author) === encodeHashToBase64(myDevice),
 				)
@@ -119,22 +127,39 @@ export class FriendsStore
 	currentProfileForAgent = new MemoHoloHashMap(
 		agent =>
 			new AsyncComputed(() => {
-				if (encodeHashToBase64(this.myPubKey) === encodeHashToBase64(agent)) {
-					// TODO: what about when the agent is one of your other linked devices?
+				const myAgents = this.allMyAgents.get();
+				const events = this.privateEvents.get();
+
+				if (myAgents.status !== 'completed') return myAgents;
+				if (events.status !== 'completed') return events;
+
+				if (
+					myAgents.value.find(
+						a => encodeHashToBase64(a) === encodeHashToBase64(agent),
+					)
+				) {
 					return this.myProfile.get();
 				}
-				const friends = this.friends.get();
-				if (friends.status !== 'completed') return friends;
 
-				const friend = friends.value.find(friend =>
-					friend.agents.find(
-						agent => encodeHashToBase64(agent) === encodeHashToBase64(agent),
+				const sortedSetProfiles = Object.values(events.value)
+					.filter(event => event.event.content.type === 'SetProfile')
+					.sort((e1, e2) => e2.event.timestamp - e1.event.timestamp)
+					.map(event =>
+						event.event.content.type === 'SetProfile'
+							? event.event.content
+							: undefined,
+					)
+					.filter(a => !!a);
+
+				const setProfile = sortedSetProfiles.find(setProfile =>
+					setProfile.agents.find(
+						a => encodeHashToBase64(a) === encodeHashToBase64(agent),
 					),
 				);
 
 				return {
 					status: 'completed',
-					value: friend?.profile,
+					value: setProfile?.profile,
 				};
 			}),
 	);
