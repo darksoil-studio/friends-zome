@@ -60,7 +60,6 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 				name="${fieldConfig.name}"
 				.required=${fieldConfig.required}
 				.label=${fieldConfig.label}
-				style="margin-bottom: 16px;"
 			></sl-input>
 		`;
 	}
@@ -71,17 +70,13 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 				id="profile-form"
 				class="column"
 				${onSubmit(fields => this.setProfile(fields))}
+				style="gap: 16px"
 			>
 				<div
 					class="row"
-					style="justify-content: center; align-self: start; margin-bottom: 16px"
+					style="justify-content: center; align-self: start; gap: 16px"
 				>
-					<select-avatar
-						avatar-width="64"
-						avatar-height="64"
-						name="avatar"
-						required
-					></select-avatar>
+					<select-avatar name="avatar" required></select-avatar>
 					<sl-input
 						name="name"
 						.label=${msg('Name')}
@@ -90,7 +85,6 @@ export class CreateProfile extends SignalWatcher(LitElement) {
 						.helpText=${msg(
 							str`Min. ${this.store.config.minNicknameLength} characters`,
 						)}
-						style="margin-left: 16px;"
 					></sl-input>
 				</div>
 
