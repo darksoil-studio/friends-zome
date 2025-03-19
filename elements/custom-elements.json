@@ -4,62 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "locales/locales.js",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "sourceLocale",
-          "default": "`en`",
-          "description": "The locale code that templates in this source code are written in."
-        },
-        {
-          "kind": "variable",
-          "name": "targetLocales",
-          "type": {
-            "text": "array"
-          },
-          "default": "[ , ]",
-          "description": "The other locale codes that this application is localized into. Sorted\nlexicographically."
-        },
-        {
-          "kind": "variable",
-          "name": "allLocales",
-          "type": {
-            "text": "array"
-          },
-          "default": "[ `en`, ]",
-          "description": "All valid project locale codes. Sorted lexicographically."
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "sourceLocale",
-          "declaration": {
-            "name": "sourceLocale",
-            "module": "locales/locales.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "targetLocales",
-          "declaration": {
-            "name": "targetLocales",
-            "module": "locales/locales.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "allLocales",
-          "declaration": {
-            "name": "allLocales",
-            "module": "locales/locales.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/config.ts",
       "declarations": [
         {
@@ -270,8 +214,19 @@
             },
             {
               "kind": "field",
+              "name": "allMyAgents",
+              "default": "new AsyncComputed(() => { let myDevices = [this.client.client.myPubKey]; if (this.linkedDevicesStore) { const myLinkedDevices = this.linkedDevicesStore.myLinkedDevices.get(); if (myLinkedDevices.status !== 'completed') return myLinkedDevices; myDevices = [this.client.client.myPubKey, ...myLinkedDevices.value]; } return { status: 'completed', value: myDevices, }; })"
+            },
+            {
+              "kind": "field",
+              "name": "profileIntialized",
+              "privacy": "private",
+              "default": "new LocalStorageSignal<boolean>( `profile-initialized/${this.client.roleName}/${encodeHashToBase64(this.client.client.myPubKey)}`, )"
+            },
+            {
+              "kind": "field",
               "name": "myProfile",
-              "default": "new AsyncComputed(() => { const privateEvents = this.privateEvents.get(); if (privateEvents.status !== 'completed') return privateEvents; let myDevices = [this.client.client.myPubKey]; if (this.linkedDevicesStore) { const myLinkedDevices = this.linkedDevicesStore.myLinkedDevices.get(); if (myLinkedDevices.status !== 'completed') return myLinkedDevices; myDevices = [this.client.client.myPubKey, ...myLinkedDevices.value]; } let myProfile: [Timestamp, Profile] | undefined; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type !== 'SetProfile') continue; if ( !myDevices.find( myDevice => encodeHashToBase64(entry.author) === encodeHashToBase64(myDevice), ) ) continue; const profile = entry.event.content.profile; if (!myProfile || myProfile[0] < entry.event.timestamp) { myProfile = [entry.event.timestamp, profile]; } } return { status: 'completed', value: myProfile ? myProfile[1] : undefined, }; })"
+              "default": "new AsyncComputed(() => { const isInitialized = this.profileIntialized.get(); if (!isInitialized) { return { status: 'completed', value: undefined, }; } const privateEvents = this.privateEvents.get(); const myAgents = this.allMyAgents.get(); if (privateEvents.status !== 'completed') return privateEvents; if (myAgents.status !== 'completed') return myAgents; let myProfile: [Timestamp, Profile] | undefined; for (const [entryHash, entry] of Object.entries(privateEvents.value)) { if (entry.event.content.type !== 'SetProfile') continue; if ( !myAgents.value.find( myDevice => encodeHashToBase64(entry.author) === encodeHashToBase64(myDevice), ) ) continue; const profile = entry.event.content.profile; if (!myProfile || myProfile[0] < entry.event.timestamp) { myProfile = [entry.event.timestamp, profile]; } } return { status: 'completed', value: myProfile ? myProfile[1] : undefined, }; })"
             },
             {
               "kind": "field",
@@ -285,7 +240,7 @@
             {
               "kind": "field",
               "name": "currentProfileForAgent",
-              "default": "new MemoHoloHashMap( agent => new AsyncComputed(() => { if (encodeHashToBase64(this.myPubKey) === encodeHashToBase64(agent)) { // TODO: what about when the agent is one of your other linked devices? return this.myProfile.get(); } const friends = this.friends.get(); if (friends.status !== 'completed') return friends; const friend = friends.value.find(friend => friend.agents.find( agent => encodeHashToBase64(agent) === encodeHashToBase64(agent), ), ); return { status: 'completed', value: friend?.profile, }; }), )"
+              "default": "new MemoHoloHashMap( agent => new AsyncComputed(() => { const myAgents = this.allMyAgents.get(); const events = this.privateEvents.get(); if (myAgents.status !== 'completed') return myAgents; if (events.status !== 'completed') return events; if ( myAgents.value.find( a => encodeHashToBase64(a) === encodeHashToBase64(agent), ) ) { return this.myProfile.get(); } const sortedSetProfiles = Object.values(events.value) .filter(event => event.event.content.type === 'SetProfile') .sort((e1, e2) => e2.event.timestamp - e1.event.timestamp) .map(event => event.event.content.type === 'SetProfile' ? event.event.content : undefined, ) .filter(a => !!a); const setProfile = sortedSetProfiles.find(setProfile => setProfile.agents.find( a => encodeHashToBase64(a) === encodeHashToBase64(agent), ), ); return { status: 'completed', value: setProfile?.profile, }; }), )"
             },
             {
               "kind": "method",
@@ -407,6 +362,29 @@
               }
             }
           ]
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "LocalStorageSignal",
+          "members": [
+            {
+              "kind": "method",
+              "name": "set",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ]
+            }
+          ],
+          "superclass": {
+            "module": "src/utils.ts"
+          }
         }
       ],
       "exports": [
@@ -416,6 +394,70 @@
           "declaration": {
             "name": "asyncReadable",
             "module": "src/utils.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "LocalStorageSignal",
+          "declaration": {
+            "name": "LocalStorageSignal",
+            "module": "src/utils.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "locales/locales.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "sourceLocale",
+          "default": "`en`",
+          "description": "The locale code that templates in this source code are written in."
+        },
+        {
+          "kind": "variable",
+          "name": "targetLocales",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ , ]",
+          "description": "The other locale codes that this application is localized into. Sorted\nlexicographically."
+        },
+        {
+          "kind": "variable",
+          "name": "allLocales",
+          "type": {
+            "text": "array"
+          },
+          "default": "[ `en`, ]",
+          "description": "All valid project locale codes. Sorted lexicographically."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "sourceLocale",
+          "declaration": {
+            "name": "sourceLocale",
+            "module": "locales/locales.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "targetLocales",
+          "declaration": {
+            "name": "targetLocales",
+            "module": "locales/locales.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "allLocales",
+          "declaration": {
+            "name": "allLocales",
+            "module": "locales/locales.js"
           }
         }
       ]
