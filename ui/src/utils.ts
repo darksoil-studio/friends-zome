@@ -32,3 +32,16 @@ export function asyncReadable<T>(
 	);
 	return signal;
 }
+
+export class LocalStorageSignal<T> extends Signal.State<T | undefined> {
+	constructor(public key: string) {
+		const item = localStorage.getItem(key);
+
+		super(item ? JSON.parse(item) : undefined);
+	}
+
+	public set(value: T) {
+		super.set(value);
+		localStorage.setItem(this.key, JSON.stringify(value));
+	}
+}
