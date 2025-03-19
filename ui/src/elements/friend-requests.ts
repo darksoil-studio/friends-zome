@@ -55,12 +55,15 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 
 		if (Object.keys(incomingPendingFriendRequests).length === 0)
 			return html`
-				<div class="column center-content" style="padding: 20px; flex: 1">
+				<div
+					class="column placeholder center-content"
+					style="gap: 8px; flex: 1"
+				>
 					<sl-icon
 						.src=${wrapPathInSvg(mdiInformationOutline)}
-						style="color: grey; height: 64px; width: 48px;"
+						style="font-size: 64px;"
 					></sl-icon>
-					<span class="placeholder"
+					<span style="text-align: center"
 						>${msg("You don't have pending friend requests.")}</span
 					>
 				</div>

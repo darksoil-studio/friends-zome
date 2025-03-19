@@ -11,7 +11,7 @@ import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import { sharedStyles, wrapPathInSvg } from '@tnesh-stack/elements';
 import '@tnesh-stack/elements/dist/elements/display-error.js';
 import { SignalWatcher } from '@tnesh-stack/signals';
-import { LitElement, css, html } from 'lit';
+import { LitElement, PropertyValues, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { friendsStoreContext } from '../context.js';
@@ -47,6 +47,10 @@ export class ProfilePrompt extends SignalWatcher(LitElement) {
 
 	@state()
 	private linkingDevices = false;
+
+	firstUpdated() {
+		this.store.client.queryPrivateEventEntries();
+	}
 
 	// async createProfileForLinkedDevices(agent: AgentPubKey) {
 	// 	if (this.linkingDevices) return;

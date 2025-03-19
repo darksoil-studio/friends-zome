@@ -18,7 +18,7 @@ import { MemoHoloHashMap } from '@tnesh-stack/utils';
 import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';
 import { Friend, FriendRequest, FriendsEvent } from './types.js';
-import { asyncReadable } from './utils.js';
+import { LocalStorageSignal, asyncReadable } from './utils.js';
 
 export class FriendsStore
 	extends PrivateEventSourcingStore<FriendsEvent>
@@ -32,6 +32,25 @@ export class FriendsStore
 		public linkedDevicesStore?: LinkedDevicesStore,
 	) {
 		super(client, linkedDevicesStore);
+
+		const unsubscribe = client.onSignal(signal => {
+			const privateEventSourcingSignal = signal as PrivateEventSourcingSignal;
+			if (
+				!(
+					'type' in privateEventSourcingSignal &&
+					privateEventSourcingSignal.type === 'NewPrivateEvent'
+				)
+			)
+				return;
+
+			const friendsEvent = decode(
+				privateEventSourcingSignal.private_event_entry.event.content,
+			) as FriendsEvent;
+
+			if (friendsEvent.type !== 'SetProfile') return;
+			this.profileIntialized.set(true);
+			unsubscribe();
+		});
 	}
 
 	get myPubKey() {
@@ -52,8 +71,22 @@ export class FriendsStore
 		};
 	});
 
+	private profileIntialized = new LocalStorageSignal<boolean>(
+		`profile-initialized/${this.client.roleName}/${encodeHashToBase64(this.client.client.myPubKey)}`,
+	);
+
 	myProfile = new AsyncComputed(() => {
+		const isInitialized = this.profileIntialized.get();
+
+		if (!isInitialized) {
+			return {
+				status: 'completed',
+				value: undefined,
+			};
+		}
+
 		const privateEvents = this.privateEvents.get();
+
 		const myAgents = this.allMyAgents.get();
 		if (privateEvents.status !== 'completed') return privateEvents;
 		if (myAgents.status !== 'completed') return myAgents;
