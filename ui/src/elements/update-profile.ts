@@ -83,10 +83,7 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 				${onSubmit(fields => this.setProfile(fields))}
 				style="gap: 16px"
 			>
-				<div
-					class="row"
-					style="justify-content: center; align-self: start; gap: 16px; flex: 1"
-				>
+				<div class="row" style="justify-content: center; gap: 16px;">
 					<select-avatar
 						avatar-width="64"
 						avatar-height="64"
