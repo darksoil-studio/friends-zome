@@ -53,7 +53,9 @@ export class MyFriends extends SignalWatcher(LitElement) {
 						.src=${wrapPathInSvg(mdiInformationOutline)}
 						style="height: 64px; width: 64px;"
 					></sl-icon>
-					<span>${msg("You don't have any friends yet.")}</span>
+					<span style="text-align: center"
+						>${msg("You don't have any friends yet.")}</span
+					>
 				</div>
 			`;
 
