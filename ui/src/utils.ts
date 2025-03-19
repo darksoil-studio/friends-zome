@@ -35,13 +35,14 @@ export function asyncReadable<T>(
 
 export class LocalStorageSignal<T> extends Signal.State<T | undefined> {
 	constructor(public key: string) {
-		const item = localStorage.getItem(key);
+		const item = globalThis.localStorage?.getItem(key);
 
 		super(item ? JSON.parse(item) : undefined);
 	}
 
 	public set(value: T) {
 		super.set(value);
-		localStorage.setItem(this.key, JSON.stringify(value));
+		if (globalThis.localStorage)
+			globalThis.localStorage.setItem(this.key, JSON.stringify(value));
 	}
 }
