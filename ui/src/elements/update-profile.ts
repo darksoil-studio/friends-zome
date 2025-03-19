@@ -71,7 +71,6 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 				.required=${fieldConfig.required}
 				.label=${fieldConfig.label}
 				.value=${value}
-				style="margin-bottom: 16px;"
 			></sl-input>
 		`;
 	}
@@ -82,10 +81,11 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 				id="profile-form"
 				class="column"
 				${onSubmit(fields => this.setProfile(fields))}
+				style="gap: 16px"
 			>
 				<div
 					class="row"
-					style="justify-content: center; align-self: start; margin-bottom: 16px"
+					style="justify-content: center; align-self: start; gap: 16px"
 				>
 					<select-avatar
 						avatar-width="64"
@@ -103,7 +103,7 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 						.helpText=${msg(
 							str`Min. ${this.store.config.minNicknameLength} characters`,
 						)}
-						style="margin-left: 16px;"
+						style="flex: 1;"
 					></sl-input>
 				</div>
 
@@ -111,7 +111,7 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 					this.renderField(field, profile.fields[field.name]),
 				)}
 
-				<sl-button style="flex: 1;" variant="primary" type="submit"
+				<sl-button variant="primary" type="submit"
 					>${msg('Update Profile')}
 				</sl-button>
 			</form>
