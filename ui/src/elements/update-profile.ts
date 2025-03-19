@@ -85,7 +85,7 @@ export class UpdateProfile extends SignalWatcher(LitElement) {
 			>
 				<div
 					class="row"
-					style="justify-content: center; align-self: start; gap: 16px"
+					style="justify-content: center; align-self: start; gap: 16px; flex: 1"
 				>
 					<select-avatar
 						avatar-width="64"
