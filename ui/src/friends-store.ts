@@ -78,14 +78,14 @@ export class FriendsStore
 	myProfile = new AsyncComputed(() => {
 		const isInitialized = this.profileIntialized.get();
 
-		const privateEvents = this.privateEvents.get();
-
 		if (!isInitialized) {
 			return {
 				status: 'completed',
 				value: undefined,
 			};
 		}
+
+		const privateEvents = this.privateEvents.get();
 
 		const myAgents = this.allMyAgents.get();
 		if (privateEvents.status !== 'completed') return privateEvents;
