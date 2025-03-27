@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@darksoil-studio/linked-devices-zome": "0.400.0-rev.6179ab788aae0e9c9c4959565c41fdd67937a25c",
-    "@darksoil-studio/private-event-sourcing-zome": "0.400.0-rev.c75ae5fc45cd6619211d71154bb54f89e21f4b83",
+    "@darksoil-studio/private-event-sourcing-zome": "0.400.0-rev.2db7d14b007978a6da1fcf153663eeb99bd34a3a",
     "@darksoil-studio/profiles-provider": "^0.400.3",
     "@holochain/client": "^0.18.0",
     "@lit/context": "^1.0.0",
