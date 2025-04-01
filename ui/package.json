@@ -28,8 +28,8 @@
     "./locales/*": "./locales/*"
   },
   "dependencies": {
-    "@darksoil-studio/linked-devices-zome": "0.400.0-rev.6179ab788aae0e9c9c4959565c41fdd67937a25c",
-    "@darksoil-studio/private-event-sourcing-zome": "0.400.0-rev.2db7d14b007978a6da1fcf153663eeb99bd34a3a",
+    "@darksoil-studio/linked-devices-zome": "0.400.0-rev.681dfa4183284292d9e40832c517a52f2200ba9f",
+    "@darksoil-studio/private-event-sourcing-zome": "0.400.0-rev.2b2d20792c838a1b7e248e09a2f99a2103471708",
     "@darksoil-studio/profiles-provider": "^0.400.3",
     "@holochain/client": "^0.18.0",
     "@lit/context": "^1.0.0",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.10.3",
-    "@darksoil-studio/notifications-zome": "0.400.0-rev.df5651be9c836b8034dcfda1931bf9c9026ee472",
+    "@darksoil-studio/notifications-zome": "0.400.0-rev.d15ff75fd4cd747ffa098ce5891189c54c8f3c25",
     "@lit/localize-tools": "^0.6.3",
     "@types/lodash-es": "^4.17.12",
     "tslib": "^2.6.2",
