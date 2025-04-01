@@ -101,6 +101,12 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 
 							try {
 								await sendFriendRequestFromCode(this.store, input.value);
+								this.dispatchEvent(
+									new CustomEvent('friend-request-sent', {
+										bubbles: true,
+										composed: true,
+									}),
+								);
 								notify('Friend request send!');
 							} catch (e) {
 								notifyError('Failed to send friend request.');
