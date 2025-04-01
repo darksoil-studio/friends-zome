@@ -291,6 +291,16 @@
             },
             {
               "kind": "field",
+              "name": "incomingFriendRequests",
+              "default": "new AsyncComputed(() => { const pendingFriendRequests = this.pendingFriendRequests.get(); const allMyAgents = this.allMyAgents.get(); if (pendingFriendRequests.status !== 'completed') return pendingFriendRequests; if (allMyAgents.status !== 'completed') return allMyAgents; const incomingFriendRequests: Record< EntryHashB64, SignedEvent<FriendRequest> > = {}; for (const [eventHash, friendRequest] of Object.entries( pendingFriendRequests.value, )) { if ( !allMyAgents.value.find( a => encodeHashToBase64(friendRequest.author) === encodeHashToBase64(a), ) ) { incomingFriendRequests[eventHash] = friendRequest; } } return { status: 'completed', value: incomingFriendRequests, }; })"
+            },
+            {
+              "kind": "field",
+              "name": "outgoingFriendRequests",
+              "default": "new AsyncComputed(() => { const pendingFriendRequests = this.pendingFriendRequests.get(); const allMyAgents = this.allMyAgents.get(); if (pendingFriendRequests.status !== 'completed') return pendingFriendRequests; if (allMyAgents.status !== 'completed') return allMyAgents; const outgoingFriendRequests: Record< EntryHashB64, SignedEvent<FriendRequest> > = {}; for (const [eventHash, friendRequest] of Object.entries( pendingFriendRequests.value, )) { if ( allMyAgents.value.find( a => encodeHashToBase64(friendRequest.author) === encodeHashToBase64(a), ) ) { outgoingFriendRequests[eventHash] = friendRequest; } } return { status: 'completed', value: outgoingFriendRequests, }; })"
+            },
+            {
+              "kind": "field",
               "name": "friends"
             },
             {
@@ -592,6 +602,24 @@
           ]
         },
         {
+          "kind": "function",
+          "name": "sendFriendRequestFromCode",
+          "parameters": [
+            {
+              "name": "store",
+              "type": {
+                "text": "FriendsStore"
+              }
+            },
+            {
+              "name": "code",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
           "kind": "class",
           "description": "",
           "name": "FriendRequestQrCode",
@@ -611,6 +639,31 @@
               },
               "default": "256",
               "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "showSendCodeFallback",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "show-send-code-fallback"
+            },
+            {
+              "kind": "method",
+              "name": "renderSendCodeFallback",
+              "parameters": [
+                {
+                  "name": "code",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "code"
             }
           ],
           "attributes": [
@@ -621,6 +674,14 @@
               },
               "default": "256",
               "fieldName": "size"
+            },
+            {
+              "name": "show-send-code-fallback",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "showSendCodeFallback"
             }
           ],
           "mixins": [
@@ -672,6 +733,14 @@
         },
         {
           "kind": "js",
+          "name": "sendFriendRequestFromCode",
+          "declaration": {
+            "name": "sendFriendRequestFromCode",
+            "module": "src/elements/friend-request-qr-code.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "FriendRequestQrCode",
           "declaration": {
             "name": "FriendRequestQrCode",
@@ -711,7 +780,13 @@
               "name": "renderList",
               "parameters": [
                 {
-                  "name": "pendingFriendRequests",
+                  "name": "incomingFriendRequests",
+                  "type": {
+                    "text": "Record<string, SignedEvent<FriendRequest>>"
+                  }
+                },
+                {
+                  "name": "outgoingFriendRequests",
                   "type": {
                     "text": "Record<string, SignedEvent<FriendRequest>>"
                   }
