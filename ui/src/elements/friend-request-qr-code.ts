@@ -19,7 +19,6 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { friendsStoreContext } from '../context.js';
 import { FriendsStore } from '../friends-store.js';
-import { sendFriendRequestFromCode } from '../utils.js';
 
 export function isTauriEnv() {
 	// eslint-disable-next-line
@@ -38,6 +37,21 @@ export async function scanQrCodeAndSendFriendRequest(store: FriendsStore) {
 	const code = await scanQrcode();
 
 	return sendFriendRequestFromCode(store, code);
+}
+
+export async function sendFriendRequestFromCode(
+	store: FriendsStore,
+	code: string,
+) {
+	const split = code.split('/');
+	if (split.length !== 2) {
+		notifyError(msg('Invalid code.'));
+		return;
+	}
+	const [name, pubkeyB64] = split;
+	const pubkey = decodeHashFromBase64(pubkeyB64);
+
+	return store.client.sendFriendRequest(name, [pubkey]);
 }
 
 @customElement('friend-request-qr-code')

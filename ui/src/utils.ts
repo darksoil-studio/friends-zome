@@ -1,6 +1,5 @@
 import { decodeHashFromBase64 } from '@holochain/client';
 import { msg } from '@lit/localize';
-import { notifyError } from '@tnesh-stack/elements';
 import { AsyncState, Signal } from '@tnesh-stack/signals';
 
 import { FriendsStore } from './friends-store';
@@ -50,19 +49,4 @@ export class LocalStorageSignal<T> extends Signal.State<T | undefined> {
 		if (globalThis.localStorage)
 			globalThis.localStorage.setItem(this.key, JSON.stringify(value));
 	}
-}
-
-export async function sendFriendRequestFromCode(
-	store: FriendsStore,
-	code: string,
-) {
-	const split = code.split('/');
-	if (split.length !== 2) {
-		notifyError(msg('Invalid code.'));
-		return;
-	}
-	const [name, pubkeyB64] = split;
-	const pubkey = decodeHashFromBase64(pubkeyB64);
-
-	return store.client.sendFriendRequest(name, [pubkey]);
 }
