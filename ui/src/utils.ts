@@ -1,4 +1,8 @@
+import { decodeHashFromBase64 } from '@holochain/client';
+import { msg } from '@lit/localize';
 import { AsyncState, Signal } from '@tnesh-stack/signals';
+
+import { FriendsStore } from './friends-store';
 
 export function asyncReadable<T>(
 	initFn: (set: (value: T) => void) => Promise<(() => void) | void>,

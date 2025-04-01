@@ -17,7 +17,7 @@ import {
 	wrapPathInSvg,
 } from '@tnesh-stack/elements';
 import '@tnesh-stack/elements/dist/elements/display-error.js';
-import { SignalWatcher, joinAsyncMap } from '@tnesh-stack/signals';
+import { SignalWatcher, joinAsync, joinAsyncMap } from '@tnesh-stack/signals';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { join } from 'lit/directives/join.js';
@@ -43,17 +43,14 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 	/** Private properties */
 
 	renderList(
-		pendingFriendRequests: Record<string, SignedEvent<FriendRequest>>,
+		incomingFriendRequests: Record<string, SignedEvent<FriendRequest>>,
+		outgoingFriendRequests: Record<string, SignedEvent<FriendRequest>>,
 	) {
-		const incomingPendingFriendRequests = Object.entries(
-			pendingFriendRequests,
-		).filter(
-			([_, friendRequest]) =>
-				encodeHashToBase64(friendRequest.author) !==
-				encodeHashToBase64(this.store.client.client.myPubKey),
-		);
-
-		if (Object.keys(incomingPendingFriendRequests).length === 0)
+		if (
+			Object.keys(incomingFriendRequests).length +
+				Object.keys(outgoingFriendRequests).length ===
+			0
+		)
 			return html`
 				<div
 					class="column placeholder center-content"
@@ -72,7 +69,7 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 		return html`
 			<div class="column" style="flex: 1;">
 				${join(
-					incomingPendingFriendRequests.map(
+					Object.entries(incomingFriendRequests).map(
 						([friendRequestHash, friendRequest]) => html`
 							<div
 								class="row"
@@ -120,12 +117,31 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 					),
 					() => html`<sl-divider></sl-divider>`,
 				)}
+				${join(
+					Object.entries(outgoingFriendRequests).map(
+						([friendRequestHash, friendRequest]) => html`
+							<div
+								class="row"
+								style="align-items: center; gap: 8px; margin: 8px"
+							>
+								<span style="flex: 1"
+									>${friendRequest.event.content.to_name}</span
+								>
+								<sl-tag>${msg('Awaiting response')} </sl-tag>
+							</div>
+						`,
+					),
+					() => html`<sl-divider></sl-divider>`,
+				)}
 			</div>
 		`;
 	}
 
 	render() {
-		const pendingFriendRequests = this.store.pendingFriendRequests.get();
+		const pendingFriendRequests = joinAsync([
+			this.store.incomingFriendRequests.get(),
+			this.store.outgoingFriendRequests.get(),
+		]);
 
 		switch (pendingFriendRequests.status) {
 			case 'pending':
@@ -142,7 +158,10 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 					.error=${pendingFriendRequests.error}
 				></display-error>`;
 			case 'completed':
-				return this.renderList(pendingFriendRequests.value);
+				return this.renderList(
+					pendingFriendRequests.value[0],
+					pendingFriendRequests.value[1],
+				);
 		}
 	}
 
