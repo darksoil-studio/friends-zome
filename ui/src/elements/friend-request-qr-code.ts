@@ -69,18 +69,19 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 		if (!this.showSendCodeFallback) return html``;
 
 		return html`
-			<div class="column" style="gap: 16px">
+			<div class="column" style="gap:16px">
 				<span style="align-self: center">${msg('OR')} </span>
 
 				<div class="column" style="gap: 8px">
 					<span>${msg('Send this code to your other friend...')} </span>
-					<div class="row" style="align-items: center; gap: 8px">
-						<sl-tag style="flex: 1; ">${code} </sl-tag>
+					<div
+						class="row"
+						style="align-items: center; gap: 8px; justify-content: center"
+					>
+						<sl-tag>${code.slice(0, 32)}...</sl-tag>
 						<sl-copy-button .value=${code}></sl-copy-button>
 					</div>
-				</div>
 
-				<div class="column" style=" gap: 8px">
 					<span style="word-break: break-word;"
 						>${msg('... and enter here the code from your friend.')}
 					</span>
@@ -89,10 +90,17 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 						@sl-input=${async (e: CustomEvent) => {
 							const input = e.target as SlInput;
 
-							const code = input.value;
+							if (code === input.value) {
+								notifyError(
+									msg('Invalid invite code: this is your own invite code.'),
+								);
+								input.value = '';
+
+								return;
+							}
 
 							try {
-								await sendFriendRequestFromCode(this.store, code);
+								await sendFriendRequestFromCode(this.store, input.value);
 								notify('Friend request send!');
 							} catch (e) {
 								notifyError('Failed to send friend request.');
@@ -135,7 +143,7 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 					.error=${code.error}
 				></display-error>`;
 			case 'completed':
-				return html`<div class="column" style="gap: 16px">
+				return html`<div class="column" style="gap: 16px; flex: 1">
 					<sl-qr-code
 						style="align-self: center"
 						.size=${this.size}
@@ -151,14 +159,7 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 		sharedStyles,
 		css`
 			:host {
-				display: contents;
-			}
-			sl-tag::part(base) {
-				font-size: 12px;
-				overflow: hidden;
-			}
-			sl-tag {
-				max-width: 70vw;
+				display: flex;
 			}
 		`,
 	];
