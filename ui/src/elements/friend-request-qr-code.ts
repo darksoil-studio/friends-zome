@@ -107,9 +107,21 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 		`;
 	}
 
-	render() {
+	code() {
 		const myProfile = this.store.myProfile.get();
-		switch (myProfile.status) {
+		if (myProfile.status !== 'completed') return myProfile;
+
+		return {
+			status: 'completed' as const,
+			value: `${myProfile.value?.name}/${encodeHashToBase64(
+				this.store.client.client.myPubKey,
+			)}`,
+		};
+	}
+
+	render() {
+		const code = this.code();
+		switch (code.status) {
 			case 'pending':
 				return html`<div
 					class="column"
@@ -120,20 +132,17 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 			case 'error':
 				return html`<display-error
 					.headline=${msg('Error fetching the profiles for all agents')}
-					.error=${myProfile.error}
+					.error=${code.error}
 				></display-error>`;
 			case 'completed':
-				const code = `${myProfile.value?.name}/${encodeHashToBase64(
-					this.store.client.client.myPubKey,
-				)}`;
 				return html`<div class="column" style="gap: 16px">
 					<sl-qr-code
 						style="align-self: center"
 						.size=${this.size}
-						.value=${code}
+						.value=${code.value}
 					>
 					</sl-qr-code
-					>${this.renderSendCodeFallback(code)}
+					>${this.renderSendCodeFallback(code.value)}
 				</div>`;
 		}
 	}
