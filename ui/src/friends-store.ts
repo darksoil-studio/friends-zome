@@ -143,6 +143,66 @@ export class FriendsStore
 		return { status: 'completed', value: friendRequests };
 	});
 
+	incomingFriendRequests = new AsyncComputed(() => {
+		const pendingFriendRequests = this.pendingFriendRequests.get();
+		const allMyAgents = this.allMyAgents.get();
+		if (pendingFriendRequests.status !== 'completed')
+			return pendingFriendRequests;
+		if (allMyAgents.status !== 'completed') return allMyAgents;
+
+		const incomingFriendRequests: Record<
+			EntryHashB64,
+			SignedEvent<FriendRequest>
+		> = {};
+		for (const [eventHash, friendRequest] of Object.entries(
+			pendingFriendRequests.value,
+		)) {
+			if (
+				!allMyAgents.value.find(
+					a =>
+						encodeHashToBase64(friendRequest.author) === encodeHashToBase64(a),
+				)
+			) {
+				incomingFriendRequests[eventHash] = friendRequest;
+			}
+		}
+
+		return {
+			status: 'completed',
+			value: incomingFriendRequests,
+		};
+	});
+
+	outgoingFriendRequests = new AsyncComputed(() => {
+		const pendingFriendRequests = this.pendingFriendRequests.get();
+		const allMyAgents = this.allMyAgents.get();
+		if (pendingFriendRequests.status !== 'completed')
+			return pendingFriendRequests;
+		if (allMyAgents.status !== 'completed') return allMyAgents;
+
+		const outgoingFriendRequests: Record<
+			EntryHashB64,
+			SignedEvent<FriendRequest>
+		> = {};
+		for (const [eventHash, friendRequest] of Object.entries(
+			pendingFriendRequests.value,
+		)) {
+			if (
+				allMyAgents.value.find(
+					a =>
+						encodeHashToBase64(friendRequest.author) === encodeHashToBase64(a),
+				)
+			) {
+				outgoingFriendRequests[eventHash] = friendRequest;
+			}
+		}
+
+		return {
+			status: 'completed',
+			value: outgoingFriendRequests,
+		};
+	});
+
 	friends = asyncReadable<Friend[]>(async set => {
 		let friends = await this.client.queryAllFriends();
 		set(friends);
