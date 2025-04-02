@@ -901,7 +901,7 @@ import{l as wt}from"./context.C_Dm2Rqq.js";import{e as K,d as bt,i as F,x as k,u
 				overflow: hidden;
 			}
 			sl-tag {
-				max-width: 85vw;
+				max-width: 70%;
 			}
 		`];V([nt({context:wt,subscribe:!0}),f()],pt.prototype,"store",void 0);pt=V([$t(),ot("discover-agent")],pt);let ht=class extends Z{constructor(){super(...arguments),this.passcodeLength=4}firstUpdated(){setTimeout(()=>{var t;(t=this.shadowRoot.getElementById("input-0"))===null||t===void 0||t.focus()})}get passcode(){const t=Array.from(this.shadowRoot.querySelectorAll("sl-input")),o=Array.from(Array(this.passcodeLength)).map(()=>{});for(let s=0;s<t.length;s++){if(t[s].value==="")return;const u=parseInt(t[s].value,10);if(u>9)return;o[s]=u}return o}clearPasscode(){Array.from(this.shadowRoot.querySelectorAll("sl-input")).forEach(o=>o.value=""),setTimeout(()=>{var o;(o=this.shadowRoot.getElementById("input-0"))===null||o===void 0||o.focus()})}maybeDispatchEvent(){const t=this.passcode;t&&this.dispatchEvent(new CustomEvent("passcode-change",{bubbles:!0,composed:!0,detail:{passcode:t}}))}render(){return k`
 			<div class="row">
