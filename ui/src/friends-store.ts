@@ -260,7 +260,7 @@ export class FriendsStore
 	async search(nameFilter: string): Promise<Array<User>> {
 		const friends = await toPromise(this.friends);
 		const filteredFriends = friends.filter(friend =>
-			friend.profile.name.startsWith(nameFilter),
+			friend.profile.name.toLowerCase().startsWith(nameFilter.toLowerCase()),
 		);
 		return filteredFriends;
 	}
