@@ -1,6 +1,6 @@
+import { ActionCommittedSignal } from '@darksoil-studio/holochain-utils';
 import { Profile } from '@darksoil-studio/profiles-provider';
 import { AgentPubKey, EntryHash } from '@holochain/client';
-import { ActionCommittedSignal } from '@darksoil-studio/holochain-utils';
 
 export type FriendsSignal = ActionCommittedSignal<EntryTypes, LinkTypes>;
 
