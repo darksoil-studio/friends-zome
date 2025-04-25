@@ -1,5 +1,5 @@
 import { dhtSync, pause, runScenario } from '@holochain/tryorama';
-import { toPromise, watch } from '@tnesh-stack/signals';
+import { toPromise, watch } from '@darksoil-studio/holochain-signals';
 import { assert, expect, test } from 'vitest';
 
 import { setup } from './setup.js';

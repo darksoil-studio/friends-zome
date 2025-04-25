@@ -1,3 +1,14 @@
+import {
+	notifyError,
+	sharedStyles,
+	wrapPathInSvg,
+} from '@darksoil-studio/holochain-elements';
+import '@darksoil-studio/holochain-elements/dist/elements/display-error.js';
+import {
+	SignalWatcher,
+	joinAsync,
+	joinAsyncMap,
+} from '@darksoil-studio/holochain-signals';
 import { SignedEvent } from '@darksoil-studio/private-event-sourcing-zome';
 import '@darksoil-studio/profiles-provider/dist/elements/profile-list-item-skeleton.js';
 import {
@@ -11,13 +22,6 @@ import { mdiInformationOutline } from '@mdi/js';
 import { SlButton } from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
-import {
-	notifyError,
-	sharedStyles,
-	wrapPathInSvg,
-} from '@tnesh-stack/elements';
-import '@tnesh-stack/elements/dist/elements/display-error.js';
-import { SignalWatcher, joinAsync, joinAsyncMap } from '@tnesh-stack/signals';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { join } from 'lit/directives/join.js';

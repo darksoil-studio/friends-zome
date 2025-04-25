@@ -1,4 +1,10 @@
 import {
+	sharedStyles,
+	wrapPathInSvg,
+} from '@darksoil-studio/holochain-elements';
+import '@darksoil-studio/holochain-elements/dist/elements/display-error.js';
+import { SignalWatcher } from '@darksoil-studio/holochain-signals';
+import {
 	LinkedDevicesStore,
 	linkedDevicesStoreContext,
 } from '@darksoil-studio/linked-devices-zome';
@@ -8,9 +14,6 @@ import { localized, msg } from '@lit/localize';
 import { mdiArrowLeft, mdiSync } from '@mdi/js';
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
-import { sharedStyles, wrapPathInSvg } from '@tnesh-stack/elements';
-import '@tnesh-stack/elements/dist/elements/display-error.js';
-import { SignalWatcher } from '@tnesh-stack/signals';
 import { LitElement, PropertyValues, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 

@@ -392,7 +392,7 @@
           "name": "FriendsZomeMock",
           "superclass": {
             "name": "ZomeMock",
-            "package": "@tnesh-stack/utils"
+            "package": "@darksoil-studio/holochain-utils"
           }
         }
       ],
@@ -538,7 +538,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -666,6 +666,14 @@
               "name": "code"
             }
           ],
+          "events": [
+            {
+              "name": "friend-request-sent",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
           "attributes": [
             {
               "name": "size",
@@ -687,7 +695,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -814,7 +822,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -1010,7 +1018,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -1093,7 +1101,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -1202,7 +1210,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -1290,7 +1298,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {
@@ -1404,7 +1412,7 @@
           "mixins": [
             {
               "name": "SignalWatcher",
-              "package": "@tnesh-stack/signals"
+              "package": "@darksoil-studio/holochain-signals"
             }
           ],
           "superclass": {

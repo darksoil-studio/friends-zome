@@ -1,3 +1,12 @@
+import {
+	notifyError,
+	onSubmit,
+	sharedStyles,
+	wrapPathInSvg,
+} from '@darksoil-studio/holochain-elements';
+import '@darksoil-studio/holochain-elements/dist/elements/display-error.js';
+import '@darksoil-studio/holochain-elements/dist/elements/select-avatar.js';
+import { SignalWatcher } from '@darksoil-studio/holochain-signals';
 import { FieldConfig, Profile } from '@darksoil-studio/profiles-provider';
 import { consume } from '@lit/context';
 import { localized, msg, str } from '@lit/localize';
@@ -8,15 +17,6 @@ import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
-import {
-	notifyError,
-	onSubmit,
-	sharedStyles,
-	wrapPathInSvg,
-} from '@tnesh-stack/elements';
-import '@tnesh-stack/elements/dist/elements/display-error.js';
-import '@tnesh-stack/elements/dist/elements/select-avatar.js';
-import { SignalWatcher } from '@tnesh-stack/signals';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 

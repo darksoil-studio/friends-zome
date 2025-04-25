@@ -1,14 +1,9 @@
 { inputs, ... }:
 
 {
-  perSystem =
-    { inputs'
-    , lib
-    , self'
-    , system
-    , ...
-    }: {
-      packages.friends_test_happ = inputs.tnesh-stack.outputs.builders.${system}.happ {
+  perSystem = { inputs', lib, self', system, ... }: {
+    packages.friends_test_happ =
+      inputs.holochain-nix-builders.outputs.builders.${system}.happ {
         happManifest = ./happ.yaml;
 
         dnas = {
@@ -18,5 +13,5 @@
           friends_test = self'.packages.friends_test_dna;
         };
       };
-    };
+  };
 }
