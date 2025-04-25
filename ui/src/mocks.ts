@@ -27,7 +27,7 @@ import {
 	fakeUpdateEntry,
 	hash,
 	pickBy,
-} from '@tnesh-stack/utils';
+} from '@darksoil-studio/holochain-utils';
 
 import { FriendsClient } from './friends-client.js';
 

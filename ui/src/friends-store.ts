@@ -12,8 +12,8 @@ import {
 } from '@darksoil-studio/profiles-provider';
 import { EntryHashB64, Timestamp, encodeHashToBase64 } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
-import { AsyncComputed, toPromise } from '@tnesh-stack/signals';
-import { MemoHoloHashMap } from '@tnesh-stack/utils';
+import { AsyncComputed, toPromise } from '@darksoil-studio/holochain-signals';
+import { MemoHoloHashMap } from '@darksoil-studio/holochain-utils';
 
 import { FriendsConfig, defaultConfig } from './config.js';
 import { FriendsClient } from './friends-client.js';

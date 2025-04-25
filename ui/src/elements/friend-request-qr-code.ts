@@ -11,9 +11,9 @@ import {
 	requestPermissions,
 	scan,
 } from '@tauri-apps/plugin-barcode-scanner';
-import { notify, notifyError, sharedStyles } from '@tnesh-stack/elements';
-import '@tnesh-stack/elements/dist/elements/display-error.js';
-import { SignalWatcher } from '@tnesh-stack/signals';
+import { notify, notifyError, sharedStyles } from '@darksoil-studio/holochain-elements';
+import '@darksoil-studio/holochain-elements/dist/elements/display-error.js';
+import { SignalWatcher } from '@darksoil-studio/holochain-signals';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 

@@ -1,6 +1,6 @@
 import { decodeHashFromBase64 } from '@holochain/client';
 import { msg } from '@lit/localize';
-import { AsyncState, Signal } from '@tnesh-stack/signals';
+import { AsyncState, Signal } from '@darksoil-studio/holochain-signals';
 
 import { FriendsStore } from './friends-store';
 

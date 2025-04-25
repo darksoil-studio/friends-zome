@@ -4,9 +4,9 @@ import { localized, msg, str } from '@lit/localize';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
-import { notifyError, onSubmit, sharedStyles } from '@tnesh-stack/elements';
-import '@tnesh-stack/elements/dist/elements/select-avatar.js';
-import { SignalWatcher } from '@tnesh-stack/signals';
+import { notifyError, onSubmit, sharedStyles } from '@darksoil-studio/holochain-elements';
+import '@darksoil-studio/holochain-elements/dist/elements/select-avatar.js';
+import { SignalWatcher } from '@darksoil-studio/holochain-signals';
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
