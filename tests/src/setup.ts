@@ -1,21 +1,5 @@
-import { EntryRecord } from '@darksoil-studio/holochain-utils';
-import {
-	ActionHash,
-	AgentPubKey,
-	AppBundleSource,
-	AppCallZomeRequest,
-	AppWebsocket,
-	EntryHash,
-	NewEntryAction,
-	Record,
-	encodeHashToBase64,
-	fakeActionHash,
-	fakeAgentPubKey,
-	fakeDnaHash,
-	fakeEntryHash,
-} from '@holochain/client';
+import { AppWebsocket } from '@holochain/client';
 import { Player, Scenario, dhtSync, pause } from '@holochain/tryorama';
-import { encode } from '@msgpack/msgpack';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -46,8 +30,10 @@ export async function setup(scenario: Scenario, numPlayers = 2) {
 
 async function addPlayer(scenario: Scenario) {
 	const player = await scenario.addPlayerWithApp({
-		type: 'path',
-		value: testHappUrl,
+		appBundleSource: {
+			type: 'path',
+			value: testHappUrl,
+		},
 	});
 
 	patchCallZome(player.appWs as AppWebsocket);
