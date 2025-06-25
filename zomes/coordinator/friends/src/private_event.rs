@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use hdk::prelude::*;
 use private_event_sourcing::*;
 
-use crate::{all_friends::query_my_friends, profile::query_my_profile_event};
+use crate::all_friends::query_my_friends;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Profile {
@@ -98,7 +98,8 @@ impl PrivateEvent for FriendsEvent {
                     ));
                 };
 
-                let FriendsEvent::FriendRequest { .. } = friend_request.event.content else {
+                let FriendsEvent::FriendRequest { .. } = friend_request.payload.content.event
+                else {
                     return Ok(ValidateCallbackResult::Invalid(
                         "Given hash was not for a FriendRequest".into(),
                     ));
@@ -145,7 +146,8 @@ impl PrivateEvent for FriendsEvent {
                     return Err(wasm_error!("Friend request not found"));
                 };
 
-                let FriendsEvent::FriendRequest { from_agents, .. } = friend_request.event.content
+                let FriendsEvent::FriendRequest { from_agents, .. } =
+                    friend_request.payload.content.event
                 else {
                     return Err(wasm_error!("Given hash was not for a FriendRequest"));
                 };
@@ -162,7 +164,8 @@ impl PrivateEvent for FriendsEvent {
                     return Err(wasm_error!("Friend request not found"));
                 };
 
-                let FriendsEvent::FriendRequest { to_agents, .. } = friend_request.event.content
+                let FriendsEvent::FriendRequest { to_agents, .. } =
+                    friend_request.payload.content.event
                 else {
                     return Err(wasm_error!("Given hash was not for a FriendRequest"));
                 };
@@ -170,29 +173,6 @@ impl PrivateEvent for FriendsEvent {
                 Ok(to_agents.iter().cloned().collect())
             }
         }
-    }
-
-    fn post_commit(
-        &self,
-        _event_hash: EntryHash,
-        _author: AgentPubKey,
-        _timestamp: Timestamp,
-    ) -> ExternResult<()> {
-        let FriendsEvent::AcceptFriendRequest { .. } = self else {
-            return Ok(());
-        };
-
-        let Some((my_profile_event_hash, _)) = query_my_profile_event()? else {
-            return Err(wasm_error!(
-                "Can't accept a friend request if we haven't set our profile."
-            ));
-        };
-
-        info!("Sending my profile to new friends.");
-
-        send_events(vec![my_profile_event_hash.into()].into_iter().collect())?;
-
-        Ok(())
     }
 }
 

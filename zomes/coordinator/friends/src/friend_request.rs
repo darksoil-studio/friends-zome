@@ -52,7 +52,9 @@ pub fn accept_friend_request(friend_request_hash: EntryHash) -> ExternResult<()>
     else {
         return Err(wasm_error!("Friend request not found."));
     };
-    let FriendsEvent::FriendRequest { from_agents, .. } = friend_request_entry.event.content else {
+    let FriendsEvent::FriendRequest { from_agents, .. } =
+        friend_request_entry.payload.content.event
+    else {
         return Err(wasm_error!("The given hash is not for a friend request."));
     };
     let Some(my_profile) = query_my_profile(())? else {
@@ -86,7 +88,9 @@ pub fn reject_friend_request(friend_request_hash: EntryHash) -> ExternResult<()>
     else {
         return Err(wasm_error!("Friend request not found."));
     };
-    let FriendsEvent::FriendRequest { from_agents, .. } = friend_request_entry.event.content else {
+    let FriendsEvent::FriendRequest { from_agents, .. } =
+        friend_request_entry.payload.content.event
+    else {
         return Err(wasm_error!("The given hash is not for a friend request."));
     };
     let Some(my_profile) = query_my_profile(())? else {
@@ -118,7 +122,8 @@ pub fn cancel_friend_request(friend_request_hash: EntryHash) -> ExternResult<()>
     else {
         return Err(wasm_error!("Friend request not found."));
     };
-    let FriendsEvent::FriendRequest { to_agents, .. } = friend_request_entry.event.content else {
+    let FriendsEvent::FriendRequest { to_agents, .. } = friend_request_entry.payload.content.event
+    else {
         return Err(wasm_error!("The given hash is not for a friend request."));
     };
     let Some(my_profile) = query_my_profile(())? else {
