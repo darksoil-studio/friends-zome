@@ -22,13 +22,13 @@ pub fn query_my_profile_event() -> ExternResult<Option<(EntryHashB64, Profile)>>
     let mut sorted_events: Vec<(EntryHashB64, SignedEvent<FriendsEvent>)> =
         friends_events.into_iter().collect();
 
-    sorted_events.sort_by(|e1, e2| e1.1.event.timestamp.cmp(&e2.1.event.timestamp));
+    sorted_events.sort_by_key(|e| e.1.payload.timestamp);
 
     let all_my_agents = query_all_my_agents()?;
 
     let profile_events: Vec<(EntryHashB64, Profile)> = sorted_events
         .into_iter()
-        .filter_map(|(entry_hash, event)| match event.event.content {
+        .filter_map(|(entry_hash, event)| match event.payload.content.event {
             FriendsEvent::SetProfile { agents, profile } => {
                 match agents.iter().any(|a| all_my_agents.contains(a)) {
                     true => Some((entry_hash.clone(), profile)),
