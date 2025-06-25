@@ -86,6 +86,9 @@ importers:
       '@darksoil-studio/holochain-utils':
         specifier: ^0.500.0
         version: 0.500.0
+      '@darksoil-studio/private-event-sourcing-zome':
+        specifier: 0.500.0-rev.9b50c8af1736c1b3f9af63ac86b0e2a9bada67c7
+        version: 0.500.0-rev.9b50c8af1736c1b3f9af63ac86b0e2a9bada67c7(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@holochain/client':
         specifier: ^0.19.0
         version: 0.19.0
@@ -390,6 +393,9 @@ packages:
 
   '@darksoil-studio/private-event-sourcing-zome@0.500.0-rev.84548e166f6cb36b4df7a7b43f4570171d4b31fd':
     resolution: {integrity: sha512-64qhm0wObjiY1YARche3tB/MpoFTc2H0XxZ0UZRrFpSTN7SkkZ7GS0jvxXRMoJzR5HBLo4DfYqNkRtmqmu6xSg==}
+
+  '@darksoil-studio/private-event-sourcing-zome@0.500.0-rev.9b50c8af1736c1b3f9af63ac86b0e2a9bada67c7':
+    resolution: {integrity: sha512-36Akb9BJQIGvEhDqikrYneN424lkxrFo7RSjfKVzgJ5vSapFXMXtvCQ/TZtKSqjUoqCjSW2LSDICf8EASZN/4Q==}
 
   '@darksoil-studio/profiles-provider@0.500.0':
     resolution: {integrity: sha512-QOH2nd4wjLNjC6a9S2VtCVd0OH19e6GTpgbK6UMIU2775h7MZNZEEuYJIqg+HIofK/uEhAml62rvLw6aVz4eLA==}
@@ -3301,6 +3307,25 @@ snapshots:
       - utf-8-validate
 
   '@darksoil-studio/private-event-sourcing-zome@0.500.0-rev.84548e166f6cb36b4df7a7b43f4570171d4b31fd(@floating-ui/utils@0.2.9)(@types/react@19.0.10)':
+    dependencies:
+      '@darksoil-studio/holochain-elements': 0.500.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@darksoil-studio/holochain-signals': 0.500.0
+      '@darksoil-studio/holochain-utils': 0.500.0
+      '@darksoil-studio/linked-devices-zome': 0.500.0-rev.704b36ed3a672354446909c5ff77a347cf0edeac(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      '@holochain/client': 0.19.0
+      '@lit/context': 1.1.4
+      '@lit/localize': 0.12.2
+      '@mdi/js': 7.4.47
+      '@msgpack/msgpack': 2.8.0
+      '@shoelace-style/shoelace': 2.20.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+      lit: 3.2.1
+    transitivePeerDependencies:
+      - '@floating-ui/utils'
+      - '@types/react'
+      - bufferutil
+      - utf-8-validate
+
+  '@darksoil-studio/private-event-sourcing-zome@0.500.0-rev.9b50c8af1736c1b3f9af63ac86b0e2a9bada67c7(@floating-ui/utils@0.2.9)(@types/react@19.0.10)':
     dependencies:
       '@darksoil-studio/holochain-elements': 0.500.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@darksoil-studio/holochain-signals': 0.500.0

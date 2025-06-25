@@ -31409,11 +31409,11 @@
         "scaffolding": "scaffolding_51"
       },
       "locked": {
-        "lastModified": 1750847483,
-        "narHash": "sha256-kpWtk+/ncdmXFi1BEIJPxOedhQAu9NN8RSKuLYNUlZM=",
+        "lastModified": 1750852559,
+        "narHash": "sha256-xHzUtZ2whJY+DcWEzikirszs1OXiph/5ZyqwwtA0YwE=",
         "owner": "darksoil-studio",
         "repo": "private-event-sourcing-zome",
-        "rev": "84548e166f6cb36b4df7a7b43f4570171d4b31fd",
+        "rev": "9b50c8af1736c1b3f9af63ac86b0e2a9bada67c7",
         "type": "github"
       },
       "original": {
