@@ -3,7 +3,7 @@
 	"private": true,
 	"scripts": {
 		"start": "AGENTS=2 pnpm network",
-		"network": "pnpm build:happ && UI_PORT=8888 concurrently -k \"pnpm -F @darksoil-studio/friends-zome start\" \"pnpm launch\" \"hc playground\"",
+		"network": "pnpm build:happ && UI_PORT=8889 concurrently -k \"pnpm -F @darksoil-studio/friends-zome start\" \"pnpm launch\" \"hc playground\"",
 		"launch": "concurrently-repeat  \"RUST_LOG=warn WASM_LOG=info hc pilot workdir/friends_test.happ --ui-port $UI_PORT\" $AGENTS",
 		"test": "pnpm build:happ && pnpm -F tests test",
 		"build:happ": "nix build -L .#friends_test_happ.meta.debug -o workdir/friends_test.happ"

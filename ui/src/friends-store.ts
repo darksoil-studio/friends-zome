@@ -2,7 +2,6 @@ import { AsyncComputed, toPromise } from '@darksoil-studio/holochain-signals';
 import { MemoHoloHashMap } from '@darksoil-studio/holochain-utils';
 import { LinkedDevicesStore } from '@darksoil-studio/linked-devices-zome';
 import {
-	PrivateEventEntry,
 	PrivateEventSourcingSignal,
 	PrivateEventSourcingStore,
 	SignedEvent,
@@ -44,7 +43,7 @@ export class FriendsStore
 				return;
 
 			const friendsEvent = decode(
-				privateEventSourcingSignal.private_event_entry.event.content,
+				privateEventSourcingSignal.private_event_entry.payload.content.event,
 			) as FriendsEvent;
 
 			if (friendsEvent.type !== 'SetProfile') return;
@@ -94,7 +93,7 @@ export class FriendsStore
 		let myProfile: [Timestamp, Profile] | undefined;
 
 		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
-			if (entry.event.content.type !== 'SetProfile') continue;
+			if (entry.payload.content.event.type !== 'SetProfile') continue;
 			if (
 				!myAgents.value.find(
 					myDevice =>
@@ -103,10 +102,10 @@ export class FriendsStore
 			)
 				continue;
 
-			const profile = entry.event.content.profile;
+			const profile = entry.payload.content.event.profile;
 
-			if (!myProfile || myProfile[0] < entry.event.timestamp) {
-				myProfile = [entry.event.timestamp, profile];
+			if (!myProfile || myProfile[0] < entry.payload.timestamp) {
+				myProfile = [entry.payload.timestamp, profile];
 			}
 		}
 
@@ -123,19 +122,19 @@ export class FriendsStore
 		const friendRequests: Record<EntryHashB64, SignedEvent<FriendRequest>> = {};
 
 		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
-			if (entry.event.content.type === 'FriendRequest') {
+			if (entry.payload.content.event.type === 'FriendRequest') {
 				friendRequests[entryHash] = entry as SignedEvent<FriendRequest>;
 			}
 		}
 
 		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
 			if (
-				entry.event.content.type === 'AcceptFriendRequest' ||
-				entry.event.content.type === 'RejectFriendRequest' ||
-				entry.event.content.type === 'CancelFriendRequest'
+				entry.payload.content.event.type === 'AcceptFriendRequest' ||
+				entry.payload.content.event.type === 'RejectFriendRequest' ||
+				entry.payload.content.event.type === 'CancelFriendRequest'
 			) {
 				delete friendRequests[
-					encodeHashToBase64(entry.event.content.friend_request_hash)
+					encodeHashToBase64(entry.payload.content.event.friend_request_hash)
 				];
 			}
 		}
@@ -235,11 +234,11 @@ export class FriendsStore
 				}
 
 				const sortedSetProfiles = Object.values(events.value)
-					.filter(event => event.event.content.type === 'SetProfile')
-					.sort((e1, e2) => e2.event.timestamp - e1.event.timestamp)
+					.filter(event => event.payload.content.event.type === 'SetProfile')
+					.sort((e1, e2) => e2.payload.timestamp - e1.payload.timestamp)
 					.map(event =>
-						event.event.content.type === 'SetProfile'
-							? event.event.content
+						event.payload.content.event.type === 'SetProfile'
+							? event.payload.content.event
 							: undefined,
 					)
 					.filter(a => !!a);

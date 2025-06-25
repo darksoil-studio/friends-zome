@@ -18,7 +18,7 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
     let mut sorted_events: Vec<(EntryHashB64, SignedEvent<FriendsEvent>)> =
         friends_events.into_iter().collect();
 
-    sorted_events.sort_by(|e1, e2| e1.1.event.timestamp.cmp(&e2.1.event.timestamp));
+    sorted_events.sort_by_key(|e| e.1.payload.timestamp);
 
     let all_my_agents = query_all_my_agents()?;
 
@@ -30,7 +30,7 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
             to_agents,
             from_agents,
             ..
-        } = &friend_event.event.content
+        } = &friend_event.payload.content.event
         else {
             continue;
         };
@@ -41,7 +41,7 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
         };
         friend_requests.insert(
             entry_hash.clone(),
-            (friend_event.event.timestamp, peer_agents.clone()),
+            (friend_event.payload.timestamp, peer_agents.clone()),
         );
     }
 
@@ -50,7 +50,7 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
     for (_entry_hash, friend_event) in &sorted_events {
         let FriendsEvent::AcceptFriendRequest {
             friend_request_hash,
-        } = &friend_event.event.content
+        } = &friend_event.payload.content.event
         else {
             continue;
         };
@@ -62,14 +62,14 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
     }
 
     for (_entry_hash, friend_event) in &sorted_events {
-        let FriendsEvent::RemoveFriend { agents } = &friend_event.event.content else {
+        let FriendsEvent::RemoveFriend { agents } = &friend_event.payload.content.event else {
             continue;
         };
 
         accepted_friend_requests = accepted_friend_requests
             .into_iter()
             .filter(|(timestamp, friend)| {
-                friend_event.event.timestamp.lt(timestamp)
+                friend_event.payload.timestamp.lt(timestamp)
                     || (friend.is_disjoint(agents) && !friend.contains(&friend_event.author))
             })
             .collect();
@@ -78,7 +78,8 @@ pub fn query_all_friends() -> ExternResult<Vec<Friend>> {
     let mut friends: Vec<Friend> = Vec::new();
 
     for (_hash, friend_event) in sorted_events {
-        let FriendsEvent::SetProfile { agents, profile } = friend_event.event.content else {
+        let FriendsEvent::SetProfile { agents, profile } = friend_event.payload.content.event
+        else {
             continue;
         };
         if agents.iter().any(|a| all_my_agents.contains(a)) {
@@ -112,7 +113,7 @@ pub fn query_my_friends() -> ExternResult<Vec<BTreeSet<AgentPubKey>>> {
     let mut sorted_events: Vec<(EntryHashB64, SignedEvent<FriendsEvent>)> =
         friends_events.into_iter().collect();
 
-    sorted_events.sort_by(|e1, e2| e1.1.event.timestamp.cmp(&e2.1.event.timestamp));
+    sorted_events.sort_by_key(|e| e.1.payload.timestamp);
 
     let all_my_agents = query_all_my_agents()?;
 
@@ -124,7 +125,7 @@ pub fn query_my_friends() -> ExternResult<Vec<BTreeSet<AgentPubKey>>> {
             to_agents,
             from_agents,
             ..
-        } = &friend_event.event.content
+        } = &friend_event.payload.content.event
         else {
             continue;
         };
@@ -135,7 +136,7 @@ pub fn query_my_friends() -> ExternResult<Vec<BTreeSet<AgentPubKey>>> {
         };
         friend_requests.insert(
             entry_hash.clone(),
-            (friend_event.event.timestamp, peer_agents.clone()),
+            (friend_event.payload.timestamp, peer_agents.clone()),
         );
     }
 
@@ -144,7 +145,7 @@ pub fn query_my_friends() -> ExternResult<Vec<BTreeSet<AgentPubKey>>> {
     for (_entry_hash, friend_event) in &sorted_events {
         let FriendsEvent::AcceptFriendRequest {
             friend_request_hash,
-        } = &friend_event.event.content
+        } = &friend_event.payload.content.event
         else {
             continue;
         };
@@ -156,14 +157,14 @@ pub fn query_my_friends() -> ExternResult<Vec<BTreeSet<AgentPubKey>>> {
     }
 
     for (_entry_hash, friend_event) in &sorted_events {
-        let FriendsEvent::RemoveFriend { agents } = &friend_event.event.content else {
+        let FriendsEvent::RemoveFriend { agents } = &friend_event.payload.content.event else {
             continue;
         };
 
         accepted_friend_requests = accepted_friend_requests
             .into_iter()
             .filter(|(timestamp, friend)| {
-                friend_event.event.timestamp.lt(timestamp)
+                friend_event.payload.timestamp.lt(timestamp)
                     || (friend.is_disjoint(agents) && !friend.contains(&friend_event.author))
             })
             .collect();
