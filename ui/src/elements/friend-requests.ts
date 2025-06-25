@@ -80,7 +80,7 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 								style="align-items: center; gap: 8px; margin: 8px"
 							>
 								<span style="flex: 1"
-									>${friendRequest.event.content.from_name}</span
+									>${friendRequest.payload.content.event.from_name}</span
 								>
 								<sl-button
 									@click=${async (e: CustomEvent) => {
@@ -129,7 +129,7 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 								style="align-items: center; gap: 8px; margin: 8px"
 							>
 								<span style="flex: 1"
-									>${friendRequest.event.content.to_name}</span
+									>${friendRequest.payload.content.event.to_name}</span
 								>
 								<sl-tag>${msg('Awaiting response')} </sl-tag>
 							</div>
