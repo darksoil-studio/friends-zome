@@ -176,7 +176,8 @@
 <a href="#175" id="175">175</a>
 <a href="#176" id="176">176</a>
 <a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::BTreeMap;
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::collections::BTreeMap;
 
 <span class="kw">use </span>hdk::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>private_event_sourcing::{query_all_my_agents, SignedEvent};
@@ -196,7 +197,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>sorted_events: Vec&lt;(EntryHashB64, SignedEvent&lt;FriendsEvent&gt;)&gt; =
         friends_events.into_iter().collect();
 
-    sorted_events.sort_by(|e1, e2| e1.<span class="number">1</span>.event.timestamp.cmp(<span class="kw-2">&amp;</span>e2.<span class="number">1</span>.event.timestamp));
+    sorted_events.sort_by_key(|e| e.<span class="number">1</span>.payload.timestamp);
 
     <span class="kw">let </span>all_my_agents = query_all_my_agents()<span class="question-mark">?</span>;
 
@@ -208,7 +209,7 @@
             to_agents,
             from_agents,
             ..
-        } = <span class="kw-2">&amp;</span>friend_event.event.content
+        } = <span class="kw-2">&amp;</span>friend_event.payload.content.event
         <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
@@ -219,7 +220,7 @@
         };
         friend_requests.insert(
             entry_hash.clone(),
-            (friend_event.event.timestamp, peer_agents.clone()),
+            (friend_event.payload.timestamp, peer_agents.clone()),
         );
     }
 
@@ -228,7 +229,7 @@
     <span class="kw">for </span>(_entry_hash, friend_event) <span class="kw">in </span><span class="kw-2">&amp;</span>sorted_events {
         <span class="kw">let </span>FriendsEvent::AcceptFriendRequest {
             friend_request_hash,
-        } = <span class="kw-2">&amp;</span>friend_event.event.content
+        } = <span class="kw-2">&amp;</span>friend_event.payload.content.event
         <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
@@ -240,14 +241,14 @@
     }
 
     <span class="kw">for </span>(_entry_hash, friend_event) <span class="kw">in </span><span class="kw-2">&amp;</span>sorted_events {
-        <span class="kw">let </span>FriendsEvent::RemoveFriend { agents } = <span class="kw-2">&amp;</span>friend_event.event.content <span class="kw">else </span>{
+        <span class="kw">let </span>FriendsEvent::RemoveFriend { agents } = <span class="kw-2">&amp;</span>friend_event.payload.content.event <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
 
         accepted_friend_requests = accepted_friend_requests
             .into_iter()
             .filter(|(timestamp, friend)| {
-                friend_event.event.timestamp.lt(timestamp)
+                friend_event.payload.timestamp.lt(timestamp)
                     || (friend.is_disjoint(agents) &amp;&amp; !friend.contains(<span class="kw-2">&amp;</span>friend_event.author))
             })
             .collect();
@@ -256,7 +257,8 @@
     <span class="kw">let </span><span class="kw-2">mut </span>friends: Vec&lt;Friend&gt; = Vec::new();
 
     <span class="kw">for </span>(_hash, friend_event) <span class="kw">in </span>sorted_events {
-        <span class="kw">let </span>FriendsEvent::SetProfile { agents, profile } = friend_event.event.content <span class="kw">else </span>{
+        <span class="kw">let </span>FriendsEvent::SetProfile { agents, profile } = friend_event.payload.content.event
+        <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
         <span class="kw">if </span>agents.iter().any(|a| all_my_agents.contains(a)) {
@@ -290,7 +292,7 @@
     <span class="kw">let </span><span class="kw-2">mut </span>sorted_events: Vec&lt;(EntryHashB64, SignedEvent&lt;FriendsEvent&gt;)&gt; =
         friends_events.into_iter().collect();
 
-    sorted_events.sort_by(|e1, e2| e1.<span class="number">1</span>.event.timestamp.cmp(<span class="kw-2">&amp;</span>e2.<span class="number">1</span>.event.timestamp));
+    sorted_events.sort_by_key(|e| e.<span class="number">1</span>.payload.timestamp);
 
     <span class="kw">let </span>all_my_agents = query_all_my_agents()<span class="question-mark">?</span>;
 
@@ -302,7 +304,7 @@
             to_agents,
             from_agents,
             ..
-        } = <span class="kw-2">&amp;</span>friend_event.event.content
+        } = <span class="kw-2">&amp;</span>friend_event.payload.content.event
         <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
@@ -313,7 +315,7 @@
         };
         friend_requests.insert(
             entry_hash.clone(),
-            (friend_event.event.timestamp, peer_agents.clone()),
+            (friend_event.payload.timestamp, peer_agents.clone()),
         );
     }
 
@@ -322,7 +324,7 @@
     <span class="kw">for </span>(_entry_hash, friend_event) <span class="kw">in </span><span class="kw-2">&amp;</span>sorted_events {
         <span class="kw">let </span>FriendsEvent::AcceptFriendRequest {
             friend_request_hash,
-        } = <span class="kw-2">&amp;</span>friend_event.event.content
+        } = <span class="kw-2">&amp;</span>friend_event.payload.content.event
         <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
@@ -334,14 +336,14 @@
     }
 
     <span class="kw">for </span>(_entry_hash, friend_event) <span class="kw">in </span><span class="kw-2">&amp;</span>sorted_events {
-        <span class="kw">let </span>FriendsEvent::RemoveFriend { agents } = <span class="kw-2">&amp;</span>friend_event.event.content <span class="kw">else </span>{
+        <span class="kw">let </span>FriendsEvent::RemoveFriend { agents } = <span class="kw-2">&amp;</span>friend_event.payload.content.event <span class="kw">else </span>{
             <span class="kw">continue</span>;
         };
 
         accepted_friend_requests = accepted_friend_requests
             .into_iter()
             .filter(|(timestamp, friend)| {
-                friend_event.event.timestamp.lt(timestamp)
+                friend_event.payload.timestamp.lt(timestamp)
                     || (friend.is_disjoint(agents) &amp;&amp; !friend.contains(<span class="kw-2">&amp;</span>friend_event.author))
             })
             .collect();

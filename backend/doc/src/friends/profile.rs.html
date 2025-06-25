@@ -65,13 +65,13 @@
     <span class="kw">let </span><span class="kw-2">mut </span>sorted_events: Vec&lt;(EntryHashB64, SignedEvent&lt;FriendsEvent&gt;)&gt; =
         friends_events.into_iter().collect();
 
-    sorted_events.sort_by(|e1, e2| e1.<span class="number">1</span>.event.timestamp.cmp(<span class="kw-2">&amp;</span>e2.<span class="number">1</span>.event.timestamp));
+    sorted_events.sort_by_key(|e| e.<span class="number">1</span>.payload.timestamp);
 
     <span class="kw">let </span>all_my_agents = query_all_my_agents()<span class="question-mark">?</span>;
 
     <span class="kw">let </span>profile_events: Vec&lt;(EntryHashB64, Profile)&gt; = sorted_events
         .into_iter()
-        .filter_map(|(entry_hash, event)| <span class="kw">match </span>event.event.content {
+        .filter_map(|(entry_hash, event)| <span class="kw">match </span>event.payload.content.event {
             FriendsEvent::SetProfile { agents, profile } =&gt; {
                 <span class="kw">match </span>agents.iter().any(|a| all_my_agents.contains(a)) {
                     <span class="bool-val">true </span>=&gt; <span class="prelude-val">Some</span>((entry_hash.clone(), profile)),

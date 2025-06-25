@@ -168,7 +168,12 @@
 <a href="#167" id="167">167</a>
 <a href="#168" id="168">168</a>
 <a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a></pre></div><pre class="rust"><code><span class="kw">use </span>hdk::prelude::<span class="kw-2">*</span>;
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a></pre></div><pre class="rust"><code><span class="kw">use </span>hdk::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>private_event_sourcing::{create_private_event, query_all_my_agents, query_private_event};
 
 <span class="kw">use crate</span>::{
@@ -222,7 +227,9 @@
     </span><span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">wasm_error!</span>(<span class="string">"Friend request not found."</span>));
     };
-    <span class="kw">let </span>FriendsEvent::FriendRequest { from_agents, .. } = friend_request_entry.event.content <span class="kw">else </span>{
+    <span class="kw">let </span>FriendsEvent::FriendRequest { from_agents, .. } =
+        friend_request_entry.payload.content.event
+    <span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">wasm_error!</span>(<span class="string">"The given hash is not for a friend request."</span>));
     };
     <span class="kw">let </span><span class="prelude-val">Some</span>(my_profile) = query_my_profile(())<span class="question-mark">? </span><span class="kw">else </span>{
@@ -256,7 +263,9 @@
     </span><span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">wasm_error!</span>(<span class="string">"Friend request not found."</span>));
     };
-    <span class="kw">let </span>FriendsEvent::FriendRequest { from_agents, .. } = friend_request_entry.event.content <span class="kw">else </span>{
+    <span class="kw">let </span>FriendsEvent::FriendRequest { from_agents, .. } =
+        friend_request_entry.payload.content.event
+    <span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">wasm_error!</span>(<span class="string">"The given hash is not for a friend request."</span>));
     };
     <span class="kw">let </span><span class="prelude-val">Some</span>(my_profile) = query_my_profile(())<span class="question-mark">? </span><span class="kw">else </span>{
@@ -288,7 +297,8 @@
     </span><span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">wasm_error!</span>(<span class="string">"Friend request not found."</span>));
     };
-    <span class="kw">let </span>FriendsEvent::FriendRequest { to_agents, .. } = friend_request_entry.event.content <span class="kw">else </span>{
+    <span class="kw">let </span>FriendsEvent::FriendRequest { to_agents, .. } = friend_request_entry.payload.content.event
+    <span class="kw">else </span>{
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">wasm_error!</span>(<span class="string">"The given hash is not for a friend request."</span>));
     };
     <span class="kw">let </span><span class="prelude-val">Some</span>(my_profile) = query_my_profile(())<span class="question-mark">? </span><span class="kw">else </span>{
