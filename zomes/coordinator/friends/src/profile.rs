@@ -12,11 +12,14 @@ pub fn set_my_profile(profile: Profile) -> ExternResult<()> {
 
 #[hdk_extern]
 pub fn query_my_profile() -> ExternResult<Option<Profile>> {
-    let my_profile_event = query_my_profile_event()?;
+    let all_my_agents = query_all_my_agents()?;
+    let my_profile_event = query_profile_event_for(all_my_agents)?;
     Ok(my_profile_event.map(|(_hash, profile)| profile))
 }
 
-pub fn query_my_profile_event() -> ExternResult<Option<(EntryHashB64, Profile)>> {
+pub fn query_profile_event_for(
+    for_agents: BTreeSet<AgentPubKey>,
+) -> ExternResult<Option<(EntryHashB64, Profile)>> {
     let friends_events = query_friends_events()?;
 
     let mut sorted_events: Vec<(EntryHashB64, SignedEvent<FriendsEvent>)> =
@@ -24,13 +27,11 @@ pub fn query_my_profile_event() -> ExternResult<Option<(EntryHashB64, Profile)>>
 
     sorted_events.sort_by_key(|e| e.1.payload.timestamp);
 
-    let all_my_agents = query_all_my_agents()?;
-
     let profile_events: Vec<(EntryHashB64, Profile)> = sorted_events
         .into_iter()
         .filter_map(|(entry_hash, event)| match event.payload.content.event {
             FriendsEvent::SetProfile { agents, profile } => {
-                match agents.iter().any(|a| all_my_agents.contains(a)) {
+                match agents.iter().any(|a| for_agents.contains(a)) {
                     true => Some((entry_hash.clone(), profile)),
                     false => None,
                 }
