@@ -9,11 +9,6 @@ integrity:
     bundled: ../target/wasm32-unknown-unknown/release/friends_integrity.wasm
     dependencies: null
     dylib: null
-  - name: notifications_integrity
-    hash: null
-    bundled: <NIX_PACKAGE>
-    dependencies: null
-    dylib: null
   - name: linked_devices_integrity
     hash: null
     bundled: <NIX_PACKAGE>
@@ -26,12 +21,6 @@ coordinator:
     bundled: ../target/wasm32-unknown-unknown/release/friends.wasm
     dependencies:
     - name: friends_integrity
-    dylib: null
-  - name: notifications
-    hash: null
-    bundled: <NIX_PACKAGE>
-    dependencies:
-    - name: notifications_integrity
     dylib: null
   - name: linked_devices
     hash: null

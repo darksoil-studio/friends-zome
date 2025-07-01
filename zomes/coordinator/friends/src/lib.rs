@@ -1,7 +1,7 @@
-use hc_zome_trait_notifications::NotificationsZomeTrait;
 use hc_zome_traits::implemented_zome_traits;
 use hdk::prelude::*;
 use notifications::FriendsNotifications;
+use notifications_zome_trait::NotificationsZomeTrait;
 use private_event_sourcing::EventHistory;
 
 mod notifications;
