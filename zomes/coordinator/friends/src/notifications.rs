@@ -1,205 +1,167 @@
-use private_event_sourcing::call_local_zome;
-use serde::de::DeserializeOwned;
-use std::collections::BTreeMap;
 use xliff::t::T;
 
-use hc_zome_trait_notifications::*;
 use hc_zome_traits::*;
 use hdk::prelude::*;
-use notifications_types::SendNotificationInput;
+use notifications_zome_trait::*;
+use private_event_sourcing::{query_all_my_agents, query_private_event};
 
-pub fn notifications_zome_name() -> Option<ZomeName> {
-    match std::option_env!("NOTIFICATIONS_COORDINATOR_ZOME_NAME") {
-        Some(zome_name) => Some(zome_name.into()),
-        None => None,
-    }
-}
+use crate::{private_event::FriendsEvent, profile::query_profile_event_for};
 
 pub struct FriendsNotifications;
 
-#[derive(Serialize, Deserialize, Debug, SerializedBytes)]
-#[serde(tag = "type")]
-pub enum FriendsNotification {
-    NewFriendRequest {
-        from_name: String,
-        friend_request_hash: EntryHash,
-    },
-    AcceptedFriendRequest {
-        name: String,
-        friend_request_hash: EntryHash,
-    },
-    RejectedFriendRequest {
-        name: String,
-        friend_request_hash: EntryHash,
-    },
-    CancelledFriendRequest {
-        name: String,
-        friend_request_hash: EntryHash,
-    },
-    RemovedYouAsFriend {
-        name: String,
-        friend: BTreeSet<AgentPubKey>,
-    },
-}
-impl FriendsNotification {
-    fn notification_type(&self) -> String {
-        match self {
-            Self::NewFriendRequest { .. } => format!("NewFriendRequest"),
-            Self::AcceptedFriendRequest { .. } => format!("AcceptedFriendRequest"),
-            Self::RejectedFriendRequest { .. } => format!("RejectedFriendRequest"),
-            Self::CancelledFriendRequest { .. } => format!("CancelledFriendRequest"),
-            Self::RemovedYouAsFriend { .. } => format!("RemovedYouAsFriend"),
-        }
-    }
-    fn notification_group(&self) -> String {
-        match self {
-            Self::NewFriendRequest {
-                friend_request_hash,
-                ..
-            } => format!("{friend_request_hash}"),
-            Self::AcceptedFriendRequest {
-                friend_request_hash,
-                ..
-            } => format!("{friend_request_hash}"),
-            Self::RejectedFriendRequest {
-                friend_request_hash,
-                ..
-            } => format!("{friend_request_hash}"),
-            Self::CancelledFriendRequest {
-                friend_request_hash,
-                ..
-            } => format!("{friend_request_hash}"),
-            Self::RemovedYouAsFriend { friend, .. } => format!("{friend:?}"),
-        }
-    }
-}
-
 #[implement_zome_trait_as_externs]
 impl NotificationsZomeTrait for FriendsNotifications {
-    fn get_notifications_types(locale: String) -> ExternResult<BTreeMap<String, NotificationType>> {
-        let mut types: BTreeMap<String, NotificationType> = BTreeMap::new();
+    fn get_notification(input: GetNotificationInput) -> ExternResult<Option<Notification>> {
+        let event_hash = EntryHashB64::from_b64_str(input.notification_id.as_str())
+            .map_err(|_err| wasm_error!("Failed to convert notification id to EntryHash."))?;
+        let Some(private_event) = query_private_event::<FriendsEvent>(event_hash.clone().into())?
+        else {
+            return Ok(None);
+        };
 
-        types.insert(
-            "NewFriendRequest".into(),
-            NotificationType {
-                name: t(&locale, "New friend request"),
-                description: t(&locale, "You received a new friend request."),
-            },
-        );
+        let my_agents = query_all_my_agents()?;
 
-        types.insert(
-            "AcceptedFriendRequest".into(),
-            NotificationType {
-                name: t(&locale, "Accepted friend request"),
-                description: t(&locale, "Your friend request was accepted."),
-            },
-        );
+        if my_agents.contains(&private_event.author) {
+            return Ok(None);
+        }
 
-        types.insert(
-            "RejectedFriendRequest".into(),
-            NotificationType {
-                name: t(&locale, "Rejected friend request"),
-                description: t(&locale, "Your friend request was rejected."),
-            },
-        );
-
-        types.insert(
-            "CancelledFriendRequest".into(),
-            NotificationType {
-                name: t(&locale, "Cancelled friend request"),
-                description: t(&locale, "A friend request you received was cancelled."),
-            },
-        );
-
-        types.insert(
-            "RemovedYouAsFriend".into(),
-            NotificationType {
-                name: t(&locale, "You were removed as a friend"),
-                description: t(
-                    &locale,
-                    "One of your friends removed you from their friends.",
-                ),
-            },
-        );
-
-        Ok(types)
-    }
-
-    fn get_notification_contents(
-        input: GetNotificationContentsInput,
-    ) -> ExternResult<NotificationContents> {
-        let notification = FriendsNotification::try_from(input.notification.content)
-            .map_err(|err| wasm_error!(err))?;
-
-        match notification {
-            FriendsNotification::NewFriendRequest { from_name, .. } => Ok(NotificationContents {
+        match private_event.payload.content.event {
+            FriendsEvent::FriendRequest { from_name, .. } => Ok(Some(Notification {
                 title: t(&input.locale, "New friend request."),
+                group: Some(event_hash.to_string()),
                 body: format!(
                     "{} {}.",
                     from_name,
                     t(&input.locale, "sent you a friend request"),
                 ),
+
                 icon_src: format!(
                     "data:image/svg+xml;charset=utf-8,{}",
                     md_icons::filled::ICON_PERSON_ADD
                 ),
                 url_path_to_navigate_to_on_click: Some(String::from("/friend-requests")),
-            }),
-            FriendsNotification::AcceptedFriendRequest { name, .. } => Ok(NotificationContents {
-                title: t(&input.locale, "Friend request was accepted."),
-                body: format!(
-                    "{} {} {}.",
-                    t(&input.locale, "Your friend request for"),
-                    name,
-                    t(&input.locale, "was accepted"),
-                ),
-                icon_src: format!(
-                    "data:image/svg+xml;charset=utf-8,{}",
-                    md_icons::filled::ICON_HOW_TO_REG
-                ),
-                url_path_to_navigate_to_on_click: None,
-            }),
-            FriendsNotification::RejectedFriendRequest { name, .. } => Ok(NotificationContents {
-                title: t(&input.locale, "Friend request was rejected."),
-                body: format!(
-                    "{} {} {}.",
-                    t(&input.locale, "Your friend request for"),
-                    name,
-                    t(&input.locale, "was rejected"),
-                ),
-                icon_src: format!(
-                    "data:image/svg+xml;charset=utf-8,{}",
-                    md_icons::filled::ICON_PERSON_REMOVE_ALT_1
-                ),
-                url_path_to_navigate_to_on_click: None,
-            }),
-            FriendsNotification::CancelledFriendRequest { name, .. } => Ok(NotificationContents {
-                title: t(&input.locale, "Friend request was cancelled."),
-                body: format!(
-                    "{} {} {}.",
-                    t(&input.locale, "Friend request from"),
-                    name,
-                    t(&input.locale, "was cancelled"),
-                ),
-                icon_src: format!(
-                    "data:image/svg+xml;charset=utf-8,{}",
-                    md_icons::filled::ICON_PERSON_REMOVE_ALT_1
-                ),
-                url_path_to_navigate_to_on_click: None,
-            }),
-            FriendsNotification::RemovedYouAsFriend { name, .. } => Ok(NotificationContents {
-                title: t(&input.locale, "One of your friends removed you."),
-                body: format!(
-                    "{} {}.",
-                    name,
-                    t(&input.locale, "removed you from their friends"),
-                ),
-                icon_src: format!(
-                    "data:image/svg+xml;charset=utf-8,{}",
-                    md_icons::filled::ICON_PERSON_REMOVE_ALT_1
-                ),
-                url_path_to_navigate_to_on_click: None,
-            }),
+            })),
+            FriendsEvent::AcceptFriendRequest {
+                friend_request_hash,
+            } => {
+                let Some(friend_request) =
+                    query_private_event::<FriendsEvent>(friend_request_hash.clone())?
+                else {
+                    return Err(wasm_error!("Failed to find friend request hash"));
+                };
+                let FriendsEvent::FriendRequest { to_name, .. } =
+                    friend_request.payload.content.event
+                else {
+                    return Err(wasm_error!(
+                        "friend_request_hash is not for a friend request."
+                    ));
+                };
+
+                Ok(Some(Notification {
+                    title: t(&input.locale, "Friend request was accepted."),
+                    body: format!(
+                        "{} {} {}.",
+                        t(&input.locale, "Your friend request for"),
+                        to_name,
+                        t(&input.locale, "was accepted"),
+                    ),
+                    group: Some(friend_request_hash.to_string()),
+                    icon_src: format!(
+                        "data:image/svg+xml;charset=utf-8,{}",
+                        md_icons::filled::ICON_HOW_TO_REG
+                    ),
+                    url_path_to_navigate_to_on_click: None,
+                }))
+            }
+            FriendsEvent::RejectFriendRequest {
+                friend_request_hash,
+            } => {
+                let Some(friend_request) =
+                    query_private_event::<FriendsEvent>(friend_request_hash.clone())?
+                else {
+                    return Err(wasm_error!("Failed to find friend request hash"));
+                };
+                let FriendsEvent::FriendRequest { to_name, .. } =
+                    friend_request.payload.content.event
+                else {
+                    return Err(wasm_error!(
+                        "friend_request_hash is not for a friend request."
+                    ));
+                };
+
+                Ok(Some(Notification {
+                    title: t(&input.locale, "Friend request was rejected."),
+                    body: format!(
+                        "{} {} {}.",
+                        t(&input.locale, "Your friend request for"),
+                        to_name,
+                        t(&input.locale, "was rejected"),
+                    ),
+                    icon_src: format!(
+                        "data:image/svg+xml;charset=utf-8,{}",
+                        md_icons::filled::ICON_PERSON_REMOVE_ALT_1
+                    ),
+                    url_path_to_navigate_to_on_click: None,
+                    group: Some(friend_request_hash.to_string()),
+                }))
+            }
+            FriendsEvent::CancelFriendRequest {
+                friend_request_hash,
+            } => {
+                let Some(friend_request) =
+                    query_private_event::<FriendsEvent>(friend_request_hash.clone())?
+                else {
+                    return Err(wasm_error!("Failed to find friend request hash"));
+                };
+                let FriendsEvent::FriendRequest { from_name, .. } =
+                    friend_request.payload.content.event
+                else {
+                    return Err(wasm_error!(
+                        "friend_request_hash is not for a friend request."
+                    ));
+                };
+
+                Ok(Some(Notification {
+                    title: t(&input.locale, "Friend request was cancelled."),
+                    body: format!(
+                        "{} {} {}.",
+                        t(&input.locale, "Friend request from"),
+                        from_name,
+                        t(&input.locale, "was cancelled"),
+                    ),
+                    icon_src: format!(
+                        "data:image/svg+xml;charset=utf-8,{}",
+                        md_icons::filled::ICON_PERSON_REMOVE_ALT_1
+                    ),
+                    url_path_to_navigate_to_on_click: None,
+                    group: Some(friend_request_hash.to_string()),
+                }))
+            }
+            FriendsEvent::RemoveFriend { .. } => {
+                let Some((_, sender_profile)) =
+                    query_profile_event_for(vec![private_event.author].into_iter().collect())?
+                else {
+                    return Err(wasm_error!(
+                        "Failed to find profile for friend after they have removed me."
+                    ));
+                };
+
+                Ok(Some(Notification {
+                    title: t(&input.locale, "One of your friends removed you."),
+                    body: format!(
+                        "{} {}.",
+                        sender_profile.name,
+                        t(&input.locale, "removed you from their friends"),
+                    ),
+                    icon_src: format!(
+                        "data:image/svg+xml;charset=utf-8,{}",
+                        md_icons::filled::ICON_PERSON_REMOVE_ALT_1
+                    ),
+                    url_path_to_navigate_to_on_click: None,
+                    group: None,
+                }))
+            }
+            _ => Ok(None),
         }
     }
 }
@@ -221,37 +183,4 @@ fn t_from_xliff(xliff_str: &str, source: &str) -> String {
         }
     }
     source.to_string()
-}
-
-// Call the notifications zome, if it exists
-// If the notifications zome does not exist, it will return None
-fn call_notifications<R, P>(fn_name: FunctionName, payload: P) -> ExternResult<Option<R>>
-where
-    P: serde::Serialize + std::fmt::Debug,
-    R: DeserializeOwned + std::fmt::Debug,
-{
-    let Some(zome_name) = notifications_zome_name() else {
-        return Ok(None);
-    };
-    call_local_zome(zome_name, fn_name, payload)
-}
-
-pub fn send_friends_notification(
-    recipient: AgentPubKey,
-    friends_notification: FriendsNotification,
-) -> ExternResult<()> {
-    // We don't care in this case if the notification is not sent
-    let _result: Option<()> = call_notifications(
-        "send_notification".into(),
-        SendNotificationInput {
-            zome_name: zome_info()?.name,
-            notification_type: friends_notification.notification_type(),
-            notification_group: friends_notification.notification_group(),
-            recipient,
-            content: SerializedBytes::try_from(friends_notification)
-                .map_err(|err| wasm_error!(err))?,
-        },
-    )?;
-
-    Ok(())
 }
