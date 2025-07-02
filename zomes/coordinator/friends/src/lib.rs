@@ -3,9 +3,12 @@ use hdk::prelude::*;
 use notifications::FriendsNotifications;
 use notifications_zome_trait::NotificationsZomeTrait;
 use private_event_sourcing::EventHistory;
+use profiles_provider::FriendsProfilesProvider;
+use profiles_provider_zome_trait::ProfilesProviderZomeTrait;
 
 mod notifications;
 mod private_event;
+mod profiles_provider;
 
 mod all_friends;
 mod friend_request;
@@ -14,6 +17,7 @@ mod profile;
 #[implemented_zome_traits]
 pub enum ZomeTraits {
     Notifications(FriendsNotifications),
+    ProfilesProvider(FriendsProfilesProvider),
 }
 
 #[hdk_extern]
