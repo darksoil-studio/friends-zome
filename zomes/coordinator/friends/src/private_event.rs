@@ -2,15 +2,9 @@ use std::collections::BTreeMap;
 
 use hdk::prelude::*;
 use private_event_sourcing::*;
+pub use profiles_provider_zome_trait::Profile;
 
 use crate::all_friends::query_my_friends;
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Profile {
-    pub name: String,
-    pub avatar: Option<String>,
-    pub fields: BTreeMap<String, String>,
-}
 
 #[private_event]
 pub enum FriendsEvent {
