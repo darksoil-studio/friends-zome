@@ -94,6 +94,7 @@ export class MyFriends extends SignalWatcher(LitElement) {
 									<sl-icon-button
 										slot="trigger"
 										.src=${wrapPathInSvg(mdiDotsVertical)}
+										style="font-size: 1.4rem"
 									></sl-icon-button>
 									<sl-menu>
 										<sl-menu-item
@@ -115,8 +116,8 @@ export class MyFriends extends SignalWatcher(LitElement) {
 										slot="footer"
 										@click=${() =>
 											(
-												this.shadowRoot!.querySelector(
-													`sl-dialog#${i}`,
+												this.shadowRoot!.getElementById(
+													`dialog-${i}`,
 												)! as SlDialog
 											).hide()}
 										>${msg('Cancel')}</sl-button
@@ -134,8 +135,8 @@ export class MyFriends extends SignalWatcher(LitElement) {
 												console.error(e);
 											}
 											(
-												this.shadowRoot!.querySelector(
-													`sl-dialog#${i}`,
+												this.shadowRoot!.getElementById(
+													`dialog-${i}`,
 												)! as SlDialog
 											).hide();
 											button.loading = false;
