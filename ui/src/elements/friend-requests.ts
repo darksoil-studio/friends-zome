@@ -17,11 +17,16 @@ import {
 	encodeHashToBase64,
 } from '@holochain/client';
 import { consume } from '@lit/context';
-import { localized, msg } from '@lit/localize';
-import { mdiInformationOutline } from '@mdi/js';
-import { SlButton } from '@shoelace-style/shoelace';
+import { localized, msg, str } from '@lit/localize';
+import { mdiDotsVertical, mdiInformationOutline } from '@mdi/js';
+import { SlButton, SlDialog } from '@shoelace-style/shoelace';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/menu-item/menu-item.js';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { join } from 'lit/directives/join.js';
@@ -123,7 +128,7 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 				)}
 				${join(
 					Object.entries(outgoingFriendRequests).map(
-						([friendRequestHash, friendRequest]) => html`
+						([friendRequestHash, friendRequest], i) => html`
 							<div
 								class="row"
 								style="align-items: center; gap: 8px; margin: 8px"
@@ -131,7 +136,69 @@ export class FriendRequests extends SignalWatcher(LitElement) {
 								<span style="flex: 1"
 									>${friendRequest.payload.content.event.to_name}</span
 								>
-								<sl-tag>${msg('Awaiting response')} </sl-tag>
+								<div class="row" style="align-items: center">
+									<sl-tag>${msg('Awaiting response')} </sl-tag>
+
+									<sl-dropdown>
+										<sl-icon-button
+											slot="trigger"
+											.src=${wrapPathInSvg(mdiDotsVertical)}
+											style="font-size: 1.4rem"
+										></sl-icon-button>
+										<sl-menu>
+											<sl-menu-item
+												@click=${() =>
+													this.shadowRoot!.querySelector('sl-dialog')!.show()}
+												>${msg('Cancel Request')}
+											</sl-menu-item>
+										</sl-menu>
+									</sl-dropdown>
+									<sl-dialog
+										id="dialog-${i}"
+										.label=${msg('Cancel Friend Request')}
+									>
+										<div class="column" style="gap: 12px">
+											<span
+												>${msg(
+													str`Are you sure you want to cancel the friend request to ${friendRequest.payload.content.event.to_name}?`,
+												)}</span
+											>
+										</div>
+										<sl-button
+											slot="footer"
+											@click=${() =>
+												(
+													this.shadowRoot!.getElementById(
+														`dialog-${i}`,
+													)! as SlDialog
+												).hide()}
+											>${msg('Cancel')}</sl-button
+										>
+										<sl-button
+											slot="footer"
+											variant="danger"
+											@click=${async (e: CustomEvent) => {
+												const button = e.target as SlButton;
+												button.loading = true;
+												try {
+													await this.store.client.cancelFriendRequest(
+														decodeHashFromBase64(friendRequestHash),
+													);
+												} catch (e) {
+													notifyError(msg('Failed to cancel friend request.'));
+													console.error(e);
+												}
+												(
+													this.shadowRoot!.getElementById(
+														`dialog-${i}`,
+													)! as SlDialog
+												)?.hide();
+												button.loading = false;
+											}}
+											>${msg('Cancel Friend Request')}</sl-button
+										>
+									</sl-dialog>
+								</div>
 							</div>
 						`,
 					),
