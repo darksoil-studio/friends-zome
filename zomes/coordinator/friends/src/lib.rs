@@ -1,5 +1,6 @@
-use hc_zome_traits::implemented_zome_traits;
+use hc_zome_traits::{implement_zome_trait_as_externs, implemented_zome_traits};
 use hdk::prelude::*;
+use migration_zome_trait::MigrationZomeTrait;
 use notifications::FriendsNotifications;
 use notifications_zome_trait::NotificationsZomeTrait;
 use private_event_sourcing::EventHistory;
@@ -18,27 +19,32 @@ mod profile;
 pub enum ZomeTraits {
     Notifications(FriendsNotifications),
     ProfilesProvider(FriendsProfilesProvider),
+    Migration(FriendsMigration),
 }
 
-#[hdk_extern]
-pub fn migrate_from_old_cell(old_cell: CellId) -> ExternResult<()> {
-    let response = call(
-        CallTargetCell::OtherCell(old_cell),
-        zome_info()?.name,
-        "export_event_history".into(),
-        None,
-        (),
-    )?;
+struct FriendsMigration;
 
-    let ZomeCallResponse::Ok(result) = response else {
-        return Err(wasm_error!(
-            "Error quering the old private event entries: {:?}.",
-            response
-        ));
-    };
-    let event_history: EventHistory = result.decode().map_err(|err| wasm_error!(err))?;
+#[implement_zome_trait_as_externs]
+impl MigrationZomeTrait for FriendsMigration {
+    fn migrate(old_cell_id: CellId) -> ExternResult<()> {
+        let response = call(
+            CallTargetCell::OtherCell(old_cell_id),
+            zome_info()?.name,
+            "export_event_history".into(),
+            None,
+            (),
+        )?;
 
-    private_event_sourcing::import_event_history(event_history)?;
+        let ZomeCallResponse::Ok(result) = response else {
+            return Err(wasm_error!(
+                "Error quering the old private event entries: {:?}.",
+                response
+            ));
+        };
+        let event_history: EventHistory = result.decode().map_err(|err| wasm_error!(err))?;
 
-    Ok(())
+        private_event_sourcing::import_event_history(event_history)?;
+
+        Ok(())
+    }
 }

@@ -261,6 +261,7 @@ dependencies = [
  "hdk",
  "holochain_serialized_bytes",
  "md-icons",
+ "migration_zome_trait",
  "notifications_zome_trait",
  "private_event_sourcing",
  "profiles_provider_zome_trait",
@@ -724,6 +725,17 @@ name = "memchr"
 version = "2.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
+
+[[package]]
+name = "migration_zome_trait"
+version = "0.1.0"
+source = "git+https://github.com/darksoil-studio/migration-zome-trait?branch=main-0.5#3878bc57d81258915b1f3aa5c30dba42f247959e"
+dependencies = [
+ "hc_zome_traits",
+ "hdk",
+ "holochain_serialized_bytes",
+ "serde",
+]
 
 [[package]]
 name = "notifications_zome_trait"
