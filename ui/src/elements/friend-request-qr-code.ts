@@ -82,7 +82,7 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 						class="row"
 						style="align-items: center; gap: 8px; justify-content: center"
 					>
-						<sl-tag>${code.slice(0, 32)}...</sl-tag>
+						<sl-tag>${code.slice(0, 20)}...</sl-tag>
 						<sl-copy-button .value=${code}></sl-copy-button>
 					</div>
 
