@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["migrate_from_old_cell"]};
+window.SIDEBAR_ITEMS = {};
