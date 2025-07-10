@@ -25,7 +25,7 @@ pub fn migrate_from_old_cell(old_cell: CellId) -> ExternResult<()> {
     let response = call(
         CallTargetCell::OtherCell(old_cell),
         zome_info()?.name,
-        "query_event_history".into(),
+        "export_event_history".into(),
         None,
         (),
     )?;
