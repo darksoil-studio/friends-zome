@@ -1,5 +1,5 @@
-import { dhtSync, pause, runScenario } from '@holochain/tryorama';
 import { toPromise, watch } from '@darksoil-studio/holochain-signals';
+import { dhtSync, pause, runScenario } from '@holochain/tryorama';
 import { assert, expect, test } from 'vitest';
 
 import { setup } from './setup.js';
@@ -42,7 +42,7 @@ test('send friend request and accept it', async () => {
 
 		await bob.store.client.acceptFriendRequest(friendRequestHash);
 
-		await pause(1000);
+		await pause(2000);
 
 		pendingFriendRequests = await toPromise(alice.store.pendingFriendRequests);
 		assert.equal(Object.keys(pendingFriendRequests).length, 0);

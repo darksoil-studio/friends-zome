@@ -28,17 +28,23 @@ impl NotificationsZomeTrait for FriendsNotifications {
         match private_event.payload.content.event {
             FriendsEvent::FriendRequest { from_name, .. } => Ok(Some(Notification {
                 title: t(&input.locale, "New friend request."),
-                group: Some(format!("friend-request/{}", event_hash)),
                 body: format!(
                     "{} {}.",
                     from_name,
                     t(&input.locale, "sent you a friend request"),
                 ),
-
+                large_body: Some(format!(
+                    "{} {}.",
+                    from_name,
+                    t(&input.locale, "sent you a friend request"),
+                )),
+                summary: None,
                 icon_src: format!(
                     "data:image/svg+xml;charset=utf-8,{}",
                     md_icons::filled::ICON_PERSON_ADD
                 ),
+                group: Some(format!("friend-request/{}", event_hash)),
+                group_summary: true,
             })),
             FriendsEvent::AcceptFriendRequest {
                 friend_request_hash,
@@ -64,11 +70,19 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         to_name,
                         t(&input.locale, "was accepted"),
                     ),
-                    group: Some(format!("friend-request/{}", friend_request_hash)),
+                    large_body: Some(format!(
+                        "{} {} {}.",
+                        t(&input.locale, "Your friend request for"),
+                        to_name,
+                        t(&input.locale, "was accepted"),
+                    )),
+                    summary: None,
                     icon_src: format!(
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_HOW_TO_REG
                     ),
+                    group: Some(format!("friend-request/{}", friend_request_hash)),
+                    group_summary: true,
                 }))
             }
             FriendsEvent::RejectFriendRequest {
@@ -95,11 +109,19 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         to_name,
                         t(&input.locale, "was rejected"),
                     ),
+                    large_body: Some(format!(
+                        "{} {} {}.",
+                        t(&input.locale, "Your friend request for"),
+                        to_name,
+                        t(&input.locale, "was rejected"),
+                    )),
                     icon_src: format!(
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_PERSON_REMOVE_ALT_1
                     ),
                     group: Some(format!("friend-request/{}", friend_request_hash)),
+                    group_summary: true,
+                    summary: None,
                 }))
             }
             FriendsEvent::CancelFriendRequest {
@@ -126,11 +148,19 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         from_name,
                         t(&input.locale, "was cancelled"),
                     ),
+                    large_body: Some(format!(
+                        "{} {} {}.",
+                        t(&input.locale, "Friend request from"),
+                        from_name,
+                        t(&input.locale, "was cancelled"),
+                    )),
                     icon_src: format!(
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_PERSON_REMOVE_ALT_1
                     ),
                     group: Some(format!("friend-request/{}", friend_request_hash)),
+                    group_summary: true,
+                    summary: None,
                 }))
             }
             FriendsEvent::RemoveFriend { .. } => {
@@ -149,11 +179,18 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         sender_profile.name,
                         t(&input.locale, "removed you from their friends"),
                     ),
+                    large_body: Some(format!(
+                        "{} {}.",
+                        sender_profile.name,
+                        t(&input.locale, "removed you from their friends"),
+                    )),
                     icon_src: format!(
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_PERSON_REMOVE_ALT_1
                     ),
                     group: None,
+                    group_summary: true,
+                    summary: None,
                 }))
             }
             _ => Ok(None),
