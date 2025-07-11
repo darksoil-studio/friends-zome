@@ -10,7 +10,7 @@
         zomeEnvironmentVars = {
           LINKED_DEVICES_COORDINATOR_ZOME_NAME =
             linked_devices_coordinator_zome_name;
-          ASYNC_MESSAGES_ZOME = async_message_zome_name;
+          ASYNC_MESSAGE_ZOME = async_message_zome_name;
         };
       };
 

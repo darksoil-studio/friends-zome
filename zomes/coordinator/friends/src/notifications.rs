@@ -28,7 +28,7 @@ impl NotificationsZomeTrait for FriendsNotifications {
         match private_event.payload.content.event {
             FriendsEvent::FriendRequest { from_name, .. } => Ok(Some(Notification {
                 title: t(&input.locale, "New friend request."),
-                group: Some(event_hash.to_string()),
+                group: Some(format!("friend-request/{}", event_hash)),
                 body: format!(
                     "{} {}.",
                     from_name,
@@ -39,7 +39,6 @@ impl NotificationsZomeTrait for FriendsNotifications {
                     "data:image/svg+xml;charset=utf-8,{}",
                     md_icons::filled::ICON_PERSON_ADD
                 ),
-                url_path_to_navigate_to_on_click: Some(String::from("/friend-requests")),
             })),
             FriendsEvent::AcceptFriendRequest {
                 friend_request_hash,
@@ -65,12 +64,11 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         to_name,
                         t(&input.locale, "was accepted"),
                     ),
-                    group: Some(friend_request_hash.to_string()),
+                    group: Some(format!("friend-request/{}", friend_request_hash)),
                     icon_src: format!(
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_HOW_TO_REG
                     ),
-                    url_path_to_navigate_to_on_click: None,
                 }))
             }
             FriendsEvent::RejectFriendRequest {
@@ -101,8 +99,7 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_PERSON_REMOVE_ALT_1
                     ),
-                    url_path_to_navigate_to_on_click: None,
-                    group: Some(friend_request_hash.to_string()),
+                    group: Some(format!("friend-request/{}", friend_request_hash)),
                 }))
             }
             FriendsEvent::CancelFriendRequest {
@@ -133,8 +130,7 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_PERSON_REMOVE_ALT_1
                     ),
-                    url_path_to_navigate_to_on_click: None,
-                    group: Some(friend_request_hash.to_string()),
+                    group: Some(format!("friend-request/{}", friend_request_hash)),
                 }))
             }
             FriendsEvent::RemoveFriend { .. } => {
@@ -157,7 +153,6 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         "data:image/svg+xml;charset=utf-8,{}",
                         md_icons::filled::ICON_PERSON_REMOVE_ALT_1
                     ),
-                    url_path_to_navigate_to_on_click: None,
                     group: None,
                 }))
             }
