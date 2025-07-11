@@ -12,6 +12,12 @@
           # This overrides all the "bundled" properties for the DNA manifest
           friends_integrity = self'.packages.friends_integrity;
           friends = self'.packages.friends;
+
+          encrypted_links_integrity =
+            inputs'.private-event-sourcing-zome.packages.encrypted_links_integrity;
+          encrypted_links =
+            inputs'.private-event-sourcing-zome.packages.encrypted_links;
+
         };
       };
   };
