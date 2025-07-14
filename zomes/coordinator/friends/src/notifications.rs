@@ -1,6 +1,3 @@
-use std::io::Cursor;
-
-use image::ImageReader;
 use xliff::t::T;
 
 use hc_zome_traits::*;
