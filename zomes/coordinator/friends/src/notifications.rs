@@ -39,10 +39,13 @@ impl NotificationsZomeTrait for FriendsNotifications {
                     t(&input.locale, "sent you a friend request"),
                 )),
                 summary: None,
-                icon_src: format!(
-                    "data:image/svg+xml;charset=utf-8,{}",
-                    md_icons::filled::ICON_PERSON_ADD
-                ),
+                // icon_src: format!(
+                //     "data:image/svg+xml;charset=utf-8,{}",
+                //     md_icons::filled::ICON_PERSON_ADD
+                // ),
+                icon: None,
+                large_icon: None,
+                icon_color: None,
                 group: Some(format!("friend-request/{}", event_hash)),
                 group_summary: true,
             })),
@@ -77,10 +80,13 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         t(&input.locale, "was accepted"),
                     )),
                     summary: None,
-                    icon_src: format!(
-                        "data:image/svg+xml;charset=utf-8,{}",
-                        md_icons::filled::ICON_HOW_TO_REG
-                    ),
+                    icon: None,
+                    large_icon: None,
+                    icon_color: None,
+                    // icon_src: format!(
+                    //     "data:image/svg+xml;charset=utf-8,{}",
+                    //     md_icons::filled::ICON_HOW_TO_REG
+                    // ),
                     group: Some(format!("friend-request/{}", friend_request_hash)),
                     group_summary: true,
                 }))
@@ -115,10 +121,13 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         to_name,
                         t(&input.locale, "was rejected"),
                     )),
-                    icon_src: format!(
-                        "data:image/svg+xml;charset=utf-8,{}",
-                        md_icons::filled::ICON_PERSON_REMOVE_ALT_1
-                    ),
+                    icon: None,
+                    large_icon: None,
+                    icon_color: None,
+                    // icon_src: format!(
+                    //     "data:image/svg+xml;charset=utf-8,{}",
+                    //     md_icons::filled::ICON_PERSON_REMOVE_ALT_1
+                    // ),
                     group: Some(format!("friend-request/{}", friend_request_hash)),
                     group_summary: true,
                     summary: None,
@@ -154,10 +163,13 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         from_name,
                         t(&input.locale, "was cancelled"),
                     )),
-                    icon_src: format!(
-                        "data:image/svg+xml;charset=utf-8,{}",
-                        md_icons::filled::ICON_PERSON_REMOVE_ALT_1
-                    ),
+                    icon: None,
+                    large_icon: None,
+                    icon_color: None,
+                    // icon_src: format!(
+                    //     "data:image/svg+xml;charset=utf-8,{}",
+                    //     md_icons::filled::ICON_PERSON_REMOVE_ALT_1
+                    // ),
                     group: Some(format!("friend-request/{}", friend_request_hash)),
                     group_summary: true,
                     summary: None,
@@ -172,6 +184,25 @@ impl NotificationsZomeTrait for FriendsNotifications {
                     ));
                 };
 
+                let large_icon = match sender_profile.avatar {
+                    None => None,
+                    Some(avatar) => {
+                        // let image_bytes = avatar.as_bytes().to_vec();
+                        // let img = ImageReader::new(Cursor::new(image_bytes))
+                        //     .with_guessed_format()
+                        //     .map_err(|err| wasm_error!("Failed to guess image format: {:?}", err))?
+                        //     .decode()
+                        //     .map_err(|err| wasm_error!("Failed to decode image: {:?}", err))?;
+
+                        // let mut bytes: Vec<u8> = Vec::new();
+                        // img.write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Bmp)
+                        //     .map_err(|err| wasm_error!("Failed to write image {:?}", err))?;
+
+                        // Some(bytes)
+                        None
+                    }
+                };
+
                 Ok(Some(Notification {
                     title: t(&input.locale, "One of your friends removed you."),
                     body: format!(
@@ -184,10 +215,13 @@ impl NotificationsZomeTrait for FriendsNotifications {
                         sender_profile.name,
                         t(&input.locale, "removed you from their friends"),
                     )),
-                    icon_src: format!(
-                        "data:image/svg+xml;charset=utf-8,{}",
-                        md_icons::filled::ICON_PERSON_REMOVE_ALT_1
-                    ),
+                    icon: None,
+                    large_icon,
+                    icon_color: None,
+                    // icon_src: format!(
+                    //     "data:image/svg+xml;charset=utf-8,{}",
+                    //     md_icons::filled::ICON_PERSON_REMOVE_ALT_1
+                    // ),
                     group: None,
                     group_summary: true,
                     summary: None,
