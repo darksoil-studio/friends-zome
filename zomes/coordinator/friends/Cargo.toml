@@ -20,8 +20,10 @@ private_event_sourcing = { git = "https://github.com/darksoil-studio/private-eve
 profiles_provider_zome_trait = { git = "https://github.com/darksoil-studio/profiles-zome", branch = "main-0.5" }
 
 migration_zome_trait = { git = "https://github.com/darksoil-studio/migration-zome-trait", branch = "main-0.5" }
+
 # Notifications handling
 notifications_zome_trait = { git = "https://github.com/darksoil-studio/notifications-zome-trait", branch = "main-0.5" }
 hc_zome_traits = { git = "https://github.com/holochain-open-dev/zome-traits", branch = "main" }
 xliff = { git = "https://github.com/kkostov/hb-rs-xliff", branch = "master" }
 md-icons = "0.3"
+image = "0.25"
