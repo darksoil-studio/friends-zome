@@ -191,11 +191,18 @@ impl NotificationsZomeTrait for FriendsNotifications {
                     None => None,
                     Some(avatar) => {
                         // let image_bytes = avatar.as_bytes().to_vec();
-                        // let img2 = ImageReader::new(Cursor::new(image_bytes))
-                        //     .with_guessed_format()?
-                        //     .decode()?;
+                        // let img = ImageReader::new(Cursor::new(image_bytes))
+                        //     .with_guessed_format()
+                        //     .map_err(|err| wasm_error!("Failed to guess image format: {:?}", err))?
+                        //     .decode()
+                        //     .map_err(|err| wasm_error!("Failed to decode image: {:?}", err))?;
 
-                        Some(avatar)
+                        // let mut bytes: Vec<u8> = Vec::new();
+                        // img.write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Bmp)
+                        //     .map_err(|err| wasm_error!("Failed to write image {:?}", err))?;
+
+                        // Some(bytes)
+                        None
                     }
                 };
 
