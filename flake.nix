@@ -43,8 +43,8 @@
       perSystem = { inputs', config, pkgs, system, ... }: {
         devShells.default = pkgs.mkShell {
           inputsFrom = [
-            inputs'.scaffolding.devShells.synchronized-pnpm
-            inputs'.holonix.devShells.default
+            inputs'.holochain-utils.devShells.synchronized-pnpm
+            inputs'.holochain-utils.devShells.default
           ];
 
           packages = [
