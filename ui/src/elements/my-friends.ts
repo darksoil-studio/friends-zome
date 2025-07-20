@@ -147,7 +147,7 @@ export class MyFriends extends SignalWatcher(LitElement) {
 							</div>
 						`,
 					),
-					() => html`<sl-divider></sl-divider>`,
+					() => html`<sl-divider style="margin: 0"></sl-divider>`,
 				)}
 			</div>
 		`;

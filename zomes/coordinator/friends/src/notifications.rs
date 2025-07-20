@@ -17,7 +17,10 @@ impl NotificationsZomeTrait for FriendsNotifications {
         };
         let Some(private_event) = query_private_event::<FriendsEvent>(event_hash.clone().into())?
         else {
-            return Ok(None);
+            return Err(wasm_error!(
+                "Event for notification id {} not found.",
+                input.notification_id
+            ));
         };
 
         let my_agents = query_all_my_agents()?;
