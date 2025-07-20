@@ -231,7 +231,8 @@
 <a href="#230" id="230">230</a>
 <a href="#231" id="231">231</a>
 <a href="#232" id="232">232</a>
-<a href="#233" id="233">233</a></pre></div><pre class="rust"><code><span class="kw">use </span>xliff::t::T;
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a></pre></div><pre class="rust"><code><span class="kw">use </span>xliff::t::T;
 
 <span class="kw">use </span>hc_zome_traits::<span class="kw-2">*</span>;
 <span class="kw">use </span>hdk::prelude::<span class="kw-2">*</span>;
@@ -245,8 +246,9 @@
 <span class="attr">#[implement_zome_trait_as_externs]
 </span><span class="kw">impl </span>NotificationsZomeTrait <span class="kw">for </span>FriendsNotifications {
     <span class="kw">fn </span>get_notification(input: GetNotificationInput) -&gt; ExternResult&lt;<span class="prelude-ty">Option</span>&lt;Notification&gt;&gt; {
-        <span class="kw">let </span>event_hash = EntryHashB64::from_b64_str(input.notification_id.as_str())
-            .map_err(|_err| <span class="macro">wasm_error!</span>(<span class="string">"Failed to convert notification id to EntryHash."</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(event_hash) = EntryHashB64::from_b64_str(input.notification_id.as_str()) <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+        };
         <span class="kw">let </span><span class="prelude-val">Some</span>(private_event) = query_private_event::&lt;FriendsEvent&gt;(event_hash.clone().into())<span class="question-mark">?
         </span><span class="kw">else </span>{
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
