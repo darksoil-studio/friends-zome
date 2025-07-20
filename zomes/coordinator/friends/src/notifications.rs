@@ -12,8 +12,9 @@ pub struct FriendsNotifications;
 #[implement_zome_trait_as_externs]
 impl NotificationsZomeTrait for FriendsNotifications {
     fn get_notification(input: GetNotificationInput) -> ExternResult<Option<Notification>> {
-        let event_hash = EntryHashB64::from_b64_str(input.notification_id.as_str())
-            .map_err(|_err| wasm_error!("Failed to convert notification id to EntryHash."))?;
+        let Ok(event_hash) = EntryHashB64::from_b64_str(input.notification_id.as_str()) else {
+            return Ok(None);
+        };
         let Some(private_event) = query_private_event::<FriendsEvent>(event_hash.clone().into())?
         else {
             return Ok(None);
