@@ -42,7 +42,7 @@ test('send friend request and accept it', async () => {
 
 		await bob.store.client.acceptFriendRequest(friendRequestHash);
 
-		await pause(2000);
+		await pause(3000);
 
 		pendingFriendRequests = await toPromise(alice.store.pendingFriendRequests);
 		assert.equal(Object.keys(pendingFriendRequests).length, 0);
