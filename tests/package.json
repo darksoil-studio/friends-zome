@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@msgpack/msgpack": "^2.8.0",
-    "@darksoil-studio/private-event-sourcing-zome": "0.501.0-rev.2da4a0f5a9802042b18423d5190e2d421e8bb6a2",
+    "@darksoil-studio/private-event-sourcing-zome": "0.501.0-rev.2f5f2f35d85811d21ef102b02f53cab96ff45704",
     "@holochain/client": "^0.19.0",
     "@holochain/tryorama": "^0.18.3",
     "@darksoil-studio/holochain-signals": "^0.500.0",
