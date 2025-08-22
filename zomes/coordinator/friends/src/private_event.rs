@@ -168,6 +168,18 @@ impl PrivateEvent for FriendsEvent {
             }
         }
     }
+
+    fn adds_new_recipients_for_other_events(
+        &self,
+        _event_hash: EntryHash,
+        _author: AgentPubKey,
+        _timestamp: Timestamp,
+    ) -> ExternResult<bool> {
+        match self {
+            FriendsEvent::AcceptFriendRequest { .. } => Ok(true),
+            _ => Ok(false),
+        }
+    }
 }
 
 pub fn query_friends_events() -> ExternResult<BTreeMap<EntryHashB64, SignedEvent<FriendsEvent>>> {
