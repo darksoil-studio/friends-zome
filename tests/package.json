@@ -2,11 +2,11 @@
   "name": "tests",
   "private": true,
   "scripts": {
-    "test": "WASM_LOG=warn vitest run"
+    "test": "WASM_LOG=debug vitest run"
   },
   "dependencies": {
     "@msgpack/msgpack": "^2.8.0",
-    "@darksoil-studio/private-event-sourcing-zome": "0.501.0-rev.62a7e505d1fae2df7b77eea6d2e1e76f709c27c6",
+    "@darksoil-studio/private-event-sourcing-zome": "0.501.0-rev.4f93c427f0d1239a14fa6f54e2eb51f388a144c8",
     "@holochain/client": "^0.19.0",
     "@holochain/tryorama": "^0.18.3",
     "@darksoil-studio/holochain-signals": "^0.500.0",

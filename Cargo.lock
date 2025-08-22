@@ -94,9 +94,9 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "cc"
-version = "1.2.33"
+version = "1.2.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ee0f8803222ba5a7e2777dd72ca451868909b1ac410621b676adf07280e9b5f"
+checksum = "42bc4aea80032b7bf409b0bc7ccad88853858911b7713a8062fdc0623867bedc"
 dependencies = [
  "shlex",
 ]
@@ -784,7 +784,7 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 [[package]]
 name = "private_event_proc_macro"
 version = "0.1.0"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#2f5f2f35d85811d21ef102b02f53cab96ff45704"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#4f93c427f0d1239a14fa6f54e2eb51f388a144c8"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -796,7 +796,7 @@ dependencies = [
 [[package]]
 name = "private_event_sourcing"
 version = "0.0.1"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#2f5f2f35d85811d21ef102b02f53cab96ff45704"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#4f93c427f0d1239a14fa6f54e2eb51f388a144c8"
 dependencies = [
  "hdk",
  "holochain_serialized_bytes",
@@ -811,7 +811,7 @@ dependencies = [
 [[package]]
 name = "private_event_sourcing_integrity"
 version = "0.0.1"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#2f5f2f35d85811d21ef102b02f53cab96ff45704"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#4f93c427f0d1239a14fa6f54e2eb51f388a144c8"
 dependencies = [
  "hdi",
  "holochain_serialized_bytes",
@@ -822,7 +822,7 @@ dependencies = [
 [[package]]
 name = "private_event_sourcing_types"
 version = "0.1.0"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#2f5f2f35d85811d21ef102b02f53cab96ff45704"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#4f93c427f0d1239a14fa6f54e2eb51f388a144c8"
 dependencies = [
  "hdk",
  "holochain_serialized_bytes",
@@ -972,7 +972,7 @@ checksum = "56e6fa9c48d24d85fb3de5ad847117517440f6beceb7798af16b4a87d616b8d0"
 [[package]]
 name = "send_async_message_zome_trait"
 version = "0.1.0"
-source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#2f5f2f35d85811d21ef102b02f53cab96ff45704"
+source = "git+https://github.com/darksoil-studio/private-event-sourcing-zome?branch=main-0.5#4f93c427f0d1239a14fa6f54e2eb51f388a144c8"
 dependencies = [
  "hc_zome_traits",
  "hdk",

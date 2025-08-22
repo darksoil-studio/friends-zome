@@ -87,8 +87,8 @@ importers:
         specifier: ^0.500.0
         version: 0.500.0
       '@darksoil-studio/private-event-sourcing-zome':
-        specifier: 0.501.0-rev.62a7e505d1fae2df7b77eea6d2e1e76f709c27c6
-        version: 0.501.0-rev.62a7e505d1fae2df7b77eea6d2e1e76f709c27c6(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
+        specifier: 0.501.0-rev.4f93c427f0d1239a14fa6f54e2eb51f388a144c8
+        version: 0.501.0-rev.4f93c427f0d1239a14fa6f54e2eb51f388a144c8(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@holochain/client':
         specifier: ^0.19.0
         version: 0.19.0
@@ -391,8 +391,8 @@ packages:
   '@darksoil-studio/notifications-zome@0.500.0-rev.a334a1bdd1ed05afa86dd146a077ddf37f98143a':
     resolution: {integrity: sha512-5xOe3KZlNf480KNPd8PundzKc0XrrnSmLlIuI3GMq+jYSnl4yFMH5exZrVFtkM+XagnYky7o+xiLeW34IyFgwA==}
 
-  '@darksoil-studio/private-event-sourcing-zome@0.501.0-rev.62a7e505d1fae2df7b77eea6d2e1e76f709c27c6':
-    resolution: {integrity: sha512-b9sRndzBM7ZZdeYevOHh87YeYgA/HUS1dtiu+XxPz8ChA5aWGiRwBwYt/Z+FwQuTyWTgeKG91TOOsn4fgjfjdg==}
+  '@darksoil-studio/private-event-sourcing-zome@0.501.0-rev.4f93c427f0d1239a14fa6f54e2eb51f388a144c8':
+    resolution: {integrity: sha512-3+VqniZwFkmdxwMTsO4WHAZOFC3YSyBNZUyziWPq+vE0DNAsx9XgE0JdR/Op72iqt+sTm15rlnBdCuIKH3SeAw==}
 
   '@darksoil-studio/private-event-sourcing-zome@0.501.0-rev.d23b2f3d9b9d6497f5b9b5102b0842468bff51d4':
     resolution: {integrity: sha512-v3W7cZrIEtp0W1KrRCI4po/P2N7bdBRDhy0bGpngW4sfmQvmPCo6lkKmkcbYyo91A+NjFbCcgEwgsdZ+nEOlMw==}
@@ -3306,7 +3306,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@darksoil-studio/private-event-sourcing-zome@0.501.0-rev.62a7e505d1fae2df7b77eea6d2e1e76f709c27c6(@floating-ui/utils@0.2.9)(@types/react@19.0.10)':
+  '@darksoil-studio/private-event-sourcing-zome@0.501.0-rev.4f93c427f0d1239a14fa6f54e2eb51f388a144c8(@floating-ui/utils@0.2.9)(@types/react@19.0.10)':
     dependencies:
       '@darksoil-studio/holochain-elements': 0.500.0(@floating-ui/utils@0.2.9)(@types/react@19.0.10)
       '@darksoil-studio/holochain-signals': 0.500.0
