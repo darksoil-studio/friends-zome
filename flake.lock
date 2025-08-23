@@ -356,11 +356,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755876312,
-        "narHash": "sha256-sOWjTs9QCyAYKCmS0Ca/tDPAHxiRhPSChrKYC+6ns90=",
+        "lastModified": 1755946915,
+        "narHash": "sha256-A1r2E2Ho4Tz6F8bBluVmHzHZdeDlM8ygpjz7Zqv8hz8=",
         "owner": "darksoil-studio",
         "repo": "private-event-sourcing-zome",
-        "rev": "4f93c427f0d1239a14fa6f54e2eb51f388a144c8",
+        "rev": "c2c030a62d22255f900c292a8243233d9f9b79a9",
         "type": "github"
       },
       "original": {
