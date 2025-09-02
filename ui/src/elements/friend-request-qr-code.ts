@@ -21,7 +21,7 @@ import {
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-import { friendsStoreContext } from '../context.js';
+import { DeepLinkApi, deepLinkApi, friendsStoreContext } from '../context.js';
 import { FriendsStore } from '../friends-store.js';
 
 export function isTauriEnv() {
@@ -63,6 +63,9 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 	@consume({ context: friendsStoreContext, subscribe: true })
 	store!: FriendsStore;
 
+	@consume({ context: deepLinkApi })
+	deepLinkApi: DeepLinkApi | undefined;
+
 	@property()
 	size: number = 256;
 
@@ -76,51 +79,72 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 			<div class="column" style="gap:16px">
 				<span style="align-self: center">${msg('OR')} </span>
 
+				${this.renderCodeOrLink(code)}
+			</div>
+		`;
+	}
+
+	renderCodeOrLink(code: string) {
+		if (this.deepLinkApi) {
+			const link = this.deepLinkApi.buildDeepLink(code);
+			return html`
 				<div class="column" style="gap: 8px">
-					<span>${msg('Send this code to your other friend...')} </span>
+					<span>${msg('Share this link with your friend:')} </span>
 					<div
 						class="row"
 						style="align-items: center; gap: 8px; justify-content: center"
 					>
-						<sl-tag>${code.slice(0, 20)}...</sl-tag>
-						<sl-copy-button .value=${code}></sl-copy-button>
+						<sl-tag style="width: calc(${this.size}px - 38px)">${link}</sl-tag>
+						<sl-copy-button .value=${link}></sl-copy-button>
 					</div>
-
-					<span style="word-break: break-word;"
-						>${msg('... and enter here the code from your friend.')}
-					</span>
-
-					<sl-input
-						@sl-input=${async (e: CustomEvent) => {
-							const input = e.target as SlInput;
-
-							if (code === input.value) {
-								notifyError(
-									msg('Invalid invite code: this is your own invite code.'),
-								);
-								input.value = '';
-
-								return;
-							}
-
-							try {
-								await sendFriendRequestFromCode(this.store, input.value);
-								this.dispatchEvent(
-									new CustomEvent('friend-request-sent', {
-										bubbles: true,
-										composed: true,
-									}),
-								);
-								notify('Friend request send!');
-							} catch (e) {
-								notifyError('Failed to send friend request.');
-								console.error(e);
-							}
-							input.value = '';
-						}}
-					>
-					</sl-input>
 				</div>
+			`;
+		}
+		return html`
+			<div class="column" style="gap: 8px; width: calc(${this.size}px)">
+				<span>${msg('Share this code with your friend:')} </span>
+				<div
+					class="row"
+					style="align-items: center; gap: 8px; justify-content: center"
+				>
+					<sl-tag style="width: calc(${this.size}px - 38px)">${code}</sl-tag>
+					<sl-copy-button .value=${code}></sl-copy-button>
+				</div>
+
+				<span style="word-break: break-word;"
+					>${msg('Enter the code from your friend:')}
+				</span>
+
+				<sl-input
+					@sl-input=${async (e: CustomEvent) => {
+						const input = e.target as SlInput;
+
+						if (code === input.value) {
+							notifyError(
+								msg('Invalid invite code: this is your own invite code.'),
+							);
+							input.value = '';
+
+							return;
+						}
+
+						try {
+							await sendFriendRequestFromCode(this.store, input.value);
+							this.dispatchEvent(
+								new CustomEvent('friend-request-sent', {
+									bubbles: true,
+									composed: true,
+								}),
+							);
+							notify('Friend request send!');
+						} catch (e) {
+							notifyError('Failed to send friend request.');
+							console.error(e);
+						}
+						input.value = '';
+					}}
+				>
+				</sl-input>
 			</div>
 		`;
 	}
@@ -170,6 +194,9 @@ export class FriendRequestQrCode extends SignalWatcher(LitElement) {
 		css`
 			:host {
 				display: flex;
+			}
+			sl-tag::part(base) {
+				overflow: hidden;
 			}
 		`,
 	];
