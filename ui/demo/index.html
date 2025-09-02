@@ -46,6 +46,7 @@
 			import '@shoelace-style/shoelace/dist/themes/light.css';
 			import { LitElement, css, html } from 'lit';
 
+			import '../src/elements/deep-link-api-context.ts';
 			import '../src/elements/friend-request-qr-code.ts';
 			import '../src/elements/friend-requests.ts';
 			import '../src/elements/friends-context.ts';
@@ -122,6 +123,10 @@
 						<app-client-context .client=${this._client}>
 							<linked-devices-context role="friends_test">
 								<notifications-context role="friends_test">
+								<deep-link-api-context .deepLinkApi=${{
+									buildDeepLink: (code) => `friends://${code}`,
+									onDeepLinkClicked: () => {}
+								}}>
 									<friends-context role="friends_test">
 										<div class="fill row" style="width: 100vw; height: 100%;">
 											<profile-prompt style="flex: 1;">
@@ -129,6 +134,7 @@
 											</profile-prompt>
 										</div>
 									</friends-context>
+								</deep-link-api-context>
 								</notifications-context>
 							</linked-devices-context>
 						</app-client-context>

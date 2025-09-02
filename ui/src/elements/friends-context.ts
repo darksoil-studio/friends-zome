@@ -1,4 +1,8 @@
-import { appClientContext } from '@darksoil-studio/holochain-elements';
+import {
+	appClientContext,
+	notify,
+	notifyError,
+} from '@darksoil-studio/holochain-elements';
 import {
 	LinkedDevicesStore,
 	linkedDevicesStoreContext,
@@ -11,9 +15,10 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { FriendsConfig, defaultConfig } from '../config.js';
-import { friendsStoreContext } from '../context.js';
+import { DeepLinkApi, deepLinkApi, friendsStoreContext } from '../context.js';
 import { FriendsClient } from '../friends-client.js';
 import { FriendsStore } from '../friends-store.js';
+import { sendFriendRequestFromCode } from './friend-request-qr-code.js';
 
 /**
  * @element friends-context
@@ -22,6 +27,9 @@ import { FriendsStore } from '../friends-store.js';
 export class FriendsContext extends LitElement {
 	@consume({ context: appClientContext })
 	private client!: AppClient;
+
+	@consume({ context: deepLinkApi })
+	deepLinkApi: DeepLinkApi | undefined;
 
 	@provide({ context: friendsStoreContext })
 	@provide({ context: profilesProviderContext })
@@ -77,6 +85,22 @@ export class FriendsContext extends LitElement {
 			this.config,
 			this.linkedDevicesStore,
 		);
+
+		this.deepLinkApi?.onDeepLinkClicked(async code => {
+			try {
+				await sendFriendRequestFromCode(this.store, code);
+				this.dispatchEvent(
+					new CustomEvent('friend-request-sent', {
+						bubbles: true,
+						composed: true,
+					}),
+				);
+				notify('Friend request send!');
+			} catch (e) {
+				notifyError('Failed to send friend request.');
+				console.error(e);
+			}
+		});
 	}
 
 	render() {
