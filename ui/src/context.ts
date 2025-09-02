@@ -6,7 +6,7 @@ export const friendsStoreContext = createContext<FriendsStore>('friends/store');
 
 export interface DeepLinkApi {
 	buildDeepLink: (code: string) => string;
-	onDeepLinkClicked: (handler: (code: string) => any) => void;
+	onDeepLinkClicked: (handler: (code: string) => unknown) => void;
 }
 
 export const deepLinkApi = createContext<DeepLinkApi>('deepLinkApi');
