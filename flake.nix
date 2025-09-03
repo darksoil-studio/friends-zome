@@ -2,15 +2,15 @@
   description = "Template for Holochain app development";
 
   inputs = {
-    holochain-utils.url = "github:darksoil-studio/holochain-utils/main-0.5";
+    holochain-utils.url = "github:darksoil-studio/holochain-utils/main-0.6";
     nixpkgs.follows = "holochain-utils/nixpkgs";
 
     private-event-sourcing-zome.url =
-      "github:darksoil-studio/private-event-sourcing-zome/main-0.5";
+      "github:darksoil-studio/private-event-sourcing-zome/main-0.6";
     private-event-sourcing-zome.inputs.holochain-utils.follows =
       "holochain-utils";
     linked-devices-zome.url =
-      "github:darksoil-studio/linked-devices-zome/main-0.5";
+      "github:darksoil-studio/linked-devices-zome/main-0.6";
     linked-devices-zome.inputs.holochain-utils.follows = "holochain-utils";
   };
 
@@ -67,7 +67,7 @@
                 --coordinator-zome-name friends \
                 --remote-zome-git-url github:darksoil-studio/friends-zome \
                 --remote-npm-package-name @darksoil-studio/friends-zome \
-                --remote-zome-git-branch main-0.5 \
+                --remote-zome-git-branch main-0.6 \
                 --context-element friends-context \
                 --context-element-import @darksoil-studio/friends-zome/dist/elements/friends-context.js" 
           '';

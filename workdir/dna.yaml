@@ -1,4 +1,4 @@
-manifest_version: '1'
+manifest_version: '0'
 name: friends_test
 integrity:
   network_seed: null
@@ -6,36 +6,30 @@ integrity:
   zomes:
   - name: friends_integrity
     hash: null
-    bundled: ../target/wasm32-unknown-unknown/release/friends_integrity.wasm
+    path: ../target/wasm32-unknown-unknown/release/friends_integrity.wasm
     dependencies: null
-    dylib: null
   - name: linked_devices_integrity
     hash: null
-    bundled: <NIX_PACKAGE>
+    path: <NIX_PACKAGE>
     dependencies: null
-    dylib: null
   - name: encrypted_links_integrity
     hash: null
-    bundled: <NIX_PACKAGE>
+    path: <NIX_PACKAGE>
     dependencies: null
-    dylib: null
 coordinator:
   zomes:
   - name: friends
     hash: null
-    bundled: ../target/wasm32-unknown-unknown/release/friends.wasm
+    path: ../target/wasm32-unknown-unknown/release/friends.wasm
     dependencies:
     - name: friends_integrity
-    dylib: null
   - name: linked_devices
     hash: null
-    bundled: <NIX_PACKAGE>
+    path: <NIX_PACKAGE>
     dependencies:
     - name: linked_devices_integrity
-    dylib: null
   - name: encrypted_links
     hash: null
-    bundled: <NIX_PACKAGE>
+    path: <NIX_PACKAGE>
     dependencies:
     - name: encrypted_links_integrity
-    dylib: null

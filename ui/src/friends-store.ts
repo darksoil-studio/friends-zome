@@ -129,13 +129,32 @@ export class FriendsStore
 
 		for (const [entryHash, entry] of Object.entries(privateEvents.value)) {
 			if (
-				entry.payload.content.event.type === 'AcceptFriendRequest' ||
 				entry.payload.content.event.type === 'RejectFriendRequest' ||
 				entry.payload.content.event.type === 'CancelFriendRequest'
 			) {
 				delete friendRequests[
 					encodeHashToBase64(entry.payload.content.event.friend_request_hash)
 				];
+			} else if (entry.payload.content.event.type === 'AcceptFriendRequest') {
+				const friendRequest =
+					friendRequests[
+						encodeHashToBase64(entry.payload.content.event.friend_request_hash)
+					];
+				const agentProfile = Object.values(privateEvents.value).find(
+					pe =>
+						pe.payload.content.event_type === 'SetProfile' &&
+						(friendRequest.payload.content.event.from_agents.find(
+							a => encodeHashToBase64(a) === encodeHashToBase64(pe.author),
+						) ||
+							friendRequest.payload.content.event.to_agents.find(
+								a => encodeHashToBase64(a) === encodeHashToBase64(pe.author),
+							)),
+				);
+				if (agentProfile) {
+					delete friendRequests[
+						encodeHashToBase64(entry.payload.content.event.friend_request_hash)
+					];
+				}
 			}
 		}
 

@@ -123,10 +123,6 @@
 						<app-client-context .client=${this._client}>
 							<linked-devices-context role="friends_test">
 								<notifications-context role="friends_test">
-								<deep-link-api-context .deepLinkApi=${{
-									buildDeepLink: (code) => `friends://${code}`,
-									onDeepLinkClicked: () => {}
-								}}>
 									<friends-context role="friends_test">
 										<div class="fill row" style="width: 100vw; height: 100%;">
 											<profile-prompt style="flex: 1;">
@@ -134,7 +130,6 @@
 											</profile-prompt>
 										</div>
 									</friends-context>
-								</deep-link-api-context>
 								</notifications-context>
 							</linked-devices-context>
 						</app-client-context>
