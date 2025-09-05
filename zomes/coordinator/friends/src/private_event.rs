@@ -185,14 +185,3 @@ impl PrivateEvent for FriendsEvent {
 pub fn query_friends_events() -> ExternResult<BTreeMap<EntryHashB64, SignedEvent<FriendsEvent>>> {
     query_private_events()
 }
-
-#[hdk_extern]
-pub fn recv_remote_signal(signal_bytes: SerializedBytes) -> ExternResult<()> {
-    if let Ok(private_event_sourcing_remote_signal) =
-        PrivateEventSourcingRemoteSignal::try_from(signal_bytes)
-    {
-        recv_private_events_remote_signal::<FriendsEvent>(private_event_sourcing_remote_signal)
-    } else {
-        Ok(())
-    }
-}
